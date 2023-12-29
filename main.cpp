@@ -28,7 +28,7 @@ int main() {
     }*/
 
     try {
-        ctx.CompileFolder("./Scripts/", "Scripts", false);
+//        ctx.CompileFolder("./Scripts/", "./", false);
         ctx.CompileStringAndRun("require 'Scripts/Debug' \n"
                                 "Debug.Log('Gotcha!')");
     } catch (const std::runtime_error &exc) {
