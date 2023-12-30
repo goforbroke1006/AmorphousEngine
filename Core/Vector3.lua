@@ -4,12 +4,100 @@
 --- DateTime: 12/30/23 10:31 AM
 ---
 
-Vector3 = { x = 0.0, y = 0.0, z = 0.0 }
-Vector3.zero = { x = 0.0, y = 0.0, z = 0.0 }
+require 'math'
 
-Vector3.forward = { x = 0.0, y = 0.0, z = 1.0 }
-Vector3.back = { x = 0.0, y = 0.0, z = -1.0 }
-Vector3.up = { x = 0.0, y = 1.0, z = 0.0 }
-Vector3.down = { x = 0.0, y = -1.0, z = 0.0 }
-Vector3.right = { x = 1.0, y = 0.0, z = 0.0 }
-Vector3.left = { x = -1.0, y = 0.0, z = 0.0 }
+Vector3 = { x = 0.0, y = 0.0, z = 0.0 }
+
+function Vector3:new(newX, newY, newZ)
+    vec = {}
+    self.__index = self
+    setmetatable(vec, self)
+
+    vec.x = newX
+    vec.y = newY
+    vec.z = newZ
+    return vec
+end
+
+Vector3.zero = Vector3:new(0.0, 0.0, 0.0)
+
+Vector3.forward = Vector3:new(0.0, 0.0, 1.0)
+Vector3.back = Vector3:new(0.0, 0.0, -1.0)
+Vector3.up = Vector3:new(0.0, 1.0, 0.0)
+Vector3.down = Vector3:new(0.0, -1.0, 0.0)
+Vector3.right = Vector3:new(1.0, 0.0, 0.0)
+Vector3.left = Vector3:new(-1.0, 0.0, 0.0)
+
+function Vector3:magnitude()
+    return math.sqrt(
+            math.pow(self.x, 2) + math.pow(self.y, 2) + math.pow(self.z, 2)
+    )
+end
+
+function Vector3:normalized()
+    local magnitude = self:magnitude()
+
+    if (magnitude == 0.0)
+    then
+        return Vector3.zero
+    end
+
+    local nv = Vector3
+    nv.x = self.x / magnitude
+    nv.y = self.y / magnitude
+    nv.z = self.z / magnitude
+    return nv
+end
+
+function Vector3:Set(newX, newY, newZ)
+    self.x = newX
+    self.y = newY
+    self.z = newZ
+end
+
+function Vector3:Distance(other --[[Vector3]])
+    return math.sqrt(
+            math.pow(self.x - other.x, 2) + math.pow(self.y - other.y, 2) + math.pow(self.z - other.z, 2)
+    )
+end
+
+function Vector3:Normalize()
+    local magnitude = self:magnitude()
+
+    if (magnitude ~= 0.0)
+    then
+        self.x = self.x / magnitude
+        self.y = self.y / magnitude
+        self.z = self.z / magnitude
+    end
+end
+
+Vector3.__add = function(op1 --[[Vector3]], op2 --[[Vector3]])
+    local vec = Vector3
+
+    vec.x = op1.x + op2.x
+    vec.y = op1.y + op2.y
+    vec.z = op1.z + op2.z
+
+    return vec
+end
+
+function scale_vector(origin --[[Vector3]], alpha --[[number]])
+    local vec = Vector3
+
+    vec.x = origin.x * alpha
+    vec.y = origin.y * alpha
+    vec.z = origin.z * alpha
+
+    return vec
+end
+
+Vector3.__mul = function(op1, op2)
+    if type(op2) == "number" then
+        return scale_vector(op1, op2)
+    elseif type(op1) == "number" then
+        return scale_vector(op2, op1)
+    else
+        error("Cannot scale by non-number factor")
+    end
+end
