@@ -8,7 +8,14 @@ require 'math'
 
 Vector3 = { x = 0.0, y = 0.0, z = 0.0 }
 
-function Vector3:new(newX, newY, newZ)
+function Vector3:new(newX --[[number]], newY --[[number]], newZ --[[number]])
+    if type(newX) ~= "number"
+            or type(newY) ~= "number"
+            or type(newZ) ~= "number"
+    then
+        error("Can not create vector")
+    end
+
     vec = {}
     self.__index = self
     setmetatable(vec, self)
@@ -37,8 +44,7 @@ end
 function Vector3:normalized()
     local magnitude = self:magnitude()
 
-    if (magnitude == 0.0)
-    then
+    if (magnitude == 0.0) then
         return Vector3.zero
     end
 
@@ -49,7 +55,14 @@ function Vector3:normalized()
     return nv
 end
 
-function Vector3:Set(newX, newY, newZ)
+function Vector3:Set(newX --[[number]], newY --[[number]], newZ --[[number]])
+    if type(newX) ~= "number"
+            or type(newY) ~= "number"
+            or type(newZ) ~= "number"
+    then
+        error("Can not set vector")
+    end
+
     self.x = newX
     self.y = newY
     self.z = newZ
@@ -64,8 +77,7 @@ end
 function Vector3:Normalize()
     local magnitude = self:magnitude()
 
-    if (magnitude ~= 0.0)
-    then
+    if (magnitude ~= 0.0) then
         self.x = self.x / magnitude
         self.y = self.y / magnitude
         self.z = self.z / magnitude
@@ -78,6 +90,16 @@ Vector3.__add = function(op1 --[[Vector3]], op2 --[[Vector3]])
     vec.x = op1.x + op2.x
     vec.y = op1.y + op2.y
     vec.z = op1.z + op2.z
+
+    return vec
+end
+
+Vector3.__sub = function(op1 --[[Vector3]], op2 --[[Vector3]])
+    local vec = Vector3
+
+    vec.x = op1.x - op2.x
+    vec.y = op1.y - op2.y
+    vec.z = op1.z - op2.z
 
     return vec
 end
@@ -98,6 +120,6 @@ Vector3.__mul = function(op1, op2)
     elseif type(op1) == "number" then
         return scale_vector(op2, op1)
     else
-        error("Cannot scale by non-number factor")
+        error("Can not scale by non-number factor")
     end
 end

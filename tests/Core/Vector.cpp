@@ -3,6 +3,7 @@
 //
 
 #include <gtest/gtest.h>
+
 #include <LuaCpp.hpp>
 
 TEST(TestVector3, file_compilation) {
@@ -326,6 +327,40 @@ TEST(TestVector3___add, _v1_plus_v2) {
 
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ("4.1 5.2 6.3\n", output);
+}
+
+TEST(TestVector3___sub, _v1_minus_v2) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            ""
+            "local vec1 = Vector3:new(4.0, 5.0, 6.0) \n"
+            "local vec2 = Vector3:new(0.1, 0.2, 0.3) \n"
+            "local res = vec1 - vec2 \n"
+            "print(res.x .. ' ' .. res.y .. ' ' .. res.z) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("3.9 4.8 5.7\n", output);
+}
+
+TEST(TestVector3___sub, _0_0_0_minus_v2) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            ""
+            "local vec1 = Vector3.zero \n"
+            "local vec2 = Vector3:new(0.1, 0.2, 0.3) \n"
+            "local res = vec1 - vec2 \n"
+            "print(res.x .. ' ' .. res.y .. ' ' .. res.z) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("-0.1 -0.2 -0.3\n", output);
 }
 
 TEST(TestVector3___mul, _0_0_0_mul_5) {
