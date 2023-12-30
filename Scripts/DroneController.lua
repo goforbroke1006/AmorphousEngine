@@ -21,6 +21,6 @@ end
 function DroneController:Update()
     Debug.Log("DroneController :: Update");
 
-    self.transform:LookAt(self.targetObj, Space.Self);
+    self.transform:LookAt(self.targetObj);
     self.transform:Translate(Vector3.right * self.motionSpeed * Time.deltaTime);
 end
