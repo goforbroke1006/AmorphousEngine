@@ -12,16 +12,15 @@ int main() {
 
     try {
         ctx.CompileStringAndRun(
-                "require 'Core/Debug'\n"
-                "require 'Core/Time'\n"
-                "require 'Core/Space'\n"
-                "require 'Core/Transform'\n"
+                "require 'Core/__all'\n"
                 ""
-                "require 'Scripts/RotatesAroundY' \n"
+                "require 'Scripts/DroneController' \n"
                 ""
-                "local instance = RotatesAroundY; \n"
-                "instance:Start() \n"
-                "instance:Update() \n"
+                "local component = DroneController; \n"
+                "component:Start() \n"
+                "component:Update() \n"
+                "component:Update() \n"
+                "component:Update() \n"
                 );
     } catch (const std::runtime_error &exc) {
         std::cerr << exc.what() << std::endl;

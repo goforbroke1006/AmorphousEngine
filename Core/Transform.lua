@@ -4,14 +4,28 @@
 --- DateTime: 12/30/23 1:51 AM
 ---
 
+require 'Core/Space'
+require 'Core/Vector3'
+
 Transform = {
-    position = { x = 0, y = 0, z = 0 },
+    position = Vector3,
     rotation = { x = 0, y = 0, z = 0, w = 0 }
 }
 
-function Transform:Rotate(angleX, angleY, angleZ, center)
-    center = center or Space.Self
-    print('  Transform :: Rotate(' .. angleX .. ', ' .. angleY .. ', ' .. angleZ .. ', ' .. center .. ')')
+function Transform:Translate(translation --[[Vector3]], relativeTo)
+    translation = translation or Vector3
+    relativeTo = relativeTo or Space.Self
+    print('  Transform :: Translate({' .. translation.x .. ', ' .. translation.y .. ', ' .. translation.z .. '}, ' .. relativeTo .. ')')
+end
+
+function Transform:Rotate(angleX, angleY, angleZ, relativeTo)
+    relativeTo = relativeTo or Space.Self
+    print('  Transform :: Rotate(' .. angleX .. ', ' .. angleY .. ', ' .. angleZ .. ', ' .. relativeTo .. ')')
+end
+
+function Transform:LookAt(target --[[Transform]],  worldUp --[[Vector3]])
+    worldUp = worldUp or Vector3.up
+    print('  Transform :: LookAt(target, ' .. worldUp .. ')')
 end
 
 return Transform
