@@ -6,11 +6,13 @@
 
 DroneController = LuaBehaviour
 
+DroneController.motionSpeed = 0.0
+DroneController.targetObj = Transform
+
 function DroneController:Start()
     Debug.Log("DroneController :: Start");
 
-    self.rotationSpeed = 1.0
-    self.angleY = 0.0
+    self.motionSpeed = 0.25
     self.targetObj = Transform
 
     Debug.LogWarning("TODO: need to specify 'targetObj'");
@@ -19,8 +21,6 @@ end
 function DroneController:Update()
     Debug.Log("DroneController :: Update");
 
-    self.angleY = self.angleY + Time.deltaTime * self.rotationSpeed
-    self.transform:Translate(Vector3.right);
-    self.transform:Rotate(0.0, self.angleY, 0.0, Space.Self);
     self.transform:LookAt(self.targetObj, Space.Self);
+    self.transform:Translate(Vector3.right * self.motionSpeed * Time.deltaTime);
 end

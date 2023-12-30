@@ -4,8 +4,5 @@
 --- DateTime: 12/30/23 1:48 AM
 ---
 
-Time = {
-    deltaTime = 0.1
-}
-
-_G.Time = Time
+Time = {}
+Time.deltaTime = 0.1

@@ -48,10 +48,11 @@ function Vector3:normalized()
         return Vector3.zero
     end
 
-    local nv = Vector3
-    nv.x = self.x / magnitude
-    nv.y = self.y / magnitude
-    nv.z = self.z / magnitude
+    local nv = Vector3:new(
+            self.x / magnitude,
+            self.y / magnitude,
+            self.z / magnitude
+    )
     return nv
 end
 
@@ -85,32 +86,31 @@ function Vector3:Normalize()
 end
 
 Vector3.__add = function(op1 --[[Vector3]], op2 --[[Vector3]])
-    local vec = Vector3
-
-    vec.x = op1.x + op2.x
-    vec.y = op1.y + op2.y
-    vec.z = op1.z + op2.z
+    local vec = Vector3:new(
+            op1.x + op2.x,
+            op1.y + op2.y,
+            op1.z + op2.z
+    )
 
     return vec
 end
 
 Vector3.__sub = function(op1 --[[Vector3]], op2 --[[Vector3]])
-    local vec = Vector3
-
-    vec.x = op1.x - op2.x
-    vec.y = op1.y - op2.y
-    vec.z = op1.z - op2.z
+    local vec = Vector3:new(
+            op1.x - op2.x,
+            op1.y - op2.y,
+            op1.z - op2.z
+    )
 
     return vec
 end
 
 function scale_vector(origin --[[Vector3]], alpha --[[number]])
-    local vec = Vector3
-
-    vec.x = origin.x * alpha
-    vec.y = origin.y * alpha
-    vec.z = origin.z * alpha
-
+    local vec = Vector3:new(
+            origin.x * alpha,
+            origin.y * alpha,
+            origin.z * alpha
+    )
     return vec
 end
 
