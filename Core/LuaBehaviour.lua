@@ -5,5 +5,5 @@
 ---
 
 LuaBehaviour = {
-    transform = Transform
+    transform = Transform:new()
 }

@@ -8,14 +8,38 @@ require 'Core/Space'
 require 'Core/Vector3'
 
 Transform = {
-    position = Vector3,
-    rotation = { x = 0, y = 0, z = 0, w = 0 }
+    position = Vector3:new(0.0, 0.0, 0.0),
+    rotation = { x = 0.0, y = 0.0, z = 0.0, w = 0.0 }
 }
 
+function Transform:new()
+    tr = {}
+    self.__index = self
+    setmetatable(tr, self)
+
+    return tr
+end
+
 function Transform:Translate(translation --[[Vector3]], relativeTo)
-    translation = translation or Vector3
+    --if (type(translation) ~= "Vector3") then
+    --    error("translation has incompatible type " .. type(translation))
+    --end
+
     relativeTo = relativeTo or Space.Self
-    print('  Transform :: Translate({' .. translation.x .. ', ' .. translation.y .. ', ' .. translation.z .. '}, ' .. relativeTo .. ')')
+
+    if (relativeTo == Space.Self) then
+        local relForward = Vector3:new(self.rotation.x, self.rotation.y, self.rotation.z)
+        local move = relForward - translation
+        move = move * -1.0
+
+        self.position.x = self.position.x + move.x
+        self.position.y = self.position.y + move.y
+        self.position.z = self.position.z + move.z
+    elseif (relativeTo == Space.World) then
+        self.position.x = self.position.x + translation.x
+        self.position.y = self.position.y + translation.y
+        self.position.z = self.position.z + translation.z
+    end
 end
 
 function Transform:Rotate(angleX, angleY, angleZ, relativeTo)
@@ -23,9 +47,7 @@ function Transform:Rotate(angleX, angleY, angleZ, relativeTo)
     print('  Transform :: Rotate(' .. angleX .. ', ' .. angleY .. ', ' .. angleZ .. ', ' .. relativeTo .. ')')
 end
 
-function Transform:LookAt(target --[[Transform]],  worldUp --[[Vector3]])
+function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])
     worldUp = worldUp or Vector3.up
-    print('  Transform :: LookAt(target, ' .. worldUp .. ')')
+    --print('  Transform :: LookAt(target, ' .. worldUp .. ')')
 end
-
-return Transform
