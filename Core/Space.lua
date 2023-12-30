@@ -5,5 +5,6 @@
 ---
 
 Space = {
-    Self = 'Self'
+    World = 'World',
+    Self = 'Self',
 }
