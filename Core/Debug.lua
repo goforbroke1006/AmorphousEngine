@@ -14,6 +14,4 @@ function Debug.Warn(message --[[string]])
     print('WARN: ' .. message)
 end
 
---return Debug
-
 _G.Debug = Debug

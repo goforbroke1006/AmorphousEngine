@@ -6,17 +6,19 @@
 
 RotatesAroundY = {}
 
-function RotatesAroundY:new()
-    return {}
-end
-
 function RotatesAroundY:Start()
-    Debug.Log("RotatesAroundY Start");
+    Debug.Log("RotatesAroundY :: Start");
+
+    self.transform = Transform;
     self.rotationSpeed = 1.0
+    self.angleY = 0.0
 end
 
 function RotatesAroundY:Update()
-    Debug.Log("RotatesAroundY Update");
+    Debug.Log("RotatesAroundY :: Update");
+
     self.angleY = self.angleY + Time.deltaTime * self.rotationSpeed
-    self.transform.Rotate(0, self.angleY, 0, Space.Self);
+    self.transform:Rotate(0.0, self.angleY, 0.0, Space.Self);
 end
+
+return RotatesAroundY
