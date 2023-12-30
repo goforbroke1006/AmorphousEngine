@@ -10,8 +10,10 @@ function Debug.Log(message --[[string]])
     print('DEBUG: ' .. message)
 end
 
-function Debug.Warn(message --[[string]])
-    print('WARN: ' .. message)
+function Debug.LogWarning(message --[[string]])
+    print('WARN:  ' .. message)
 end
 
-_G.Debug = Debug
+function Debug.LogError(message --[[string]])
+    print('ERROR: ' .. message)
+end

@@ -11,7 +11,9 @@ function DroneController:Start()
 
     self.rotationSpeed = 1.0
     self.angleY = 0.0
-    self.targetObj = Transform;
+    self.targetObj = Transform
+
+    Debug.LogWarning("TODO: need to specify 'targetObj'");
 end
 
 function DroneController:Update()

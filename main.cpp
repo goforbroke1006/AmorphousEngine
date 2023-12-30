@@ -12,11 +12,11 @@ int main() {
 
     try {
         ctx.CompileStringAndRun(
-                "require 'Core/__all'\n"
+                "require 'Core/__all' \n"
                 ""
                 "require 'Scripts/DroneController' \n"
                 ""
-                "local component = DroneController; \n"
+                "local component = DroneController \n"
                 "component:Start() \n"
                 "component:Update() \n"
                 "component:Update() \n"

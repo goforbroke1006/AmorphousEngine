@@ -7,5 +7,3 @@
 Space = {
     Self = 'Self'
 }
-
-_G.Space = Space
