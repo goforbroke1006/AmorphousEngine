@@ -12,8 +12,6 @@ int main() {
 
     try {
         ctx.CompileStringAndRun(
-                "require 'Core/__all' \n"
-                ""
                 "require 'Scripts/DroneController' \n"
                 ""
                 "local component = DroneController \n"

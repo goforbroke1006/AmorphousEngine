@@ -4,6 +4,34 @@
 --- DateTime: 12/30/23 10:44 AM
 ---
 
+require 'Core/Transform'
+require 'Core/GameObject'
+
+require 'Core/Debug'
+require 'Core/Time'
+require 'Core/Space'
+
 LuaBehaviour = {
-    transform = Transform:new()
+    transform = Transform,
+    gameObject = GameObject,
 }
+
+function LuaBehaviour:new()
+    lb = {
+        gameObject = GameObject:new(),
+    }
+    self.__index = self
+    setmetatable(lb, self)
+
+    lb.transform = lb.gameObject.transform
+
+    return lb
+end
+
+function LuaBehaviour:GetComponent(name --[[string]])
+    return nil
+end
+
+function LuaBehaviour:GetComponents()
+    return nil
+end

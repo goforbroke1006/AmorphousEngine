@@ -1,0 +1,44 @@
+{
+  "gameObjects": [
+    {
+      "name": "Cube-1",
+      "mesh": {
+        "filepath": "./Cube.mesh"
+      },
+      "transform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 0
+        }
+      },
+      "components": []
+    },
+    {
+      "name": "Drone-1",
+      "mesh": {
+        "filepath": "./OgreHead.mesh"
+      },
+      "transform": {
+        "position": {
+          "x": 50,
+          "y": 50,
+          "z": 50
+        },
+        "rotation": {
+          "x": 0,
+          "y": 90,
+          "z": 0,
+          "w": 0
+        }
+      },
+      "components": []
+    }
+  ]
+}

@@ -4,7 +4,9 @@
 --- DateTime: 12/29/23 2:44 PM
 ---
 
-DroneController = LuaBehaviour
+require 'Core/LuaBehaviour'
+
+DroneController = LuaBehaviour:new()
 
 DroneController.motionSpeed = 0.0
 DroneController.targetObj = Transform
