@@ -19,6 +19,7 @@ function GameObject:new(name --[[string]], components)
     go = {
         name = name,
         components = components,
+        transform = Transform:new(),
     }
     self.__index = self
     setmetatable(go, self)

@@ -47,8 +47,8 @@
               "value": 1.0
             },
             {
-              "name": "targetObj",
-              "value": "ref@gameObject@Cube-1"
+              "name": "targetTr",
+              "value": "ref#gameObject['Cube-1'].transform"
             }
           ]
         }

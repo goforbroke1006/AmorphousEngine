@@ -9,6 +9,7 @@ require 'Core/Time'
 require 'Core/Space'
 
 require 'Core/Vector3'
+require 'Core/Quaternion'
 require 'Core/Transform'
 require 'Core/GameObject'
 

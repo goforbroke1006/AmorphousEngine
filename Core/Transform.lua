@@ -6,14 +6,19 @@
 
 require 'Core/Space'
 require 'Core/Vector3'
+require 'Core/Quaternion'
 
 Transform = {
     position = Vector3:new(0.0, 0.0, 0.0),
-    rotation = { x = 0.0, y = 0.0, z = 0.0, w = 0.0 }
+    rotation = Quaternion:new(0.0, 0.0, 0.0, 0.0),
 }
 
 function Transform:new()
-    tr = {}
+    tr = {
+        position = Vector3:new(0.0, 0.0, 0.0),
+        rotation = Quaternion:new(0.0, 0.0, 0.0, 0.0),
+    }
+
     self.__index = self
     setmetatable(tr, self)
 
@@ -44,7 +49,7 @@ end
 
 function Transform:Rotate(angleX, angleY, angleZ, relativeTo)
     relativeTo = relativeTo or Space.Self
-    print('  Transform :: Rotate(' .. angleX .. ', ' .. angleY .. ', ' .. angleZ .. ', ' .. relativeTo .. ')')
+    -- print('  Transform :: Rotate(' .. angleX .. ', ' .. angleY .. ', ' .. angleZ .. ', ' .. relativeTo .. ')')
 end
 
 function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])

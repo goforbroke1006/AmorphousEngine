@@ -9,21 +9,32 @@ require 'Core/LuaBehaviour'
 DroneController = LuaBehaviour:new()
 
 DroneController.motionSpeed = 0.0
-DroneController.targetObj = Transform
+DroneController.targetTr = Transform
 
 function DroneController:Start()
     Debug.Log("DroneController :: Start");
 
-    self.motionSpeed = 0.25
-    self.targetObj = Transform
+    if (self.motionSpeed == 0.0) then
+        Debug.LogWarning('motionSpeed should not be equals zero')
+    end
+    if (self.targetTr == nil) then
+        Debug.LogError('targetTr is required')
+    else
+        Debug.Log("targetTr = " .. self.targetTr.position:ToString())
+    end
 end
 
 function DroneController:Update()
     Debug.Log("DroneController :: Update");
 
-    self.transform:LookAt(self.targetObj);
-    self.transform:Translate(Vector3.right * self.motionSpeed * Time.deltaTime);
+    --Debug.Log("targetTr = " .. self.targetTr.position:ToString())
+    self.transform:LookAt(self.targetTr.position);
 
-    --local distance = self.transform.position.Distance(self.targetObj.position);
-    --Debug.Log("Distance to target" .. distance);
+    local move = Vector3.right * self.motionSpeed * Time.deltaTime
+    print('  next move ' .. move.x .. ' ' .. move.y .. ' ' .. move.z)
+
+    self.transform:Translate(move);
+
+    local distance = self.transform.position:Distance(self.targetTr.position);
+    Debug.Log("Distance to target " .. distance);
 end

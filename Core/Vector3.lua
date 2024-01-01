@@ -13,7 +13,7 @@ function Vector3:new(newX --[[number]], newY --[[number]], newZ --[[number]])
             or type(newY) ~= "number"
             or type(newZ) ~= "number"
     then
-        error("Can not create vector")
+        error("Can not create Vector3")
     end
 
     vec = {}
@@ -23,6 +23,7 @@ function Vector3:new(newX --[[number]], newY --[[number]], newZ --[[number]])
     vec.x = newX
     vec.y = newY
     vec.z = newZ
+
     return vec
 end
 
@@ -61,7 +62,7 @@ function Vector3:Set(newX --[[number]], newY --[[number]], newZ --[[number]])
             or type(newY) ~= "number"
             or type(newZ) ~= "number"
     then
-        error("Can not set vector")
+        error("Can not set Vector3")
     end
 
     self.x = newX
@@ -83,6 +84,10 @@ function Vector3:Normalize()
         self.y = self.y / magnitude
         self.z = self.z / magnitude
     end
+end
+
+function Vector3:ToString()
+    return '(' .. self.x .. ', ' .. self.y .. ', ' .. self.z .. ')'
 end
 
 Vector3.__add = function(op1 --[[Vector3]], op2 --[[Vector3]])
