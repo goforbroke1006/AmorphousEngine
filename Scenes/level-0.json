@@ -7,15 +7,15 @@
       },
       "transform": {
         "position": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
         },
         "rotation": {
-          "x": 0,
-          "y": 0,
-          "z": 0,
-          "w": 0
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "w": 0.0
         }
       },
       "components": []
@@ -27,18 +27,32 @@
       },
       "transform": {
         "position": {
-          "x": 50,
-          "y": 50,
-          "z": 50
+          "x": 50.0,
+          "y": 50.0,
+          "z": 50.0
         },
         "rotation": {
-          "x": 0,
-          "y": 90,
-          "z": 0,
-          "w": 0
+          "x": 0.0,
+          "y": 90.0,
+          "z": 0.0,
+          "w": 0.0
         }
       },
-      "components": []
+      "components": [
+        {
+          "filepath": "Scripts/DroneController",
+          "args": [
+            {
+              "name": "motionSpeed",
+              "value": 1.0
+            },
+            {
+              "name": "targetObj",
+              "value": "ref@gameObject@Cube-1"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

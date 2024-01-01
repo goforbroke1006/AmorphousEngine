@@ -16,8 +16,6 @@ function DroneController:Start()
 
     self.motionSpeed = 0.25
     self.targetObj = Transform
-
-    Debug.LogWarning("TODO: need to specify 'targetObj'");
 end
 
 function DroneController:Update()
@@ -25,4 +23,7 @@ function DroneController:Update()
 
     self.transform:LookAt(self.targetObj);
     self.transform:Translate(Vector3.right * self.motionSpeed * Time.deltaTime);
+
+    --local distance = self.transform.position.Distance(self.targetObj.position);
+    --Debug.Log("Distance to target" .. distance);
 end
