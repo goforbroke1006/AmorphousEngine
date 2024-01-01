@@ -40,7 +40,7 @@
       },
       "components": [
         {
-          "filepath": "Scripts/DroneController",
+          "pathname": "Scripts/DroneController",
           "args": [
             {
               "name": "motionSpeed",

@@ -4,6 +4,7 @@ set -e
 
 sudo apt update -qq
 sudo apt install lua5.3 liblua5.3-dev -y
+sudo apt install libjsoncpp-dev -y
 lua -v
 
 mkdir -p third_party
