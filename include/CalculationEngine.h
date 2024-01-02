@@ -2,8 +2,8 @@
 // Created by goforbroke on 1/2/24.
 //
 
-#ifndef AMORPHOUSENGINE_CALCULATIONENGINE_H
-#define AMORPHOUSENGINE_CALCULATIONENGINE_H
+#ifndef AMORPHOUS_ENGINE_CALCULATION_ENGINE_H
+#define AMORPHOUS_ENGINE_CALCULATION_ENGINE_H
 
 #include "GameObject.h"
 
@@ -13,9 +13,9 @@ public:
      * Prepare calculation engine.
      * @param gameObjects
      */
-    virtual void initialize(const std::vector<GameObject *> &gameObjects) = 0;
+    virtual void initialize(const std::map<std::string, GameObject *> &gameObjects) = 0;
 
-    virtual std::vector<GameObject *> update() = 0;
+    virtual void update(std::map<std::string, GameObject *> &gameObjects) = 0;
 };
 
-#endif //AMORPHOUSENGINE_CALCULATIONENGINE_H
+#endif //AMORPHOUS_ENGINE_CALCULATION_ENGINE_H

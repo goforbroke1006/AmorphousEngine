@@ -2,8 +2,8 @@
 // Created by goforbroke on 1/1/24.
 //
 
-#ifndef OGRITY_TYPES_H
-#define OGRITY_TYPES_H
+#ifndef AMORPHOUS_ENGINE_TYPES_H
+#define AMORPHOUS_ENGINE_TYPES_H
 
 #include <string>
 #include <utility>
@@ -11,10 +11,23 @@
 
 struct Vector3 {
     double mX, mY, mZ;
+
+    void Set(double x, double y, double z) {
+        mX = x;
+        mY = y;
+        mZ = z;
+    }
 };
 
 struct Quaternion {
     double mX, mY, mZ, mW;
+
+    void Set(double x, double y, double z) {
+        mX = x;
+        mY = y;
+        mZ = z;
+        mW = 1.0; // TODO: ???
+    }
 };
 
 struct Transform {
@@ -34,7 +47,4 @@ struct Component {
 };
 
 
-
-
-
-#endif //OGRITY_TYPES_H
+#endif //AMORPHOUS_ENGINE_TYPES_H

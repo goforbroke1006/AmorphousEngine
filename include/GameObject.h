@@ -2,8 +2,8 @@
 // Created by goforbroke on 1/2/24.
 //
 
-#ifndef AMORPHOUSENGINE_GAMEOBJECT_H
-#define AMORPHOUSENGINE_GAMEOBJECT_H
+#ifndef AMORPHOUS_ENGINE_GAME_OBJECT_H
+#define AMORPHOUS_ENGINE_GAME_OBJECT_H
 
 #include "types.h"
 
@@ -27,4 +27,4 @@ public:
 
 };
 
-#endif //AMORPHOUSENGINE_GAMEOBJECT_H
+#endif //AMORPHOUS_ENGINE_GAME_OBJECT_H

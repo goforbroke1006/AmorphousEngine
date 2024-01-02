@@ -4,10 +4,10 @@
 
 #include "../../include/Graphics/OgreNext.h"
 
-void OgreNext::initialize(const std::vector<GameObject *> &gameObjects) {
+void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 
 }
 
-void OgreNext::update(const std::vector<GameObject *> &gameObjects) {
+void OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
 
 }

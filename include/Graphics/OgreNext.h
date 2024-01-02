@@ -7,13 +7,13 @@
 
 #include "../types.h"
 #include "../GameObject.h"
-#include "../GraphicsEEngine.h"
+#include "../GraphicsEngine.h"
 
-class OgreNext : public GraphicsEEngine {
+class OgreNext : public GraphicsEngine {
 public:
-    void initialize(const std::vector<GameObject *> &gameObjects) override;
+    void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
-    void update(const std::vector<GameObject *> &gameObjects) override;
+    void update(const std::map<std::string,GameObject *> &gameObjects) override;
 };
 
 #endif //OGRITY_OGRENEXT_H

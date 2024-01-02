@@ -2,8 +2,8 @@
 // Created by goforbroke on 1/1/24.
 //
 
-#ifndef OGRITY_LUA53_H
-#define OGRITY_LUA53_H
+#ifndef AMORPHOUS_ENGINE_LUA53_H
+#define AMORPHOUS_ENGINE_LUA53_H
 
 #include <vector>
 #include <string>
@@ -14,13 +14,16 @@
 #include "../GameObject.h"
 #include "../CalculationEngine.h"
 
+#define LUA53_G_VAR_GO_T "allGameObjects"
+#define LUA53_G_VAR_CMP_T "allComponents"
+
 class Lua53 : public CalculationEngine {
 public:
-    void initialize(const std::vector<GameObject *> &gameObjects) override;
+    void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
-    std::vector<GameObject *> update() override;
+    void update(std::map<std::string, GameObject *> &gameObjects) override;
 
-    std::string buildInitLuaCode(const std::vector<GameObject *> &gameObjects);
+    static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
 
 private:
     LuaCpp::LuaContext ctx;
@@ -28,8 +31,6 @@ private:
 
     LuaCpp::Engine::LuaTTable mGameObjectsTbl;
     LuaCpp::Engine::LuaTTable mComponentsTbl;
-
-    std::string mEngineRoot;
 };
 
-#endif //OGRITY_LUA53_H
+#endif //AMORPHOUS_ENGINE_LUA53_H

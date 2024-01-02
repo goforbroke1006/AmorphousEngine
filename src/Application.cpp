@@ -12,7 +12,7 @@
 Application::Application(
         std::string mEngineRoot,
         std::string mProjectRoot,
-        GraphicsEEngine *mGraphicsEngine,
+        GraphicsEngine *mGraphicsEngine,
         CalculationEngine *mCalculationEngine
 )
         : mEngineRoot(std::move(mEngineRoot)),
@@ -73,7 +73,7 @@ void Application::loadScene(const std::string &filepath) {
             pGO->mComponents.push_back(cmp);
         }
 
-        mGameObjects.push_back(pGO);
+        mGameObjects[pGO->mID] = pGO;
     }
 }
 
@@ -82,7 +82,7 @@ void Application::runMainLoop() {
     mCalculationEngine->initialize(mGameObjects);
 
     while (true) {
-        mGameObjects = mCalculationEngine->update();
+        mCalculationEngine->update(mGameObjects);
         mGraphicsEngine->update(mGameObjects);
     }
 }

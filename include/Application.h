@@ -2,14 +2,15 @@
 // Created by goforbroke on 1/1/24.
 //
 
-#ifndef OGRITY_APPLICATION_H
-#define OGRITY_APPLICATION_H
+#ifndef AMORPHOUS_ENGINE_APPLICATION_H
+#define AMORPHOUS_ENGINE_APPLICATION_H
 
 #include <string>
+#include <map>
 
 #include "types.h"
 #include "GameObject.h"
-#include "GraphicsEEngine.h"
+#include "GraphicsEngine.h"
 #include "CalculationEngine.h"
 
 class Application {
@@ -17,7 +18,7 @@ public:
     explicit Application(
             std::string mEngineRoot,
             std::string mProjectRoot,
-            GraphicsEEngine *mGraphicsEngine,
+            GraphicsEngine *mGraphicsEngine,
             CalculationEngine *mCalculationEngine
     );
 
@@ -29,10 +30,10 @@ private:
     std::string mEngineRoot;
     std::string mProjectRoot;
 
-    GraphicsEEngine *mGraphicsEngine;
+    GraphicsEngine *mGraphicsEngine;
     CalculationEngine *mCalculationEngine;
 
-    std::vector<GameObject *> mGameObjects;
+    std::map<std::string, GameObject *> mGameObjects;
 };
 
-#endif //OGRITY_APPLICATION_H
+#endif //AMORPHOUS_ENGINE_APPLICATION_H
