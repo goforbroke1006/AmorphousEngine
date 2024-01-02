@@ -1,6 +1,7 @@
 {
   "gameObjects": [
     {
+      "id": "go 0 :: cube 1",
       "name": "Cube-1",
       "mesh": {
         "filepath": "./Cube.mesh"
@@ -21,6 +22,7 @@
       "components": []
     },
     {
+      "id": "go 1 :: drone 1",
       "name": "Drone-1",
       "mesh": {
         "filepath": "./OgreHead.mesh"
@@ -49,7 +51,7 @@
             },
             {
               "name": "targetTr",
-              "value": "ref#allGameObjects['Cube-1'].transform"
+              "value": "ref#allGameObjects['go 0 :: cube 1'].transform"
             }
           ]
         }

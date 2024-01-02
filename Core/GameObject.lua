@@ -7,20 +7,24 @@
 require 'Core/Transform'
 
 GameObject = {
+    id = "",
     name = "",
     components = {},
     transform = Transform:new(),
 }
 
-function GameObject:new(name --[[string]], components)
+function GameObject:new(id --[[string]], name --[[string]], components)
+    id = id or ""
     name = name or ""
     components = components or {}
 
     go = {
+        id = id,
         name = name,
         components = components,
         transform = Transform:new(),
     }
+
     self.__index = self
     setmetatable(go, self)
 

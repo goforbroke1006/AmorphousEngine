@@ -31,9 +31,7 @@ void Application::loadScene(const std::string &filepath) {
     const Json::Value &gameObjectsVals = obj["gameObjects"];
 
     for (const auto &goVal: gameObjectsVals) {
-        const std::string goName = goVal["name"].asString();
-
-        auto *pGO = GameObject::build(goName);
+        auto *pGO = new GameObject(goVal["id"].asString(), goVal["name"].asString());
 
         pGO->mTransform = new Transform;
 

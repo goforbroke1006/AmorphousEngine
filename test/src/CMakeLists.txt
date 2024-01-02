@@ -32,4 +32,4 @@ target_link_libraries(${PROJECT_NAME}
         ${LUACPP_LIBRARIES}
 )
 
-#file(COPY ../../Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ../../Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

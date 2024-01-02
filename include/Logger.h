@@ -12,6 +12,11 @@ class Logger {
 public:
 
     inline
+    static void Trace(const std::string &message) {
+        std::cout << "TRACE: " << message << std::endl;
+    }
+
+    inline
     static void Debug(const std::string &message) {
         std::cout << "DEBUG: " << message << std::endl;
     }

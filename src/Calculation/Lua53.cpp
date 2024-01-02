@@ -27,6 +27,7 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 
     const std::string &initCode = buildInitLuaCode(gameObjects);
     luaL_loadstring(*L, initCode.c_str());
+//    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
@@ -50,8 +51,8 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
     std::string updateFrameCode
             = std::string() +
               "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do \n"
-                                                                             "     cmpInstance:Update() \n"
-                                                                             "end \n";
+                                                                   "     cmpInstance:Update() \n"
+                                                                   "end \n";
     luaL_loadstring(*L, updateFrameCode.c_str());
 
     int res = lua_pcall(*L, 0, 0, 0);
@@ -63,19 +64,31 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
     mComponentsTbl.PopGlobal(*L);
 
     for (const auto &goState: mGameObjectsTbl.getValues()) {
-        const std::string goID = goState.first.ToString();
+        auto *goTbl = (LETable *) goState.second.get();
 
-        auto &name = (LEString &) ((LETable &) goState.second).getValue(LETKey("name"));
-        auto &transform = (LETable &) ((LETable &) goState.second).getValue(LETKey("transform"));
+        auto &idVal = goTbl->getValue(LETKey("id"));
+        auto id = ((LEString &) idVal).getValue();
+
+        auto &transform = (LETable &) goTbl->getValue(LETKey("transform"));
         auto &position = (LETable &) transform.getValue(LETKey("position"));
+        auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
 
-        if (gameObjects.find(goID) == gameObjects.end()) {
-            gameObjects[goID] = GameObject::build(name.getValue());
+        if (gameObjects.find(id) == gameObjects.end()) {
+            auto& nameVal = ((LEString &) goTbl->getValue(LETKey("name")));
+
+            gameObjects[id] = new GameObject(id, nameVal.getValue());
         }
 
-        gameObjects[goID]->mTransform->mPosition.mX = ((LENum &) position.getValue(LETKey("x"))).getValue();
-        gameObjects[goID]->mTransform->mPosition.mY = ((LENum &) position.getValue(LETKey("y"))).getValue();
-        gameObjects[goID]->mTransform->mPosition.mZ = ((LENum &) position.getValue(LETKey("z"))).getValue();
+        gameObjects[id]->mTransform->mPosition.Set(
+                ((LENum &) position.getValue(LETKey("x"))).getValue(),
+                ((LENum &) position.getValue(LETKey("y"))).getValue(),
+                ((LENum &) position.getValue(LETKey("z"))).getValue()
+        );
+        gameObjects[id]->mTransform->mRotation.Set(
+                ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
+                ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
+                ((LENum &) rotation.getValue(LETKey("z"))).getValue()
+        );
     }
 }
 
@@ -94,7 +107,8 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
         auto rot = go->mTransform->mRotation;
 
         initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "['" + go->mID + "'] = GameObject:new('" + go->mName + "')\n";
+                    + LUA53_G_VAR_GO_T + "['" + go->mID + "'] = GameObject:new('" + go->mID + "', '" + go->mName +
+                    "')\n";
         initCode += std::string()
                     + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.position:Set("
                     + std::to_string(pos.mX)
@@ -140,8 +154,8 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
 
     initCode += std::string()
                 + "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do\n"
-                                                                                 "    cmpInstance:Start()\n"
-                                                                                 "end\n";
+                                                                       "    cmpInstance:Start()\n"
+                                                                       "end\n";
 
     return initCode;
 }
