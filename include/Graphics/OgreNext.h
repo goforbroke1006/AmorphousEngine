@@ -6,6 +6,8 @@
 #define OGRITY_OGRENEXT_H
 
 #include "../types.h"
+#include "../GameObject.h"
+#include "../GraphicsEEngine.h"
 
 class OgreNext : public GraphicsEEngine {
 public:

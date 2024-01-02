@@ -40,15 +40,16 @@
       },
       "components": [
         {
+          "name": "DroneController",
           "pathname": "Scripts/DroneController",
-          "args": [
+          "properties": [
             {
               "name": "motionSpeed",
               "value": 1.0
             },
             {
               "name": "targetTr",
-              "value": "ref#gameObject['Cube-1'].transform"
+              "value": "ref#allGameObjects['Cube-1'].transform"
             }
           ]
         }

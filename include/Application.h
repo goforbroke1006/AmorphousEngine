@@ -8,6 +8,9 @@
 #include <string>
 
 #include "types.h"
+#include "GameObject.h"
+#include "GraphicsEEngine.h"
+#include "CalculationEngine.h"
 
 class Application {
 public:

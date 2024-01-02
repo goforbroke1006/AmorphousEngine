@@ -6,6 +6,7 @@
 #define OGRITY_TYPES_H
 
 #include <string>
+#include <utility>
 #include <vector>
 
 struct Vector3 {
@@ -21,38 +22,19 @@ struct Transform {
     Quaternion mRotation;
 };
 
-struct ComponentArg {
-    double doubleVal;
-    std::string refVal;
+struct Prop {
+    std::string mName;
+    std::string mValue;
 };
 
 struct Component {
-    std::string mPathname;
-    std::vector<ComponentArg> args;
-};
-
-struct GameObject {
     std::string mName;
-    Transform *mTransform;
-    std::vector<Component> mComponents;
+    std::string mPathname;
+    std::vector<Prop> mProperties;
 };
 
-class GraphicsEEngine {
-public:
-    virtual void initialize(const std::vector<GameObject *> &gameObjects) = 0;
 
-    virtual void update(const std::vector<GameObject *> &gameObjects) = 0;
-};
 
-class CalculationEngine {
-public:
-    /**
-     * Prepare calculation engine.
-     * @param gameObjects
-     */
-    virtual void initialize(const std::vector<GameObject *> &gameObjects) = 0;
 
-    virtual std::vector<GameObject *> update() = 0;
-};
 
 #endif //OGRITY_TYPES_H

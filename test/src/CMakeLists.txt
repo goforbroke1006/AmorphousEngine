@@ -1,9 +1,15 @@
-project(${PROJECT_NAME}-Core)
+project(${PROJECT_NAME}-src)
 
 add_compile_definitions(DEBUG "")
 
-file(GLOB test_source_files "./*.cxx" "./*.cpp")
-add_executable(${PROJECT_NAME} ${test_source_files})
+file(GLOB test_source_files
+        "./*.cxx" "./*.cpp"
+        "./*/*.cxx" "./*/*.cpp"
+)
+add_executable(${PROJECT_NAME}
+        ../../src/Calculation/Lua53.cpp
+        ../../src/GameObject.cpp
+        ${test_source_files})
 add_test(AllTests-${PROJECT_NAME} ${PROJECT_NAME})
 
 # Locate GTest
@@ -26,4 +32,4 @@ target_link_libraries(${PROJECT_NAME}
         ${LUACPP_LIBRARIES}
 )
 
-file(COPY ../../Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#file(COPY ../../Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

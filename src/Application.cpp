@@ -29,10 +29,11 @@ void Application::loadScene(const std::string &filepath) {
     reader.parse(ifs, obj);
 
     const Json::Value &gameObjectsVals = obj["gameObjects"];
-    for (const auto &goVal: gameObjectsVals) {
-        auto *pGO = new GameObject();
 
-        pGO->mName = goVal["name"].asString();
+    for (const auto &goVal: gameObjectsVals) {
+        const std::string goName = goVal["name"].asString();
+
+        auto *pGO = GameObject::build(goName);
 
         pGO->mTransform = new Transform;
 
@@ -52,16 +53,20 @@ void Application::loadScene(const std::string &filepath) {
             Component cmp;
             cmp.mPathname = cmpVal["pathname"].asString();
 
-            const Json::Value &argumentsVals = cmpVal["args"];
+            const Json::Value &argumentsVals = cmpVal["properties"];
             for (const auto &argVal: argumentsVals) {
-                ComponentArg cmpArg;
+                Prop prop;
+                prop.mName = argVal["name"].asString();
 
                 if (argVal.isDouble()) {
-                    cmpArg.doubleVal = argVal.asDouble();
-                }
-
-                if (argVal.isString()) {
-                    cmpArg.refVal = argVal.asString();
+                    prop.mValue = std::to_string(argVal.asDouble());
+                } else if (argVal.isString()) {
+                    prop.mValue = argVal.asString();
+                    if (prop.mValue.substr(0, 4) == "ref#") {
+                        prop.mValue = prop.mValue.substr(4, prop.mValue.length());
+                    } else {
+                        prop.mValue = "'" + prop.mValue + "'";
+                    }
                 }
             }
 
