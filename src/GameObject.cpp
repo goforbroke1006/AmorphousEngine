@@ -3,6 +3,7 @@
 //
 
 #include <utility>
+#include <algorithm>
 
 #include "../include/GameObject.h"
 
@@ -13,4 +14,10 @@ GameObject::GameObject(std::string mID, std::string mName)
 
 GameObject::~GameObject() {
     delete mTransform;
+}
+
+bool GameObject::isCamera() {
+    return std::any_of(mComponents.begin(), mComponents.end(), [](const auto &cmp){
+        return cmp.mName == "Camera";
+    });
 }

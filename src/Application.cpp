@@ -49,6 +49,7 @@ void Application::loadScene(const std::string &filepath) {
         const Json::Value &componentsVals = goVal["components"];
         for (const auto &cmpVal: componentsVals) {
             Component cmp;
+            cmp.mName = cmpVal["name"].asString();
             cmp.mPathname = cmpVal["pathname"].asString();
 
             const Json::Value &argumentsVals = cmpVal["properties"];
@@ -56,19 +57,25 @@ void Application::loadScene(const std::string &filepath) {
                 Prop prop;
                 prop.mName = argVal["name"].asString();
 
-                if (argVal.isDouble()) {
-                    prop.mValue = std::to_string(argVal.asDouble());
-                } else if (argVal.isString()) {
-                    prop.mValue = argVal.asString();
+                if (argVal["value"].isDouble()) {
+                    prop.mValue = std::to_string(argVal["value"].asDouble());
+                } else if (argVal["value"].isString()) {
+                    prop.mValue = argVal["value"].asString();
                     if (prop.mValue.substr(0, 4) == "ref#") {
                         prop.mValue = prop.mValue.substr(4, prop.mValue.length());
                     } else {
                         prop.mValue = "'" + prop.mValue + "'";
                     }
                 }
+
+                cmp.mProperties.push_back(prop);
             }
 
             pGO->mComponents.push_back(cmp);
+        }
+
+        if (!goVal["mesh"].empty() && goVal["mesh"].isString()) {
+            pGO->mMeshPathname = goVal["mesh"].asString();
         }
 
         mGameObjects[pGO->mID] = pGO;

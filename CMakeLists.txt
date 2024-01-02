@@ -6,10 +6,35 @@ project(AmorphousEngine)
 
 add_executable(${PROJECT_NAME} main.cpp
         src/Application.cpp
-        src/Graphics/OgreNext.cpp
+        src/Graphics/OgreNext/OgreNext.cpp
         src/Calculation/Lua53.cpp
         src/GameObject.cpp
 )
+
+if (NOT MSVC)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}			-DDEBUG=1 -D_DEBUG=1 -g")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL}		-Os -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}			-O2 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}	-O2 -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-overloaded-virtual")
+endif ()
+if (LINUX)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /usr/local/lib/OGRE/cmake)
+endif (LINUX)
+
+find_package(OGRE 2.3.3 REQUIRED COMPONENTS Bites RTShaderSystem)
+target_include_directories(${PROJECT_NAME} PRIVATE
+        ${OGRE_INCLUDE_DIRS}
+        ${OGRE_INCLUDE_DIRS}/Hlms
+        ${OGRE_INCLUDE_DIRS}/Hlms/Common
+        ${OGRE_HlmsPbs_INCLUDE_DIRS}
+        ${OGRE_HlmsUnlit_INCLUDE_DIRS}
+        "${OGRE_HlmsUnlit_INCLUDE_DIRS}/../Common"
+)
+target_link_libraries(${PROJECT_NAME}
+        ${OGRE_LIBRARIES}
+        ${OGRE_HlmsPbs_LIBRARIES}
+        ${OGRE_HlmsUnlit_LIBRARIES})
 
 find_package(LuaCpp REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -25,6 +50,7 @@ find_package(jsoncpp REQUIRED)
 target_link_libraries(${PROJECT_NAME} jsoncpp)
 
 file(COPY ./Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ./Component DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./projects DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 #

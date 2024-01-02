@@ -19,14 +19,17 @@
 
 class Lua53 : public CalculationEngine {
 public:
+    explicit Lua53(const std::string &projectRoot);
+
+    virtual ~Lua53();
+
     void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
     void update(std::map<std::string, GameObject *> &gameObjects) override;
 
-    static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
+    std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
 
 private:
-    LuaCpp::LuaContext ctx;
     std::unique_ptr<LuaCpp::Engine::LuaState> L;
 
     LuaCpp::Engine::LuaTTable mGameObjectsTbl;

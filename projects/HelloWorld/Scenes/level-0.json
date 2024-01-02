@@ -1,11 +1,33 @@
 {
   "gameObjects": [
     {
-      "id": "go 0 :: cube 1",
-      "name": "Cube-1",
-      "mesh": {
-        "filepath": "./Cube.mesh"
+      "id": "go 0 :: Main Camera",
+      "name": "Main Camera",
+      "transform": {
+        "position": {
+          "x": 0.0,
+          "y": 100.0,
+          "z": -100.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 45.0,
+          "z": 0.0,
+          "w": 0.0
+        }
       },
+      "components": [
+        {
+          "name": "Camera",
+          "pathname": "Component/Camera",
+          "properties": []
+        }
+      ]
+    },
+    {
+      "id": "go 1 :: Cube 1",
+      "name": "Cube 1",
+      "mesh": "./Cube.mesh",
       "transform": {
         "position": {
           "x": 0.0,
@@ -22,11 +44,9 @@
       "components": []
     },
     {
-      "id": "go 1 :: drone 1",
-      "name": "Drone-1",
-      "mesh": {
-        "filepath": "./OgreHead.mesh"
-      },
+      "id": "go 2 :: Drone 1",
+      "name": "Drone 1",
+      "mesh": "./OgreHead.mesh",
       "transform": {
         "position": {
           "x": 50.0,
@@ -51,7 +71,7 @@
             },
             {
               "name": "targetTr",
-              "value": "ref#allGameObjects['go 0 :: cube 1'].transform"
+              "value": "ref#allGameObjects['go 1 :: Cube 1'].transform"
             }
           ]
         }

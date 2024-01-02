@@ -12,22 +12,41 @@ using LENum = LuaCpp::Engine::LuaTNumber;
 using LEString = LuaCpp::Engine::LuaTString;
 using LETable = LuaCpp::Engine::LuaTTable;
 
-void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
+Lua53::Lua53(const std::string &projectRoot) {
+    LuaCpp::LuaContext ctx;
     L = ctx.newState();
 
     mGameObjectsTbl.PushGlobal(*L, LUA53_G_VAR_GO_T);
     mComponentsTbl.PushGlobal(*L, LUA53_G_VAR_CMP_T);
 
+    std::string setLuaPathCode;
+    setLuaPathCode += "package.path = package.path .. ';" + projectRoot + "?.lua'\n";
+    setLuaPathCode += "print(package.path)\n";
+
+    luaL_loadstring(*L, setLuaPathCode.c_str());
+    int res = lua_pcall(*L, 0, 0, 0);
+    if (res != LUA_OK) {
+        throw std::runtime_error(lua_tostring(*L, 1));
+    }
+
+    mGameObjectsTbl.PopGlobal(*L);
+    mComponentsTbl.PopGlobal(*L);
+}
+
+Lua53::~Lua53() {
+//    lua_close(*L);
+}
+
+void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
     // 1) Include LUA modules from 'Core'
     // 2) Create all game objects (set name, set transform)
     // 3) Create all components (set gameObject, set transform)
     // 4) Set each component with args (static values, references to gameObject or transforms)
     // 5) Run 'Start()' method for each component
 
-
     const std::string &initCode = buildInitLuaCode(gameObjects);
     luaL_loadstring(*L, initCode.c_str());
-//    Logger::Trace("\n" + initCode);
+    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
@@ -74,7 +93,7 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
         auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
 
         if (gameObjects.find(id) == gameObjects.end()) {
-            auto& nameVal = ((LEString &) goTbl->getValue(LETKey("name")));
+            auto &nameVal = ((LEString &) goTbl->getValue(LETKey("name")));
 
             gameObjects[id] = new GameObject(id, nameVal.getValue());
         }
@@ -99,6 +118,11 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
     std::string initCode;
     initCode += "require 'Core'\n"
                 "\n";
+
+//    initCode += std::string()
+//                + LUA53_G_VAR_GO_T + " = {}\n"
+//                + LUA53_G_VAR_CMP_T + " = {}\n"
+//                                      "\n";
 
     for (const auto &goPair: gameObjects) {
         auto *go = goPair.second;
@@ -131,20 +155,23 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
         auto *go = goPair.second;
 
         for (const auto &cmp: go->mComponents) {
+            std::string cmpID = go->mID + " :: " + cmp.mName;
+
             initCode += "require '" + cmp.mPathname + "'\n";
             initCode += "\n";
-            initCode += "local cmp = " + cmp.mName + "\n";
             initCode += std::string()
-                        + "cmp.gameObject = " + LUA53_G_VAR_GO_T + "['" + go->mID + "']\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + cmp.mName + "\n";
             initCode += std::string()
-                        + "cmp.transform  = " + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = " + LUA53_G_VAR_GO_T + "['" + go->mID +
+                        "']\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + go->mID + " :: " + cmp.mName + "'] = cmp\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform  = " + LUA53_G_VAR_GO_T + "['" + go->mID +
+                        "'].transform\n";
             initCode += "\n";
 
             for (const auto &prop: cmp.mProperties) {
                 initCode += std::string()
-                            + LUA53_G_VAR_CMP_T + "['" + go->mID + " :: " + cmp.mName + "']." + prop.mName +
+                            + LUA53_G_VAR_CMP_T + "['" + cmpID + "']." + prop.mName +
                             " = " + prop.mValue +
                             "\n";
             }

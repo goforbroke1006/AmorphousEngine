@@ -11,7 +11,7 @@
 #include "../../../include/Calculation/Lua53.h"
 
 TEST(TestLua53_buildInitLuaCode, _00_empty_scene) {
-    const auto &actual = Lua53::buildInitLuaCode({});
+    const auto &actual = Lua53("./").buildInitLuaCode({});
 
     EXPECT_EQ("", actual);
 }
@@ -29,7 +29,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects) {
             {bot1GO->mID,   bot1GO},
     };
 
-    const auto &actual = Lua53::buildInitLuaCode(goList);
+    const auto &actual = Lua53("./").buildInitLuaCode(goList);
 
     for (const auto &goPair: goList)
         delete goPair.second;
@@ -74,7 +74,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
             {bot1GO->mID,   bot1GO},
     };
 
-    const auto &actual = Lua53::buildInitLuaCode(goList);
+    const auto &actual = Lua53("./").buildInitLuaCode(goList);
 
     std::string expected
             = "require 'Core'\n"
@@ -89,10 +89,9 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
               "\n"
               "require 'Scripts/CharacterController'\n"
               "\n"
-              "local cmp = CharacterController\n"
-              "cmp.gameObject = allGameObjects['go 0 :: Player']\n"
-              "cmp.transform  = allGameObjects['go 0 :: Player'].transform\n"
-              "allComponents['go 0 :: Player :: CharacterController'] = cmp\n"
+              "allComponents['go 0 :: Player :: CharacterController'] = CharacterController\n"
+              "allComponents['go 0 :: Player :: CharacterController'].gameObject = allGameObjects['go 0 :: Player']\n"
+              "allComponents['go 0 :: Player :: CharacterController'].transform  = allGameObjects['go 0 :: Player'].transform\n"
               "\n"
               "allComponents['go 0 :: Player :: CharacterController'].camera = allGameObjects['Main camera'].transform\n"
               "allComponents['go 0 :: Player :: CharacterController'].runningSpeed = 2.0\n"
@@ -104,7 +103,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
     EXPECT_EQ(expected, actual);
 }
 
-TEST(TestLua53_update, _00_update_frame_once) {
+TEST(TestLua53_update, _00_update_frame) {
     // create Scripts/DroneController.lua
     if (!std::filesystem::is_directory("Scripts"))
         std::filesystem::create_directory("Scripts");
@@ -159,8 +158,10 @@ TEST(TestLua53_update, _00_update_frame_once) {
     EXPECT_EQ(5.0, drone1GO->mTransform->mPosition.mY);
     EXPECT_EQ(6.0, drone1GO->mTransform->mPosition.mZ);
 
-    Lua53 target;
+    Lua53 target ("./");
     target.initialize(goList);
+    target.update(goList);
+    target.update(goList);
     target.update(goList);
 
     EXPECT_EQ(0.0, box1GO->mTransform->mPosition.mX);

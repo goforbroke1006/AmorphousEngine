@@ -13,10 +13,14 @@ public:
 
     virtual ~GameObject();
 
+    bool isCamera();
+
     std::string mID;
     std::string mName;
     Transform *mTransform;
     std::vector<Component> mComponents;
+
+    std::string mMeshPathname;
 };
 
 #endif //AMORPHOUS_ENGINE_GAME_OBJECT_H
