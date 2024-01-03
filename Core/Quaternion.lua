@@ -4,6 +4,8 @@
 --- DateTime: 1/1/24 3:42 PM
 ---
 
+require 'math'
+
 Quaternion = { w = 0.0, x = 0.0, y = 0.0, z = 0.0 }
 
 function Quaternion:new(newX --[[number]], newY --[[number]], newZ --[[number]], newW --[[number]])
@@ -27,6 +29,31 @@ function Quaternion:new(newX --[[number]], newY --[[number]], newZ --[[number]],
     return qrt
 end
 
+Quaternion.identity = Quaternion:new(0.0, 0.0, 0.0, 0.0)
+
+function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]])
+    -- https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
+
+    roll = math.rad(roll)
+    pitch = math.rad(pitch)
+    yaw = math.rad(yaw)
+
+    local cr = math.cos(roll * 0.5);
+    local sr = math.sin(roll * 0.5);
+    local cp = math.cos(pitch * 0.5);
+    local sp = math.sin(pitch * 0.5);
+    local cy = math.cos(yaw * 0.5);
+    local sy = math.sin(yaw * 0.5);
+
+    q = Quaternion:new(0.0, 0.0, 0.0, 0.0);
+    q.w = cr * cp * cy + sr * sp * sy;
+    q.x = sr * cp * cy - cr * sp * sy;
+    q.y = cr * sp * cy + sr * cp * sy;
+    q.z = cr * cp * sy - sr * sp * cy;
+
+    return q;
+end
+
 function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]], newW --[[number]])
     if type(newX) ~= "number"
             or type(newY) ~= "number"
@@ -40,4 +67,32 @@ function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]],
     self.y = newY
     self.z = newZ
     self.w = newW
+end
+
+Quaternion.__mul = function(qtr --[[Quaternion]], vec --[[Vector3]])
+    -- https://gamedev.stackexchange.com/a/28418
+
+    local result = Vector3:new(0.0, 0.0, 0.0)
+
+    local num12 = qtr.x + qtr.x;
+    local num2 = qtr.y + qtr.y;
+    local num = qtr.z + qtr.z;
+    local num11 = qtr.w * num12;
+    local num10 = qtr.w * num2;
+    local num9 = qtr.w * num;
+    local num8 = qtr.x * num12;
+    local num7 = qtr.x * num2;
+    local num6 = qtr.x * num;
+    local num5 = qtr.y * num2;
+    local num4 = qtr.y * num;
+    local num3 = qtr.z * num;
+    local num15 = ((vec.x * ((1.0 - num5) - num3)) + (vec.y * (num7 - num9))) + (vec.z * (num6 + num10));
+    local num14 = ((vec.x * (num7 + num9)) + (vec.y * ((1.0 - num8) - num3))) + (vec.z * (num4 - num11));
+    local num13 = ((vec.x * (num6 - num10)) + (vec.y * (num4 + num11))) + (vec.z * ((1.0 - num8) - num5));
+
+    result.x = num15;
+    result.y = num14;
+    result.z = num13;
+
+    return result;
 end

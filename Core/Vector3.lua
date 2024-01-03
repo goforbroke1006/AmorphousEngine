@@ -87,7 +87,9 @@ function Vector3:Normalize()
 end
 
 function Vector3:ToString()
-    return '(' .. self.x .. ', ' .. self.y .. ', ' .. self.z .. ')'
+    local af = 10000
+    --return '(' .. self.x .. ', ' .. self.y .. ', ' .. self.z .. ')'
+    return '(' .. math.floor(self.x * af) / af .. ', ' .. math.floor(self.y * af) / af .. ', ' .. math.floor(self.z * af) / af .. ')'
 end
 
 Vector3.__add = function(op1 --[[Vector3]], op2 --[[Vector3]])

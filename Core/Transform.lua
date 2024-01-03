@@ -27,32 +27,37 @@ function Transform:new()
     return tr
 end
 
+--- Moves the transform in the direction and distance of translation.
+--- https://docs.unity3d.com/ScriptReference/Transform.Translate.html
 function Transform:Translate(translation --[[Vector3]], relativeTo)
     --if (type(translation) ~= "Vector3") then
     --    error("translation has incompatible type " .. type(translation))
     --end
 
+    if translation:magnitude() == 0.0 then
+        -- zero movement has no impact
+        return
+    end
+
     relativeTo = relativeTo or Space.Self
 
     if (relativeTo == Space.Self) then
-        local move = translation -- TODO: implement me with correct math
-
-        self.position.x = self.position.x + move.x
-        self.position.y = self.position.y + move.y
-        self.position.z = self.position.z + move.z
-    elseif (relativeTo == Space.World) then
-        self.position.x = self.position.x + translation.x
-        self.position.y = self.position.y + translation.y
-        self.position.z = self.position.z + translation.z
+        translation = self.rotation * translation
     end
+
+    self.position.x = self.position.x + translation.x
+    self.position.y = self.position.y + translation.y
+    self.position.z = self.position.z + translation.z
 end
 
 function Transform:Rotate(angleX, angleY, angleZ, relativeTo)
     relativeTo = relativeTo or Space.Self
+    -- TODO: implement me
     -- print('  Transform :: Rotate(' .. angleX .. ', ' .. angleY .. ', ' .. angleZ .. ', ' .. relativeTo .. ')')
 end
 
 function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])
     worldUp = worldUp or Vector3.up
+    -- TODO: implement me
     --print('  Transform :: LookAt(target, ' .. worldUp .. ')')
 end
