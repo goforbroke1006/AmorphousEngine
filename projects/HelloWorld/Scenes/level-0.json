@@ -49,7 +49,18 @@
           "z": 0.5
         }
       },
-      "components": []
+      "components": [
+        {
+          "name": "SpinnerController",
+          "pathname": "Scripts/SpinnerController",
+          "properties": [
+            {
+              "name": "rotationSpeed",
+              "value": 0.5
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "go 2 :: Drone 1",
@@ -79,7 +90,7 @@
           "properties": [
             {
               "name": "motionSpeed",
-              "value": 0.05
+              "value": 0.000005
             },
             {
               "name": "targetTr",
