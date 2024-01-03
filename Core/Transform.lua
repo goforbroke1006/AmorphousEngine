@@ -11,12 +11,14 @@ require 'Core/Quaternion'
 Transform = {
     position = Vector3:new(0.0, 0.0, 0.0),
     rotation = Quaternion:new(0.0, 0.0, 0.0, 0.0),
+    localScale = Vector3:new(1.0, 1.0, 1.0),
 }
 
 function Transform:new()
     tr = {
         position = Vector3:new(0.0, 0.0, 0.0),
         rotation = Quaternion:new(0.0, 0.0, 0.0, 0.0),
+        localScale = Vector3:new(1.0, 1.0, 1.0),
     }
 
     self.__index = self
@@ -33,9 +35,7 @@ function Transform:Translate(translation --[[Vector3]], relativeTo)
     relativeTo = relativeTo or Space.Self
 
     if (relativeTo == Space.Self) then
-        local relForward = Vector3:new(self.rotation.x, self.rotation.y, self.rotation.z)
-        local move = relForward - translation
-        move = move * -1.0
+        local move = translation -- TODO: implement me with correct math
 
         self.position.x = self.position.x + move.x
         self.position.y = self.position.y + move.y

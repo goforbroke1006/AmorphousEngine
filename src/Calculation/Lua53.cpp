@@ -89,8 +89,10 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
         auto id = ((LEString &) idVal).getValue();
 
         auto &transform = (LETable &) goTbl->getValue(LETKey("transform"));
+
         auto &position = (LETable &) transform.getValue(LETKey("position"));
         auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
+        auto &localScale = (LETable &) transform.getValue(LETKey("localScale"));
 
         if (gameObjects.find(id) == gameObjects.end()) {
             auto &nameVal = ((LEString &) goTbl->getValue(LETKey("name")));
@@ -107,6 +109,11 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
                 ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
                 ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
                 ((LENum &) rotation.getValue(LETKey("z"))).getValue()
+        );
+        gameObjects[id]->mTransform->mLocalScale.Set(
+                ((LENum &) localScale.getValue(LETKey("x"))).getValue(),
+                ((LENum &) localScale.getValue(LETKey("y"))).getValue(),
+                ((LENum &) localScale.getValue(LETKey("z"))).getValue()
         );
     }
 }
@@ -129,6 +136,7 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
 
         auto pos = go->mTransform->mPosition;
         auto rot = go->mTransform->mRotation;
+        auto scale = go->mTransform->mLocalScale;
 
         initCode += std::string()
                     + LUA53_G_VAR_GO_T + "['" + go->mID + "'] = GameObject:new('" + go->mID + "', '" + go->mName +
@@ -139,7 +147,8 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
                     + ", "
                     + std::to_string(pos.mY)
                     + ", "
-                    + std::to_string(pos.mZ) + ")\n";
+                    + std::to_string(pos.mZ)
+                    + ")\n";
         initCode += std::string()
                     + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.rotation:Set("
                     + std::to_string(rot.mX)
@@ -147,7 +156,15 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
                     + std::to_string(rot.mY)
                     + ", "
                     + std::to_string(rot.mZ)
-                    + ", 0.0)\n";
+                    + ", 1.0)\n";
+        initCode += std::string()
+                    + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.localScale:Set("
+                    + std::to_string(scale.mX)
+                    + ", "
+                    + std::to_string(scale.mY)
+                    + ", "
+                    + std::to_string(scale.mZ)
+                    + ")\n";
         initCode += "\n";
     }
 

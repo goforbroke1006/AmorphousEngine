@@ -6,14 +6,18 @@
       "transform": {
         "position": {
           "x": 0.0,
-          "y": 100.0,
-          "z": -100.0
+          "y": 200.0,
+          "z": -200.0
         },
         "rotation": {
           "x": 0.0,
-          "y": 45.0,
-          "z": 0.0,
-          "w": 0.0
+          "y": 0.923879564,
+          "z": 0
+        },
+        "localScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
         }
       },
       "components": [
@@ -27,7 +31,7 @@
     {
       "id": "go 1 :: Cube 1",
       "name": "Cube 1",
-      "mesh": "./Cube.mesh",
+      "mesh": "./cube.mesh",
       "transform": {
         "position": {
           "x": 0.0,
@@ -37,8 +41,12 @@
         "rotation": {
           "x": 0.0,
           "y": 0.0,
-          "z": 0.0,
-          "w": 0.0
+          "z": 0.0
+        },
+        "localScale": {
+          "x": 0.5,
+          "y": 0.5,
+          "z": 0.5
         }
       },
       "components": []
@@ -46,7 +54,7 @@
     {
       "id": "go 2 :: Drone 1",
       "name": "Drone 1",
-      "mesh": "./OgreHead.mesh",
+      "mesh": "./ogrehead.mesh",
       "transform": {
         "position": {
           "x": 50.0,
@@ -56,8 +64,12 @@
         "rotation": {
           "x": 0.0,
           "y": 90.0,
-          "z": 0.0,
-          "w": 0.0
+          "z": 0.0
+        },
+        "localScale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
         }
       },
       "components": [
@@ -67,7 +79,7 @@
           "properties": [
             {
               "name": "motionSpeed",
-              "value": 1.0
+              "value": 0.05
             },
             {
               "name": "targetTr",

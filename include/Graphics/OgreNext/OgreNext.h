@@ -31,7 +31,7 @@ public:
 
     void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
-    void update(const std::map<std::string, GameObject *> &gameObjects) override;
+    bool update(const std::map<std::string, GameObject *> &gameObjects) override;
 
 private:
     bool mQuit = false;

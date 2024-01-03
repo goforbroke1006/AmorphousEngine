@@ -20,19 +20,19 @@ struct Vector3 {
 };
 
 struct Quaternion {
-    double mX, mY, mZ, mW;
+    double mX, mY, mZ;
 
     void Set(double x, double y, double z) {
         mX = x;
         mY = y;
         mZ = z;
-        mW = 1.0; // TODO: ???
     }
 };
 
 struct Transform {
     Vector3 mPosition;
     Quaternion mRotation;
+    Vector3 mLocalScale;
 };
 
 struct Prop {

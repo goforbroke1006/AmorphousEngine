@@ -9,6 +9,8 @@
 
 #include "../include/Application.h"
 
+#include "../include/Logger.h"
+
 Application::Application(
         std::string mEngineRoot,
         std::string mProjectRoot,
@@ -19,6 +21,12 @@ Application::Application(
           mProjectRoot(std::move(mProjectRoot)),
           mGraphicsEngine(mGraphicsEngine),
           mCalculationEngine(mCalculationEngine) {}
+
+Application::~Application() {
+    for (const auto &go: mGameObjects)
+        delete go.second;
+    Logger::Debug("Clear " + std::to_string(mGameObjects.size()) + " game objects");
+}
 
 void Application::loadScene(const std::string &filepath) {
     const std::string path = mProjectRoot + std::filesystem::path::preferred_separator + filepath;
@@ -44,7 +52,11 @@ void Application::loadScene(const std::string &filepath) {
         pGO->mTransform->mRotation.mX = rotVal["x"].asDouble();
         pGO->mTransform->mRotation.mY = rotVal["y"].asDouble();
         pGO->mTransform->mRotation.mZ = rotVal["z"].asDouble();
-        pGO->mTransform->mRotation.mW = rotVal["w"].asDouble();
+
+        auto &scaleVal = goVal["transform"]["localScale"];
+        pGO->mTransform->mLocalScale.mX = scaleVal["x"].asDouble();
+        pGO->mTransform->mLocalScale.mY = scaleVal["y"].asDouble();
+        pGO->mTransform->mLocalScale.mZ = scaleVal["z"].asDouble();
 
         const Json::Value &componentsVals = goVal["components"];
         for (const auto &cmpVal: componentsVals) {
@@ -88,6 +100,8 @@ void Application::runMainLoop() {
 
     while (true) {
         mCalculationEngine->update(mGameObjects);
-        mGraphicsEngine->update(mGameObjects);
+
+        if (!mGraphicsEngine->update(mGameObjects))
+            break;
     }
 }

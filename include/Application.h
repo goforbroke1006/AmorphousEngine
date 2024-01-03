@@ -22,6 +22,8 @@ public:
             CalculationEngine *mCalculationEngine
     );
 
+    virtual ~Application();
+
     void loadScene(const std::string &filepath);
 
     void runMainLoop();

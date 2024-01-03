@@ -13,7 +13,7 @@ class GraphicsEngine {
 public:
     virtual void initialize(const std::map<std::string, GameObject *> &gameObjects) = 0;
 
-    virtual void update(const std::map<std::string, GameObject *> &gameObjects) = 0;
+    virtual bool update(const std::map<std::string, GameObject *> &gameObjects) = 0;
 };
 
 #endif //AMORPHOUS_ENGINE_GRAPHICS_ENGINE_H
