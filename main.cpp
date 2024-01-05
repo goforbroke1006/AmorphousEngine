@@ -9,11 +9,13 @@
 
 #include "include/Application.h"
 #include "include/Graphics/OgreNext/OgreNext.h"
+#include "include/Graphics/Irrlicht.h"
 #include "include/Calculation/Lua53.h"
 
 int main(int argc, char **argv) {
     std::filesystem::path cwd = std::filesystem::current_path();
 
+    std::string graphicsMode = "OgreNext";
     std::string engineRoot = cwd.string() + std::filesystem::path::preferred_separator + "";
     std::string projectRoot = "./projects/HelloWorld/";
     std::string sceneFilename = "./Scenes/level-0.json";
@@ -23,24 +25,38 @@ int main(int argc, char **argv) {
     std::cout << "Project root:   " << projectRoot << std::endl;
     std::cout << "Scene filename: " << sceneFilename << std::endl;
 
+    GraphicsEngine *pGraphicsEngine = nullptr;
+
+    if (graphicsMode == "OgreNext") {
 #ifdef DEBUG
-    std::string pluginsCfgPathname = "plugins_d.cfg";
+        std::string pluginsCfgPathname = "plugins_d.cfg";
 #else
-    std::string pluginsCfgPathname = "plugins.cfg";
+        std::string pluginsCfgPathname = "plugins.cfg";
 #endif
 
-    auto *pGraphicsEngine = new OgreNext(
-            pluginsCfgPathname,
-            "resources2.cfg"
-    );
+        pGraphicsEngine = new OgreNext(
+                pluginsCfgPathname,
+                "resources2.cfg"
+        );
+    }
+    if (graphicsMode == "Irrlicht") {
+        pGraphicsEngine = new Irrlicht();
+    }
+
     auto *pCalculationEngine = new Lua53(projectRoot);
     auto *pApplication = new Application(engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine);
-    pApplication->loadScene(sceneFilename);
-    pApplication->runMainLoop();
+    pApplication->
+            loadScene(sceneFilename);
+    pApplication->
 
-    delete pApplication;
-    delete pCalculationEngine;
-    delete pGraphicsEngine;
+            runMainLoop();
+
+    delete
+            pApplication;
+    delete
+            pCalculationEngine;
+    delete
+            pGraphicsEngine;
 
     return EXIT_SUCCESS;
 }

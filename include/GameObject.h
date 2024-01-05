@@ -5,11 +5,13 @@
 #ifndef AMORPHOUS_ENGINE_GAME_OBJECT_H
 #define AMORPHOUS_ENGINE_GAME_OBJECT_H
 
+#include <map>
+
 #include "types.h"
 
 struct GameObject {
 public:
-    explicit GameObject(std::string  mID,std::string  mName);
+    explicit GameObject(std::string mID, std::string mName);
 
     virtual ~GameObject();
 
@@ -18,7 +20,7 @@ public:
     std::string mID;
     std::string mName;
     Transform *mTransform;
-    std::vector<Component> mComponents;
+    std::map<std::string, Component> mComponents;
 
     std::string mMeshPathname;
 };

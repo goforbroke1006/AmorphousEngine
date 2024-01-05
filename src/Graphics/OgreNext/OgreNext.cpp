@@ -27,20 +27,6 @@ OgreNext::OgreNext(
     const size_t numThreads = 1u;
     mSceneManager = mRoot->createSceneManager(Ogre::ST_GENERIC, numThreads, "Hello Ogre-next SM");
 
-//    mCamera = mSceneManager->createCamera("Main Camera");
-//    mCamera->setPosition(Ogre::Vector3(100, 100, 100));
-//    mCamera->lookAt(Ogre::Vector3(0, 0, 0));
-//    mCamera->setNearClipDistance(0.2f);
-//    mCamera->setFarClipDistance(1000.0f);
-//    mCamera->setAutoAspectRatio(true);
-
-//    // The setup for a basic compositor with a blue clear colour
-//    Ogre::CompositorManager2 *compositorManager = mRoot->getCompositorManager2();
-//    const Ogre::String workspaceName("Demo Workspace");
-//    const Ogre::ColourValue backgroundColour(0.2f, 0.4f, 0.6f);
-//    compositorManager->createBasicWorkspaceDef(workspaceName, backgroundColour, Ogre::IdString());
-//    compositorManager->addWorkspace(mSceneManager, mWindow->getTexture(), mCamera, workspaceName, true);
-
     loadResources(resourcesCfgPathname);
 
     mWinListener = new WindowEventListener;
@@ -65,10 +51,8 @@ void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects
         if (pGO->isCamera()) {
             mCamera = mSceneManager->createCamera(pGO->mName);
             mCamera->setPosition(Ogre::Vector3(pos.mX, pos.mY, pos.mZ));
-//            mCamera->setPosition(Ogre::Vector3(0, 200, -200));
             mCamera->lookAt(0, 0, 0); // TODO:
 //            mCamera->setOrientation(Ogre::Quaternion(0.0, rot.mX, rot.mY, rot.mZ));
-            Ogre::Quaternion orientation = mCamera->getOrientation(); // TODO: remove me
             mCamera->setNearClipDistance(0.2f);
             mCamera->setFarClipDistance(1000.0f);
             mCamera->setAutoAspectRatio(true);
@@ -76,7 +60,7 @@ void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects
             // The setup for a basic compositor with a blue clear colour
             Ogre::CompositorManager2 *compositorManager = mRoot->getCompositorManager2();
             const Ogre::String workspaceName("Demo Workspace");
-            const Ogre::ColourValue backgroundColour(0.2f, 0.4f, 0.6f);
+            const Ogre::ColourValue backgroundColour(0.2f, 0.4f, 0.6f); // TODO: set real color
             compositorManager->createBasicWorkspaceDef(workspaceName, backgroundColour, Ogre::IdString());
             compositorManager->addWorkspace(mSceneManager, mWindow->getTexture(), mCamera, workspaceName, true);
 

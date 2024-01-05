@@ -46,14 +46,14 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 
     const std::string &initCode = buildInitLuaCode(gameObjects);
     luaL_loadstring(*L, initCode.c_str());
-    Logger::Trace("\n" + initCode);
+//    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
 //        Logger::Error(lua_tostring(*L, 1));
 //        std::cerr << "ERROR: " << res << " " << lua_tostring(*L, 1) << std::endl
 //                  << lua_error(*L) << std::endl;
-//        L->PrintStack(std::cerr); // TODO:
+        L->PrintStack(std::cerr); // TODO:
 
         throw std::runtime_error(lua_tostring(*L, 1));
     }
@@ -116,6 +116,34 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
                 ((LENum &) localScale.getValue(LETKey("z"))).getValue()
         );
     }
+
+    for (const auto &cmpState: mComponentsTbl.getValues()) {
+        auto *cmpTbl = (LETable *) cmpState.second.get();
+
+        LETable &goVal = (LETable &) cmpTbl->getValue(LETKey("gameObject"));
+        const std::string &goID = goVal.getValue(LETKey("id")).ToString();
+
+        const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
+
+        Component &cmp = gameObjects[goID]->mComponents[cmpName];
+
+        for (const auto &luaAttrState: cmpTbl->getValues()) {
+            std::string luaAttrName = luaAttrState.first.ToString();
+
+            // skip "Start", "Update" and another functions of component
+            if (luaAttrState.second->ToString() == "function")
+                continue;
+
+            if (luaAttrState.first.ToString() == "__name")
+                continue;
+            if (luaAttrState.first.ToString() == "gameObject")
+                continue;
+            if (luaAttrState.first.ToString() == "transform")
+                continue;
+
+            cmp.mProperties[luaAttrState.first.ToString()].mValue = luaAttrState.second->ToString();
+        }
+    }
 }
 
 std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects) {
@@ -171,27 +199,29 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
     for (const auto &goPair: gameObjects) {
         auto *go = goPair.second;
 
-        for (const auto &cmp: go->mComponents) {
-            std::string cmpID = go->mID + " :: " + cmp.mName;
+        for (const auto &cmpPair: go->mComponents) {
+            std::string cmpID = go->mID + " :: " + cmpPair.second.mName;
 
-            initCode += "require '" + cmp.mPathname + "'\n";
+            initCode += "require '" + cmpPair.second.mPathname + "'\n";
             initCode += "\n";
+            initCode += "local cmp = " + cmpPair.second.mName + "\n";
+            initCode += "cmp.__name = '" + cmpPair.second.mName + "'\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + cmp.mName + "\n";
+                        + "cmp.gameObject = " + LUA53_G_VAR_GO_T + "['" + go->mID + "']\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = " + LUA53_G_VAR_GO_T + "['" + go->mID +
-                        "']\n";
-            initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform  = " + LUA53_G_VAR_GO_T + "['" + go->mID +
-                        "'].transform\n";
+                        + "cmp.transform = " + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform\n";
             initCode += "\n";
 
-            for (const auto &prop: cmp.mProperties) {
+            for (const auto &propPair: cmpPair.second.mProperties) {
                 initCode += std::string()
-                            + LUA53_G_VAR_CMP_T + "['" + cmpID + "']." + prop.mName +
-                            " = " + prop.mValue +
-                            "\n";
+                            + "cmp." + propPair.second.mName + " = " + propPair.second.mValue + "\n";
             }
+            initCode += "\n";
+
+            // append component to global list
+            initCode += std::string()
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = cmp\n";
+
             initCode += "\n";
         }
     }

@@ -7,6 +7,7 @@ project(AmorphousEngine)
 add_executable(${PROJECT_NAME} main.cpp
         src/Application.cpp
         src/Graphics/OgreNext/OgreNext.cpp
+        src/Graphics/Irrlicht.cpp
         src/Calculation/Lua53.cpp
         src/GameObject.cpp
 )
@@ -48,6 +49,10 @@ target_link_libraries(${PROJECT_NAME}
 
 find_package(jsoncpp REQUIRED)
 target_link_libraries(${PROJECT_NAME} jsoncpp)
+
+#find_package(irrlicht REQUIRED)
+target_include_directories(${PROJECT_NAME} PRIVATE "/usr/include/irrlicht")
+target_link_libraries(${PROJECT_NAME} "/usr/lib/x86_64-linux-gnu/libIrrlicht.so")
 
 file(COPY ./Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./Component DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

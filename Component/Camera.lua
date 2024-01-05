@@ -5,8 +5,11 @@
 ---
 
 require 'Core/LuaBehaviour'
+require 'Core/Color'
 
 Camera = LuaBehaviour:new()
+
+Camera.backgroundColor = Color:new()
 
 function Camera:Start()
     Debug.Log("Camera :: Start");

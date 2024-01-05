@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <map>
 
 struct Vector3 {
     double mX, mY, mZ;
@@ -43,7 +44,7 @@ struct Prop {
 struct Component {
     std::string mName;
     std::string mPathname;
-    std::vector<Prop> mProperties;
+    std::map<std::string, Prop> mProperties;
 };
 
 

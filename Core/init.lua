@@ -8,6 +8,7 @@ require 'Core/Debug'
 require 'Core/Time'
 require 'Core/Space'
 
+require 'Core/Color'
 require 'Core/Vector3'
 require 'Core/Quaternion'
 require 'Core/Transform'

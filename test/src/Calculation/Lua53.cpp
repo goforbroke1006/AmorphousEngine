@@ -57,15 +57,15 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects) {
 TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
     auto *playerGO = new GameObject("go 0 :: Player", "Player");
     playerGO->mTransform->mPosition.Set(1.0, 2.0, 3.0);
-    playerGO->mComponents.push_back(
+    playerGO->mComponents["CharacterController"] =
             Component{
                     "CharacterController",
                     "Scripts/CharacterController",
                     {
-                            Prop{"camera", "allGameObjects['Main camera'].transform"},
-                            Prop{"runningSpeed", "2.0"}
+                        {"camera", Prop{"camera", "allGameObjects['Main camera'].transform"}},
+                        {"runningSpeed", Prop{"runningSpeed", "2.0"}}
                     }
-            });
+            };
 
     auto *bot1GO = new GameObject("go 1 :: Bot 1", "Bot 1");
     bot1GO->mTransform->mPosition.Set(4.0, 5.0, 6.0);
@@ -93,12 +93,15 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
               "\n"
               "require 'Scripts/CharacterController'\n"
               "\n"
-              "allComponents['go 0 :: Player :: CharacterController'] = CharacterController\n"
-              "allComponents['go 0 :: Player :: CharacterController'].gameObject = allGameObjects['go 0 :: Player']\n"
-              "allComponents['go 0 :: Player :: CharacterController'].transform  = allGameObjects['go 0 :: Player'].transform\n"
+              "local cmp = CharacterController\n"
+              "cmp.__name = 'CharacterController'\n"
+              "cmp.gameObject = allGameObjects['go 0 :: Player']\n"
+              "cmp.transform = allGameObjects['go 0 :: Player'].transform\n"
               "\n"
-              "allComponents['go 0 :: Player :: CharacterController'].camera = allGameObjects['Main camera'].transform\n"
-              "allComponents['go 0 :: Player :: CharacterController'].runningSpeed = 2.0\n"
+              "cmp.camera = allGameObjects['Main camera'].transform\n"
+              "cmp.runningSpeed = 2.0\n"
+              "\n"
+              "allComponents['go 0 :: Player :: CharacterController'] = cmp\n"
               "\n"
               "for _, cmpInstance in pairs(allComponents) do\n"
               "    cmpInstance:Start()\n"
@@ -114,7 +117,9 @@ TEST(TestLua53_update, _00_update_frame) {
     ASSERT_TRUE(std::filesystem::is_directory("Scripts"));
 
     std::ofstream of("Scripts/DroneController.lua", std::ofstream::out | std::ofstream::trunc);
-    of << "DroneController = LuaBehaviour:new()\n"
+    of << "require 'Core'"
+          ""
+          "DroneController = LuaBehaviour:new()\n"
           "\n"
           "DroneController.motionSpeed = 0.0\n"
           "DroneController.targetTr = Transform\n"
@@ -139,15 +144,15 @@ TEST(TestLua53_update, _00_update_frame) {
     auto *drone1GO = new GameObject("id 1 :: Drone 1", "Drone 1");
     drone1GO->mTransform->mPosition.Set(4.0, 5.0, 6.0);
     drone1GO->mTransform->mRotation.Set(45.0, 45.0, 45.0);
-    drone1GO->mComponents.push_back(
+    drone1GO->mComponents["DroneController"] =
             Component{
                     "DroneController",
                     "Scripts/DroneController",
                     {
-                            Prop{"motionSpeed", "2.0"},
-                            Prop{"targetTr", "allGameObjects['id 0 :: Box 1'].transform"},
+                        {"motionSpeed", Prop{"motionSpeed", "2.0"}},
+                        {"targetTr", Prop{"targetTr", "allGameObjects['id 0 :: Box 1'].transform"}},
                     }
-            });
+            };
 
     std::map<std::string, GameObject *> goList = {
             {box1GO->mID,   box1GO},
@@ -162,7 +167,7 @@ TEST(TestLua53_update, _00_update_frame) {
     EXPECT_EQ(5.0, drone1GO->mTransform->mPosition.mY);
     EXPECT_EQ(6.0, drone1GO->mTransform->mPosition.mZ);
 
-    Lua53 target ("./");
+    Lua53 target("./");
     target.initialize(goList);
     target.update(goList);
     target.update(goList);

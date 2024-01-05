@@ -17,7 +17,5 @@ GameObject::~GameObject() {
 }
 
 bool GameObject::isCamera() {
-    return std::any_of(mComponents.begin(), mComponents.end(), [](const auto &cmp){
-        return cmp.mName == "Camera";
-    });
+    return mComponents.find("Camera") != mComponents.end();
 }

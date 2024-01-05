@@ -80,10 +80,10 @@ void Application::loadScene(const std::string &filepath) {
                     }
                 }
 
-                cmp.mProperties.push_back(prop);
+                cmp.mProperties[prop.mName] = prop;
             }
 
-            pGO->mComponents.push_back(cmp);
+            pGO->mComponents[cmp.mName] = cmp;
         }
 
         if (!goVal["mesh"].empty() && goVal["mesh"].isString()) {

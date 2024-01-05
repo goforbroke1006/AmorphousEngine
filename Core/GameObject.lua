@@ -9,19 +9,16 @@ require 'Core/Transform'
 GameObject = {
     id = "",
     name = "",
-    components = {},
     transform = Transform:new(),
 }
 
-function GameObject:new(id --[[string]], name --[[string]], components)
+function GameObject:new(id --[[string]], name --[[string]])
     id = id or ""
     name = name or ""
-    components = components or {}
 
     go = {
         id = id,
         name = name,
-        components = components,
         transform = Transform:new(),
     }
 

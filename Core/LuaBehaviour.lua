@@ -12,18 +12,21 @@ require 'Core/Time'
 require 'Core/Space'
 
 LuaBehaviour = {
-    transform = Transform,
+    __name = "",
     gameObject = GameObject,
+    transform = Transform,
 }
 
 function LuaBehaviour:new()
     lb = {
+        __name = "",
         gameObject = GameObject:new(),
+        transform = Transform,
     }
+    lb.transform = lb.gameObject.transform
+
     self.__index = self
     setmetatable(lb, self)
-
-    lb.transform = lb.gameObject.transform
 
     return lb
 end

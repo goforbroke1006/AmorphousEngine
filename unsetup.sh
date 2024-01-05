@@ -26,3 +26,5 @@ sudo rm -f /usr/local/lib/libluacpp*
 sudo rm -rf /usr/local/lib/LuaCpp/
 
 sudo apt remove lua5.3 liblua5.3-dev
+
+sudo apt-get remove libirrlicht1.8 libirrlicht-dev libirrlicht-doc
