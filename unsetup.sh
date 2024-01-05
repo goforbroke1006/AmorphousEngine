@@ -1,5 +1,20 @@
 #!/bin/bash
 
+read -p "Do you want to remove local builds? (yes/no) " yn
+case $yn in
+	yes )
+	  sudo rm -rf ./third_party/luacpp/build/
+    sudo rm -rf ./third_party/ogre-next-deps/build/
+    sudo rm -rf ./third_party/ogre-next/build/
+    ;;
+	no )
+	  echo Leave local builds
+	  ;;
+	* ) echo invalid response;
+		exit 1;;
+esac
+
+
 sudo rm -rf /usr/local/include/OGRE/
 sudo rm -rf /usr/local/lib/OGRE/
 sudo rm -f /usr/local/lib/libOgre*

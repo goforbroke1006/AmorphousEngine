@@ -23,9 +23,15 @@ int main(int argc, char **argv) {
     std::cout << "Project root:   " << projectRoot << std::endl;
     std::cout << "Scene filename: " << sceneFilename << std::endl;
 
+#ifdef DEBUG
+    std::string pluginsCfgPathname = "plugins_d.cfg";
+#else
+    std::string pluginsCfgPathname = "plugins.cfg";
+#endif
+
     auto *pGraphicsEngine = new OgreNext(
-            "/usr/local/share/OGRE/plugins_d.cfg",
-            "/usr/local/share/OGRE/resources2.cfg"
+            pluginsCfgPathname,
+            "resources2.cfg"
     );
     auto *pCalculationEngine = new Lua53(projectRoot);
     auto *pApplication = new Application(engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine);

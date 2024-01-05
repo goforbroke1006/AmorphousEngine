@@ -5,26 +5,12 @@ CXX_STANDARD=14     # 11 | 14
 
 set -e
 
-#
-# Install Clang 17
-#
-if [[ ! -f /usr/bin/clang++-17 ]]; then
-  wget https://apt.llvm.org/llvm.sh
-  chmod u+x llvm.sh
-  sudo ./llvm.sh 17
-  clang-17 --version
-fi
-
-echo "CMAKE_C_COMPILER   = /usr/bin/clang-17"
-echo "CMAKE_CXX_COMPILER = /usr/bin/clang++-17"
-
 sudo apt-get update
 
 sudo apt-get install -y \
   git ninja-build build-essential
 
-sudo apt remove cmake -y || true
-sudo snap install cmake --classic || sudo snap refresh cmake --classic
+
 
 sudo apt-get install -y \
   libfreetype6-dev libfreeimage-dev libzzip-dev libxrandr-dev libxaw7-dev freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev libx11-xcb-dev \
@@ -92,13 +78,21 @@ fi
     sudo cmake --install . --config Debug
   )
 
-#  (
-#    # Build Release
-#    mkdir -p Release
-#    cd Release
-#    #cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Release ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
+  (
+    # Build Release
+    mkdir -p Release
+    cd Release
+    cmake -G Ninja \
+      -DCMAKE_MAKE_PROGRAM=ninja \
+      -DCMAKE_C_COMPILER=/usr/bin/clang-17 \
+      -DCMAKE_CXX_COMPILER=/usr/bin/clang++-17 \
+      -DOGRE_BUILD_SAMPLES2=1 \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_CXX_STANDARD=${CXX_STANDARD} \
+      ../../
+    #cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Release ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
 #    cmake -DCMAKE_BUILD_TYPE=Release ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
-#    make
-#    sudo make install
-#  )
+    cmake --build .
+    sudo cmake --install . --config Release
+  )
 )
