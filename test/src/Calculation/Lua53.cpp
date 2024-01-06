@@ -11,7 +11,7 @@
 #include "../../../include/Calculation/Lua53.h"
 
 TEST(TestLua53_buildInitLuaCode, _00_empty_scene) {
-    const auto &actual = Lua53("./").buildInitLuaCode({});
+    const auto &actual = Lua53::buildInitLuaCode({});
 
     EXPECT_EQ("", actual);
 }
@@ -29,7 +29,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects) {
             {bot1GO->mID,   bot1GO},
     };
 
-    const auto &actual = Lua53("./").buildInitLuaCode(goList);
+    const auto &actual = Lua53::buildInitLuaCode(goList);
 
     for (const auto &goPair: goList)
         delete goPair.second;
@@ -55,27 +55,40 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects) {
 }
 
 TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
-    auto *playerGO = new GameObject("go 0 :: Player", "Player");
+    auto *mainCameraGO = new GameObject("go 0 :: Main Camera", "Main Camera");
+    mainCameraGO->mTransform->mPosition.Set(100.0, 100.0, 100.0);
+    mainCameraGO->mComponents["Camera"] =
+            Component(
+                    "Camera",
+                    "Component/Camera",
+                    {
+                            {"backgroundColor",
+                             Property{"backgroundColor", PropType::PropTypeColor, Color{0.25, 0.75, 0.25, 1.0}}},
+                    }
+            );
+
+    auto *playerGO = new GameObject("go 1 :: Player", "Player");
     playerGO->mTransform->mPosition.Set(1.0, 2.0, 3.0);
     playerGO->mComponents["CharacterController"] =
-            Component{
+            Component(
                     "CharacterController",
                     "Scripts/CharacterController",
                     {
                             {"camera",
-                             Property{"camera", PropType::PropTypeGameObjectTransform, "Main camera"}},
+                                    Property{"camera", PropType::PropTypeGameObjectTransform, "go 0 :: Main Camera"}},
                             {"runningSpeed",
-                             Property{"runningSpeed", PropType::PropTypeDouble, 2.0}}
+                                    Property{"runningSpeed", PropType::PropTypeDouble, 2.0}}
                     }
-            };
+            );
 
-    auto *bot1GO = new GameObject("go 1 :: Bot 1", "Bot 1");
+    auto *bot1GO = new GameObject("go 2 :: Bot 1", "Bot 1");
     bot1GO->mTransform->mPosition.Set(4.0, 5.0, 6.0);
     bot1GO->mTransform->mRotation.Set(0.0, 90.0, 0.0);
 
     std::map<std::string, GameObject *> goList = {
-            {playerGO->mID, playerGO},
-            {bot1GO->mID,   bot1GO},
+            {mainCameraGO->mID, mainCameraGO},
+            {playerGO->mID,     playerGO},
+            {bot1GO->mID,       bot1GO},
     };
 
     const auto &actual = Lua53::buildInitLuaCode(goList);
@@ -83,27 +96,46 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
     std::string expected
             = "require 'Core'\n"
               "\n"
-              "allGameObjects['go 0 :: Player'] = GameObject:new('go 0 :: Player', 'Player')\n"
-              "allGameObjects['go 0 :: Player'].transform.position:Set(1.000000, 2.000000, 3.000000)\n"
-              "allGameObjects['go 0 :: Player'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.0)\n"
-              "allGameObjects['go 0 :: Player'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+              "allGameObjects['go 0 :: Main Camera'] = GameObject:new('go 0 :: Main Camera', 'Main Camera')\n"
+              "allGameObjects['go 0 :: Main Camera'].transform.position:Set(100.000000, 100.000000, 100.000000)\n"
+              "allGameObjects['go 0 :: Main Camera'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.0)\n"
               "\n"
-              "allGameObjects['go 1 :: Bot 1'] = GameObject:new('go 1 :: Bot 1', 'Bot 1')\n"
-              "allGameObjects['go 1 :: Bot 1'].transform.position:Set(4.000000, 5.000000, 6.000000)\n"
-              "allGameObjects['go 1 :: Bot 1'].transform.rotation:Set(0.000000, 90.000000, 0.000000, 1.0)\n"
-              "allGameObjects['go 1 :: Bot 1'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+              "allGameObjects['go 1 :: Player'] = GameObject:new('go 1 :: Player', 'Player')\n"
+              "allGameObjects['go 1 :: Player'].transform.position:Set(1.000000, 2.000000, 3.000000)\n"
+              "allGameObjects['go 1 :: Player'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.0)\n"
+              "allGameObjects['go 1 :: Player'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+              "\n"
+              "allGameObjects['go 2 :: Bot 1'] = GameObject:new('go 2 :: Bot 1', 'Bot 1')\n"
+              "allGameObjects['go 2 :: Bot 1'].transform.position:Set(4.000000, 5.000000, 6.000000)\n"
+              "allGameObjects['go 2 :: Bot 1'].transform.rotation:Set(0.000000, 90.000000, 0.000000, 1.0)\n"
+              "allGameObjects['go 2 :: Bot 1'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+              "\n"
+              "require 'Component/Camera'\n"
+              "\n"
+              "local cmp = Camera\n"
+              "cmp.__name = 'Camera'\n"
+              "cmp.gameObject = allGameObjects['go 0 :: Main Camera']\n"
+              "cmp.transform = allGameObjects['go 0 :: Main Camera'].transform\n"
+              "\n"
+              "cmp.backgroundColor = Color:new(0.250000, 0.750000, 0.250000, 1.000000)\n"
+              "cmp.enabled = true\n"
+              "cmp.farClipPlane = 1000.000000\n"
+              "cmp.nearClipPlane = 0.100000\n"
+              "\n"
+              "allComponents['go 0 :: Main Camera :: Camera'] = cmp\n"
               "\n"
               "require 'Scripts/CharacterController'\n"
               "\n"
               "local cmp = CharacterController\n"
               "cmp.__name = 'CharacterController'\n"
-              "cmp.gameObject = allGameObjects['go 0 :: Player']\n"
-              "cmp.transform = allGameObjects['go 0 :: Player'].transform\n"
+              "cmp.gameObject = allGameObjects['go 1 :: Player']\n"
+              "cmp.transform = allGameObjects['go 1 :: Player'].transform\n"
               "\n"
-              "cmp.camera = allGameObjects['Main camera'].transform\n"
+              "cmp.camera = allGameObjects['go 0 :: Main Camera'].transform\n"
+              "cmp.enabled = true\n"
               "cmp.runningSpeed = 2.000000\n"
               "\n"
-              "allComponents['go 0 :: Player :: CharacterController'] = cmp\n"
+              "allComponents['go 1 :: Player :: CharacterController'] = cmp\n"
               "\n"
               "for _, cmpInstance in pairs(allComponents) do\n"
               "    cmpInstance:Start()\n"
@@ -126,13 +158,15 @@ TEST(TestLua53_update, _00_update_frame) {
               "Camera = LuaBehaviour:new()\n"
               "\n"
               "Camera.backgroundColor = Color:new()\n"
+              "Camera.nearClipPlane = 0.1\n"
+              "Camera.farClipPlane = 1000.0\n"
               "\n"
               "function Camera:Start()\n"
-              "    Debug.Log(\"Camera :: Start\");\n"
+              "    --Debug.Log(\"Camera :: Start\");\n"
               "end\n"
               "\n"
               "function Camera:Update()\n"
-              "    Debug.Log(\"Camera :: Update\");\n"
+              "    --Debug.Log(\"Camera :: Update\");\n"
               "end\n";
         of.close();
         ASSERT_TRUE(std::filesystem::is_regular_file("Component/Camera.lua"));
@@ -170,14 +204,14 @@ TEST(TestLua53_update, _00_update_frame) {
     auto *mainCameraGO = new GameObject("id 0 :: Main Camera", "Main Camera");
     mainCameraGO->mTransform->mPosition.Set(100.0, 100.0, 100.0);
     mainCameraGO->mComponents["Camera"] =
-            Component{
+            Component(
                     "Camera",
                     "Component/Camera",
                     {
                             {"backgroundColor",
                              Property{"backgroundColor", PropType::PropTypeColor, Color{0.25, 0.75, 0.25, 1.0}}},
                     }
-            };
+            );
 
     auto *box1GO = new GameObject("id 1 :: Box 1", "Box 1");
     box1GO->mTransform->mPosition.Set(0.0, 0.0, 0.0);
@@ -186,16 +220,17 @@ TEST(TestLua53_update, _00_update_frame) {
     drone1GO->mTransform->mPosition.Set(4.0, 5.0, 6.0);
     drone1GO->mTransform->mRotation.Set(45.0, 45.0, 45.0);
     drone1GO->mComponents["DroneController"] =
-            Component{
+            Component(
                     "DroneController",
                     "Scripts/DroneController",
                     {
                             {"motionSpeed",
-                             Property{"motionSpeed", PropType::PropTypeDouble, 2.0}},
+                                    Property{"motionSpeed", PropType::PropTypeDouble, 2.0}},
                             {"targetTr",
-                             Property{"targetTr", PropType::PropTypeGameObjectTransform, (std::string )"id 1 :: Box 1"}},
+                                    Property{"targetTr", PropType::PropTypeGameObjectTransform,
+                                             (std::string) "id 1 :: Box 1"}},
                     }
-            };
+            );
 
     std::map<std::string, GameObject *> goList = {
             {mainCameraGO->mID, mainCameraGO},

@@ -11,10 +11,6 @@
 #include <map>
 #include <any>
 
-struct Color {
-    double mR, mG, mB, mA;
-};
-
 struct Vector3 {
     double mX, mY, mZ;
 

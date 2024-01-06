@@ -10,11 +10,13 @@ require 'Core/Color'
 Camera = LuaBehaviour:new()
 
 Camera.backgroundColor = Color:new()
+Camera.nearClipPlane = 0.1
+Camera.farClipPlane = 1000.0
 
 function Camera:Start()
-    Debug.Log("Camera :: Start");
+    -- Debug.Log("Camera :: Start");
 end
 
 function Camera:Update()
-    Debug.Log("Camera :: Update");
+    -- Debug.Log("Camera :: Update");
 end

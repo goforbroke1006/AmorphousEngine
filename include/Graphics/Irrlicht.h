@@ -21,6 +21,8 @@ public:
 
     bool update(const std::map<std::string, GameObject *> &gameObjects) override;
 
+    void stop() override;
+
 private:
     bool mQuit = false;
 
@@ -29,7 +31,7 @@ private:
     irr::scene::ISceneManager *mSceneManager;
     irr::gui::IGUIEnvironment *mGuiEnv;
 
-    Color mBackgroundColor;
+    Color mBackgroundColor{};
 };
 
 #endif //AMORPHOUS_ENGINE_IRRLICHT_H

@@ -16,7 +16,7 @@ public:
 
     virtual ~GameObject();
 
-    bool isCamera();
+    [[nodiscard]] bool isCamera() const;
 
     std::string mID;
     std::string mName;

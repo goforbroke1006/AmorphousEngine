@@ -32,7 +32,7 @@ OgreNext::OgreNext(
     mWinListener = new WindowEventListener;
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, mWinListener);
 
-    mCamera = nullptr;
+    mCompositorManager = nullptr;
 }
 
 OgreNext::~OgreNext() {
@@ -46,62 +46,10 @@ void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects
     for (const auto &goPair: gameObjects) {
         GameObject *pGO = goPair.second;
 
-        auto *tr = pGO->mTransform;
-
-        auto &pos = tr->mPosition;
-        auto &rot = tr->mRotation;
-        auto &scale = tr->mLocalScale;
-
         if (pGO->isCamera()) {
-            auto backgroundColor = std::any_cast<Color>(
-                    pGO->mComponents["Camera"].mProperties["backgroundColor"].mValue);
-
-            mCamera = mSceneManager->createCamera(pGO->mName);
-            mCamera->setPosition(Ogre::Vector3(pos.mX, pos.mY, pos.mZ));
-            mCamera->lookAt(0, 0, 0); // TODO:
-//            mCamera->setOrientation(Ogre::Quaternion(0.0, rot.mX, rot.mY, rot.mZ));
-            mCamera->setNearClipDistance(0.2f);
-            mCamera->setFarClipDistance(1000.0f);
-            mCamera->setAutoAspectRatio(true);
-
-            // The setup for a basic compositor with a blue clear colour
-            Ogre::CompositorManager2 *compositorManager = mRoot->getCompositorManager2();
-            const Ogre::String workspaceName("Demo Workspace");
-            const Ogre::ColourValue backgroundColour(backgroundColor.mR, backgroundColor.mG, backgroundColor.mB, backgroundColor.mA);
-            compositorManager->createBasicWorkspaceDef(workspaceName, backgroundColour, Ogre::IdString());
-            compositorManager->addWorkspace(mSceneManager, mWindow->getTexture(), mCamera, workspaceName, true);
-
-//            mSceneNodes[pGO->mID] = mCamera;
-            // TODO: ???
+            createCameraNode(pGO);
         } else {
-            auto *sceneNode = mSceneManager->getRootSceneNode(Ogre::SCENE_DYNAMIC)
-                    ->createChildSceneNode(Ogre::SCENE_DYNAMIC);
-
-            sceneNode->setName(pGO->mID);
-            sceneNode->setPosition(Ogre::Vector3(pos.mX, pos.mY, pos.mZ));
-            sceneNode->setOrientation(Ogre::Quaternion(1.0, rot.mX, rot.mY, rot.mZ));
-            sceneNode->setScale(Ogre::Vector3(scale.mX, scale.mY, scale.mZ));
-
-            if (!pGO->mMeshPathname.empty()) {
-                Ogre::v1::MeshPtr v1Mesh = Ogre::v1::MeshManager::getSingleton().load(
-                        pGO->mMeshPathname, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
-                        Ogre::v1::HardwareBuffer::HBU_STATIC, Ogre::v1::HardwareBuffer::HBU_STATIC);
-                //Create a v2 mesh to import to, with a different name.
-                Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().createByImportingV1(
-                        pGO->mMeshPathname + " Imported", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                        v1Mesh.get(), true, true, true);
-                v2Mesh->load();
-                v1Mesh->unload();
-
-                Ogre::Item *item = mSceneManager
-                        ->createItem(pGO->mMeshPathname + " Imported",
-                                     Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
-                                     Ogre::SCENE_DYNAMIC);
-
-                sceneNode->attachObject(item);
-            }
-
-            mSceneNodes[pGO->mID] = sceneNode;
+            createSceneNode(pGO);
         }
     }
 }
@@ -115,22 +63,134 @@ bool OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
         for (const auto &goPair: gameObjects) {
             GameObject *pGO = goPair.second;
 
-            auto *tr = pGO->mTransform;
+            if (pGO->isCamera()) {
+                bool isNewObj = mCameraNodes.find(pGO->mID) == mCameraNodes.end();
 
-            auto &pos = tr->mPosition;
-            auto &rot = tr->mRotation;
-            auto &scale = tr->mLocalScale;
+                if (isNewObj)
+                    createCameraNode(pGO);
+                else
+                    updateCameraNode(pGO);
+            } else {
+                bool isNewObj = mSceneNodes.find(pGO->mID) == mSceneNodes.end();
 
-            if (mSceneNodes.find(pGO->mID) == mSceneNodes.end())
-                continue; // TODO: ???
-
-            mSceneNodes[pGO->mID]->setPosition(Ogre::Vector3(pos.mX, pos.mY, pos.mZ));
-            mSceneNodes[pGO->mID]->setOrientation(Ogre::Quaternion(1.0, rot.mX, rot.mY, rot.mZ));
-            mSceneNodes[pGO->mID]->setScale(Ogre::Vector3(scale.mX, scale.mY, scale.mZ));
+                if (isNewObj)
+                    createSceneNode(pGO);
+                else
+                    updateSceneNode(pGO);
+            }
         }
 
         mQuit |= !mRoot->renderOneFrame();
     }
 
     return !mQuit;
+}
+
+
+void OgreNext::stop() {
+    // TODO: implement me
+    mRoot->saveConfig();
+}
+
+void OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
+    mCameraNodes[gameObjectPtr->mID] = mSceneManager->createCamera(gameObjectPtr->mName);
+
+    if (gameObjectPtr->mComponents.at("Camera").isEnabled()) {
+        auto backgroundColor = std::any_cast<Color>(
+                gameObjectPtr->mComponents.at("Camera").mProperties.at("backgroundColor").mValue);
+
+        mCompositorManager = mRoot->getCompositorManager2();
+        const Ogre::String workspaceName("Demo Workspace");
+        const Ogre::ColourValue backgroundColour(
+                (float) backgroundColor.mR,
+                (float) backgroundColor.mG,
+                (float) backgroundColor.mB,
+                (float) backgroundColor.mA);
+        mCompositorManager->createBasicWorkspaceDef(workspaceName, backgroundColour, Ogre::IdString());
+        mCompositorManager->addWorkspace(
+                mSceneManager,
+                mWindow->getTexture(),
+                mCameraNodes[gameObjectPtr->mID],
+                workspaceName,
+                true);
+    }
+
+    updateCameraNode(gameObjectPtr);
+}
+
+void OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
+    auto *tr = gameObjectPtr->mTransform;
+
+    auto &pos = tr->mPosition;
+//    auto &rot = tr->mRotation; // TODO:
+
+    mCameraNodes[gameObjectPtr->mID]->setPosition(
+            Ogre::Vector3((float) pos.mX, (float) pos.mY, (float) pos.mZ));
+    mCameraNodes[gameObjectPtr->mID]->lookAt(0, 0, 0); // TODO:
+//    mCameraNodes[gameObjectPtr->mID]->setOrientation(Ogre::Quaternion(0.0, rot.mX, rot.mY, rot.mZ));
+
+    auto &camProps = gameObjectPtr->mComponents.at("Camera").mProperties;
+
+    auto nearClipPlane = std::any_cast<double>(camProps.at("nearClipPlane").mValue);
+    auto farClipPlane = std::any_cast<double>(camProps.at("farClipPlane").mValue);
+
+    mCameraNodes[gameObjectPtr->mID]->setNearClipDistance((Ogre::Real) nearClipPlane);
+    mCameraNodes[gameObjectPtr->mID]->setFarClipDistance((Ogre::Real) farClipPlane);
+    mCameraNodes[gameObjectPtr->mID]->setAutoAspectRatio(true);
+
+    if (nullptr != mRoot->getRenderSystem()->getCurrentPassDescriptor()) {
+        // TODO: can't solve - getCurrentPassDescriptor returns NULL
+
+        auto backgroundColor = std::any_cast<Color>(
+                gameObjectPtr->mComponents.at("Camera").mProperties.at("backgroundColor").mValue);
+        const Ogre::ColourValue backgroundColour(
+                (float) backgroundColor.mR,
+                (float) backgroundColor.mG,
+                (float) backgroundColor.mB,
+                (float) backgroundColor.mA);
+        mRoot->getRenderSystem()->getCurrentPassDescriptor()->setClearColour(backgroundColour);
+    }
+}
+
+void OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
+    auto *sceneNode = mSceneManager->getRootSceneNode(Ogre::SCENE_DYNAMIC)
+            ->createChildSceneNode(Ogre::SCENE_DYNAMIC);
+    sceneNode->setName(gameObjectPtr->mID);
+    mSceneNodes[gameObjectPtr->mID] = sceneNode;
+
+    if (!gameObjectPtr->mMeshPathname.empty()) {
+        std::string meshV2Pathname = gameObjectPtr->mMeshPathname + " Imported";
+
+        Ogre::v1::MeshPtr v1Mesh = Ogre::v1::MeshManager::getSingleton().load(
+                gameObjectPtr->mMeshPathname, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+                Ogre::v1::HardwareBuffer::HBU_STATIC, Ogre::v1::HardwareBuffer::HBU_STATIC);
+        //Create a v2 mesh to import to, with a different name.
+        Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().createByImportingV1(
+                meshV2Pathname, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                v1Mesh.get(), true, true, true);
+        v2Mesh->load();
+        v1Mesh->unload();
+
+        Ogre::Item *item = mSceneManager->createItem(
+                meshV2Pathname,
+                Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+                Ogre::SCENE_DYNAMIC);
+
+        sceneNode->attachObject(item);
+    }
+
+    updateSceneNode(gameObjectPtr);
+}
+
+void OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
+    auto *tr = gameObjectPtr->mTransform;
+
+    auto &pos = tr->mPosition;
+    auto &rot = tr->mRotation;
+    auto &scale = tr->mLocalScale;
+
+    mSceneNodes[gameObjectPtr->mID]->setPosition(Ogre::Vector3((float) pos.mX, (float) pos.mY, (float) pos.mZ));
+    mSceneNodes[gameObjectPtr->mID]->setOrientation(
+            Ogre::Quaternion(1.0, (float) rot.mX, (float) rot.mY, (float) rot.mZ)); // TODO:
+    mSceneNodes[gameObjectPtr->mID]->setScale(Ogre::Vector3((float) scale.mX, (float) scale.mY, (float) scale.mZ));
 }

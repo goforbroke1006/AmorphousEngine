@@ -23,15 +23,17 @@ Irrlicht::Irrlicht() {
 
     mGuiEnv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
                            irr::core::rect<irr::s32>(10, 10, 260, 22), true);
+
+    mBackgroundColor = Color::grey;
 }
 
 Irrlicht::~Irrlicht() {
     GraphicsEngine::~GraphicsEngine();
 
-    delete mGuiEnv;
-    delete mSceneManager;
-    delete mVideoDriver;
-    delete mDevice;
+//    delete mGuiEnv;
+//    delete mSceneManager;
+//    delete mVideoDriver;
+//    delete mDevice;
 }
 
 void Irrlicht::initialize(const std::map<std::string, GameObject *> &gameObjects) {
@@ -70,10 +72,11 @@ bool Irrlicht::update(const std::map<std::string, GameObject *> &gameObjects) {
     mVideoDriver->beginScene(
             true,
             true,
-            irr::video::SColor(mBackgroundColor.mA * TO_COLOR,
-                               mBackgroundColor.mR * TO_COLOR,
-                               mBackgroundColor.mG * TO_COLOR,
-                               mBackgroundColor.mB * TO_COLOR)
+            irr::video::SColor((irr::u32) (mBackgroundColor.mA * TO_COLOR),
+                               (irr::u32) (mBackgroundColor.mR * TO_COLOR),
+                               (irr::u32) (mBackgroundColor.mG * TO_COLOR),
+                               (irr::u32) (mBackgroundColor.mB * TO_COLOR)
+            )
     );
 
     mSceneManager->drawAll();
@@ -82,6 +85,10 @@ bool Irrlicht::update(const std::map<std::string, GameObject *> &gameObjects) {
     mVideoDriver->endScene();
 
     return true;
+}
+
+void Irrlicht::stop() {
+    mDevice->drop();
 }
 
 

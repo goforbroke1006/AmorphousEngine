@@ -27,11 +27,22 @@ public:
             const std::string &pluginsCfgPathname,
             const std::string &resourcesCfgPathname);
 
-    virtual ~OgreNext() ;
+    virtual ~OgreNext();
 
     void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
     bool update(const std::map<std::string, GameObject *> &gameObjects) override;
+
+    void stop() override;
+
+private:
+    void createCameraNode(const GameObject *gameObjectPtr);
+
+    void updateCameraNode(const GameObject *gameObjectPtr);
+
+    void createSceneNode(const GameObject *gameObjectPtr);
+
+    void updateSceneNode(const GameObject *gameObjectPtr);
 
 private:
     bool mQuit = false;
@@ -39,10 +50,11 @@ private:
     Ogre::Root *mRoot;
     Ogre::Window *mWindow;
     Ogre::SceneManager *mSceneManager;
-    Ogre::Camera *mCamera;
+    Ogre::CompositorManager2 *mCompositorManager;
 
     WindowEventListener *mWinListener;
 
+    std::map<std::string, Ogre::Camera *> mCameraNodes;
     std::map<std::string, Ogre::SceneNode *> mSceneNodes;
 };
 

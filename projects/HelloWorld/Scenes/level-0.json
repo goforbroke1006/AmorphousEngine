@@ -26,9 +26,24 @@
           "pathname": "Component/Camera",
           "properties": [
             {
+              "name": "enabled",
+              "type": "boolean",
+              "value": "true"
+            },
+            {
               "name": "backgroundColor",
               "type": "Color",
               "value": "0.5 0.5 0.75 1.0"
+            },
+            {
+              "name": "nearClipPlane",
+              "type": "double",
+              "value": "0.1"
+            },
+            {
+              "name": "farClipPlane",
+              "type": "double",
+              "value": "1000.0"
             }
           ]
         }
@@ -60,6 +75,11 @@
           "name": "SpinnerController",
           "pathname": "Scripts/SpinnerController",
           "properties": [
+            {
+              "name": "enabled",
+              "type": "boolean",
+              "value": "true"
+            },
             {
               "name": "rotationSpeed",
               "type": "double",
@@ -95,6 +115,11 @@
           "name": "DroneController",
           "pathname": "Scripts/DroneController",
           "properties": [
+            {
+              "name": "enabled",
+              "type": "boolean",
+              "value": "true"
+            },
             {
               "name": "motionSpeed",
               "type": "double",

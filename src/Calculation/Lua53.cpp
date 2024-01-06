@@ -10,6 +10,7 @@
 using LETKey = LuaCpp::Engine::Table::Key;
 using LENum = LuaCpp::Engine::LuaTNumber;
 using LEString = LuaCpp::Engine::LuaTString;
+using LEBoolean = LuaCpp::Engine::LuaTBoolean;
 using LETable = LuaCpp::Engine::LuaTTable;
 
 Lua53::Lua53(const std::string &projectRoot) {
@@ -69,9 +70,11 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
     std::string updateFrameCode
             = std::string() +
-              "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do \n"
-                                                                   "     cmpInstance:Update() \n"
-                                                                   "end \n";
+              "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do \n" +
+              "    if (cmpInstance.enabled) then \n" +
+              "        cmpInstance:Update() \n" +
+              "    end\n" +
+              "end\n";
     luaL_loadstring(*L, updateFrameCode.c_str());
 
     int res = lua_pcall(*L, 0, 0, 0);
@@ -196,14 +199,16 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
                     + ", "
                     + std::to_string(rot.mZ)
                     + ", 1.0)\n";
-        initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.localScale:Set("
-                    + std::to_string(scale.mX)
-                    + ", "
-                    + std::to_string(scale.mY)
-                    + ", "
-                    + std::to_string(scale.mZ)
-                    + ")\n";
+        if (!go->isCamera()) {
+            initCode += std::string()
+                        + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.localScale:Set("
+                        + std::to_string(scale.mX)
+                        + ", "
+                        + std::to_string(scale.mY)
+                        + ", "
+                        + std::to_string(scale.mZ)
+                        + ")\n";
+        }
         initCode += "\n";
     }
 
@@ -247,8 +252,8 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
 
 std::string Lua53::propValToLuaCode(const Property &prop) {
     switch (prop.mType) {
-        case PropType::PropTypeUnknown:
-            return "";
+        case PropType::PropTypeBoolean:
+            return std::any_cast<bool>(prop.mValue) ? "true" : "false";
         case PropType::PropTypeDouble:
             return std::to_string(std::any_cast<double>(prop.mValue));
         case PropType::PropTypeString:
@@ -316,8 +321,9 @@ std::string Lua53::propValToLuaCode(const Property &prop) {
 
 std::any Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal) {
     switch (kind) {
-        case PropType::PropTypeUnknown:
-            break;
+        case PropType::PropTypeBoolean: {
+            return ((LEBoolean *) rawLuaVal)->getValue();
+        }
         case PropType::PropTypeDouble: {
             return ((LENum *) rawLuaVal)->getValue();
         }

@@ -8,6 +8,7 @@ file(GLOB test_source_files
 )
 add_executable(${PROJECT_NAME}
         ../../src/Calculation/Lua53.cpp
+        ../../src/Color.cpp
         ../../src/GameObject.cpp
         ${test_source_files})
 add_test(AllTests-${PROJECT_NAME} ${PROJECT_NAME})

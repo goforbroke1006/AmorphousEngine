@@ -9,6 +9,7 @@ add_executable(${PROJECT_NAME} main.cpp
         src/Graphics/OgreNext/OgreNext.cpp
         src/Graphics/Irrlicht.cpp
         src/Calculation/Lua53.cpp
+        src/Color.cpp
         src/GameObject.cpp
 )
 

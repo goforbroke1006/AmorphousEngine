@@ -13,6 +13,7 @@ require 'Core/Space'
 
 LuaBehaviour = {
     __name = "",
+    enabled = true,
     gameObject = GameObject,
     transform = Transform,
 }
@@ -20,6 +21,7 @@ LuaBehaviour = {
 function LuaBehaviour:new()
     lb = {
         __name = "",
+        enabled = true,
         gameObject = GameObject:new(),
         transform = Transform,
     }

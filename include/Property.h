@@ -7,13 +7,16 @@
 
 #include "types.h"
 
+#include <any>
 #include <sstream>
 #include <exception>
+
+#include "Color.h"
 
 class PropType {
 public:
     enum Kind {
-        PropTypeUnknown,
+        PropTypeBoolean,
         PropTypeDouble,
         PropTypeString,
         PropTypeColor,
@@ -23,6 +26,7 @@ public:
     };
 
     static PropType::Kind parseKind(const std::string &str) {
+        if (str == "boolean") return PropTypeBoolean;
         if (str == "double") return PropTypeDouble;
         if (str == "string") return PropTypeString;
         if (str == "Color") return PropTypeColor;
@@ -33,18 +37,25 @@ public:
         throw std::runtime_error("parsing prop kind failed: " + str);
     }
 
-    static std::string asString(const PropType::Kind & kind) {
+    static std::string asString(const PropType::Kind &kind) {
         switch (kind) {
-            case PropTypeUnknown: return "<unknown>";
-            case PropTypeDouble: return "double";
-            case PropTypeString: return "string";
-            case PropTypeColor: return "Color";
-            case PropTypeVector3: return "Vector3";
-            case PropTypeGameObject: return "GameObject";
-            case PropTypeGameObjectTransform: return "GameObjectTransform";
+            case PropTypeBoolean:
+                return "boolean";
+            case PropTypeDouble:
+                return "double";
+            case PropTypeString:
+                return "string";
+            case PropTypeColor:
+                return "Color";
+            case PropTypeVector3:
+                return "Vector3";
+            case PropTypeGameObject:
+                return "GameObject";
+            case PropTypeGameObjectTransform:
+                return "GameObjectTransform";
+            default:
+                throw std::runtime_error("unexpected prop kind");
         }
-
-        return "";
     }
 };
 
@@ -55,8 +66,9 @@ struct Property {
 
     static std::any parseValue(PropType::Kind propType, const std::string &raw) {
         switch (propType) {
-            case PropType::PropTypeUnknown:
-                return "";
+            case PropType::PropTypeBoolean: {
+                return raw == "true" || raw == "1";
+            }
             case PropType::PropTypeDouble:
                 return std::stod(raw);
             case PropType::PropTypeString:
@@ -65,7 +77,7 @@ struct Property {
                 std::string data;
                 std::stringstream ss(raw);
 
-                auto color = Color{};
+                auto color = Color();
 
                 getline(ss, data, ' ');
                 color.mR = std::stod(data);

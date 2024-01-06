@@ -16,6 +16,6 @@ GameObject::~GameObject() {
     delete mTransform;
 }
 
-bool GameObject::isCamera() {
+bool GameObject::isCamera() const {
     return mComponents.find("Camera") != mComponents.end();
 }

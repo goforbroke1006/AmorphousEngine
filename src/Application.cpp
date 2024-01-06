@@ -95,4 +95,6 @@ void Application::runMainLoop() {
         if (!mGraphicsEngine->update(mGameObjects))
             break;
     }
+
+    mGraphicsEngine->stop();
 }
