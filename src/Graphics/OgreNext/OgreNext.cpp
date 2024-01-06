@@ -31,9 +31,13 @@ OgreNext::OgreNext(
 
     mWinListener = new WindowEventListener;
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, mWinListener);
+
+    mCamera = nullptr;
 }
 
 OgreNext::~OgreNext() {
+    GraphicsEngine::~GraphicsEngine();
+
     Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, mWinListener);
     delete mRoot;
 }

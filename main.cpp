@@ -15,11 +15,14 @@
 int main(int argc, char **argv) {
     std::filesystem::path cwd = std::filesystem::current_path();
 
-    std::string graphicsMode = "OgreNext";
+    std::string graphicsMode = "OgreNext"; // OgreNext | Irrlicht
     std::string engineRoot = cwd.string() + std::filesystem::path::preferred_separator + "";
     std::string projectRoot = "./projects/HelloWorld/";
     std::string sceneFilename = "./Scenes/level-0.json";
+
     // TODO: parse arguments
+    if (argc > 1)
+        graphicsMode = argv[1];
 
     std::cout << "Engine root:    " << engineRoot << std::endl;
     std::cout << "Project root:   " << projectRoot << std::endl;
@@ -45,18 +48,12 @@ int main(int argc, char **argv) {
 
     auto *pCalculationEngine = new Lua53(projectRoot);
     auto *pApplication = new Application(engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine);
-    pApplication->
-            loadScene(sceneFilename);
-    pApplication->
+    pApplication->loadScene(sceneFilename);
+    pApplication->runMainLoop();
 
-            runMainLoop();
-
-    delete
-            pApplication;
-    delete
-            pCalculationEngine;
-    delete
-            pGraphicsEngine;
+    delete pApplication;
+    delete pCalculationEngine;
+    delete pGraphicsEngine;
 
     return EXIT_SUCCESS;
 }

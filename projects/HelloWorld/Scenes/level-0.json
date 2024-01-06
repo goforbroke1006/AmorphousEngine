@@ -28,7 +28,7 @@
             {
               "name": "backgroundColor",
               "type": "Color",
-              "value": "0.5 0.75 0.5 1.0"
+              "value": "0.5 0.5 0.75 1.0"
             }
           ]
         }

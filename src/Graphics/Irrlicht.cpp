@@ -25,6 +25,15 @@ Irrlicht::Irrlicht() {
                            irr::core::rect<irr::s32>(10, 10, 260, 22), true);
 }
 
+Irrlicht::~Irrlicht() {
+    GraphicsEngine::~GraphicsEngine();
+
+    delete mGuiEnv;
+    delete mSceneManager;
+    delete mVideoDriver;
+    delete mDevice;
+}
+
 void Irrlicht::initialize(const std::map<std::string, GameObject *> &gameObjects) {
     for (const auto &goPair: gameObjects) {
         GameObject *pGO = goPair.second;
@@ -32,10 +41,13 @@ void Irrlicht::initialize(const std::map<std::string, GameObject *> &gameObjects
         auto *tr = pGO->mTransform;
 
         auto &pos = tr->mPosition;
-        auto &rot = tr->mRotation;
-        auto &scale = tr->mLocalScale;
+//        auto &rot = tr->mRotation;
+//        auto &scale = tr->mLocalScale;
 
         if (pGO->isCamera()) {
+            mBackgroundColor = std::any_cast<Color>(
+                    pGO->mComponents["Camera"].mProperties["backgroundColor"].mValue);
+
             mSceneManager->addCameraSceneNode(
                     nullptr,
                     irr::core::vector3df(pos.mX, pos.mY, pos.mZ),
@@ -58,7 +70,10 @@ bool Irrlicht::update(const std::map<std::string, GameObject *> &gameObjects) {
     mVideoDriver->beginScene(
             true,
             true,
-            irr::video::SColor(255, 100, 101, 140) // TODO: set real color
+            irr::video::SColor(mBackgroundColor.mA * TO_COLOR,
+                               mBackgroundColor.mR * TO_COLOR,
+                               mBackgroundColor.mG * TO_COLOR,
+                               mBackgroundColor.mB * TO_COLOR)
     );
 
     mSceneManager->drawAll();

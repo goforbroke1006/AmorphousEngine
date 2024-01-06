@@ -27,7 +27,7 @@ public:
             const std::string &pluginsCfgPathname,
             const std::string &resourcesCfgPathname);
 
-    virtual ~OgreNext();
+    virtual ~OgreNext() ;
 
     void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 

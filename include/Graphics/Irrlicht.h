@@ -9,9 +9,13 @@
 
 #include <irrlicht.h>
 
+#define TO_COLOR 255.0
+
 class Irrlicht : public GraphicsEngine {
 public:
     Irrlicht();
+
+    virtual ~Irrlicht();
 
     void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
@@ -25,7 +29,7 @@ private:
     irr::scene::ISceneManager *mSceneManager;
     irr::gui::IGUIEnvironment *mGuiEnv;
 
-    Vector3 mBackgroundColor;
+    Color mBackgroundColor;
 };
 
 #endif //AMORPHOUS_ENGINE_IRRLICHT_H
