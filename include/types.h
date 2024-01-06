@@ -9,6 +9,11 @@
 #include <utility>
 #include <vector>
 #include <map>
+#include <any>
+
+struct Color {
+    double mR, mG, mB, mA;
+};
 
 struct Vector3 {
     double mX, mY, mZ;
@@ -35,17 +40,5 @@ struct Transform {
     Quaternion mRotation;
     Vector3 mLocalScale;
 };
-
-struct Prop {
-    std::string mName;
-    std::string mValue;
-};
-
-struct Component {
-    std::string mName;
-    std::string mPathname;
-    std::map<std::string, Prop> mProperties;
-};
-
 
 #endif //AMORPHOUS_ENGINE_TYPES_H

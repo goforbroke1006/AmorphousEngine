@@ -8,6 +8,7 @@
 #include <jsoncpp/json/json.h>
 
 #include "../include/Application.h"
+#include "../include/Property.h"
 
 #include "../include/Logger.h"
 
@@ -66,20 +67,10 @@ void Application::loadScene(const std::string &filepath) {
 
             const Json::Value &argumentsVals = cmpVal["properties"];
             for (const auto &argVal: argumentsVals) {
-                Prop prop;
+                Property prop;
                 prop.mName = argVal["name"].asString();
-
-                if (argVal["value"].isDouble()) {
-                    prop.mValue = std::to_string(argVal["value"].asDouble());
-                } else if (argVal["value"].isString()) {
-                    prop.mValue = argVal["value"].asString();
-                    if (prop.mValue.substr(0, 4) == "ref#") {
-                        prop.mValue = prop.mValue.substr(4, prop.mValue.length());
-                    } else {
-                        prop.mValue = "'" + prop.mValue + "'";
-                    }
-                }
-
+                prop.mType = PropType::parseKind(argVal["type"].asString());
+                prop.mValue = Property::parseValue(prop.mType, argVal["value"].asString());
                 cmp.mProperties[prop.mName] = prop;
             }
 

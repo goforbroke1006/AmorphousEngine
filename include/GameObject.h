@@ -8,6 +8,7 @@
 #include <map>
 
 #include "types.h"
+#include "Component.h"
 
 struct GameObject {
 public:

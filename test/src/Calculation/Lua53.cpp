@@ -62,8 +62,10 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
                     "CharacterController",
                     "Scripts/CharacterController",
                     {
-                        {"camera", Prop{"camera", "allGameObjects['Main camera'].transform"}},
-                        {"runningSpeed", Prop{"runningSpeed", "2.0"}}
+                            {"camera",
+                             Property{"camera", PropType::PropTypeGameObjectTransform, "Main camera"}},
+                            {"runningSpeed",
+                             Property{"runningSpeed", PropType::PropTypeDouble, 2.0}}
                     }
             };
 
@@ -76,7 +78,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
             {bot1GO->mID,   bot1GO},
     };
 
-    const auto &actual = Lua53("./").buildInitLuaCode(goList);
+    const auto &actual = Lua53::buildInitLuaCode(goList);
 
     std::string expected
             = "require 'Core'\n"
@@ -99,7 +101,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
               "cmp.transform = allGameObjects['go 0 :: Player'].transform\n"
               "\n"
               "cmp.camera = allGameObjects['Main camera'].transform\n"
-              "cmp.runningSpeed = 2.0\n"
+              "cmp.runningSpeed = 2.000000\n"
               "\n"
               "allComponents['go 0 :: Player :: CharacterController'] = cmp\n"
               "\n"
@@ -111,37 +113,76 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
 }
 
 TEST(TestLua53_update, _00_update_frame) {
+    // create Component/Camera.lua
+    if (!std::filesystem::is_directory("Component"))
+        std::filesystem::create_directory("Component");
+    ASSERT_TRUE(std::filesystem::is_directory("Component"));
+
+    {
+        std::ofstream of("Component/Camera.lua", std::ofstream::out | std::ofstream::trunc);
+        of << "require 'Core/LuaBehaviour'\n"
+              "require 'Core/Color'\n"
+              "\n"
+              "Camera = LuaBehaviour:new()\n"
+              "\n"
+              "Camera.backgroundColor = Color:new()\n"
+              "\n"
+              "function Camera:Start()\n"
+              "    Debug.Log(\"Camera :: Start\");\n"
+              "end\n"
+              "\n"
+              "function Camera:Update()\n"
+              "    Debug.Log(\"Camera :: Update\");\n"
+              "end\n";
+        of.close();
+        ASSERT_TRUE(std::filesystem::is_regular_file("Component/Camera.lua"));
+    }
+
     // create Scripts/DroneController.lua
     if (!std::filesystem::is_directory("Scripts"))
         std::filesystem::create_directory("Scripts");
     ASSERT_TRUE(std::filesystem::is_directory("Scripts"));
 
-    std::ofstream of("Scripts/DroneController.lua", std::ofstream::out | std::ofstream::trunc);
-    of << "require 'Core'"
-          ""
-          "DroneController = LuaBehaviour:new()\n"
-          "\n"
-          "DroneController.motionSpeed = 0.0\n"
-          "DroneController.targetTr = Transform\n"
-          "\n"
-          "function DroneController:Start()\n"
-          "    Debug.Log(\"DroneController :: Start\");\n"
-          "end\n"
-          "\n"
-          "function DroneController:Update()\n"
-          "    Debug.Log(\"DroneController :: Update\");\n"
-          "\n"
-          "    local move = Vector3.right * self.motionSpeed * Time.deltaTime\n"
-          "    print('  next move ' .. move.x .. ' ' .. move.y .. ' ' .. move.z)\n"
-          "    self.transform:Translate(move);\n"
-          "end";
-    of.close();
-    ASSERT_TRUE(std::filesystem::is_regular_file("Scripts/DroneController.lua"));
+    {
+        std::ofstream of("Scripts/DroneController.lua", std::ofstream::out | std::ofstream::trunc);
+        of << "require 'Core'"
+              ""
+              "DroneController = LuaBehaviour:new()\n"
+              "\n"
+              "DroneController.motionSpeed = 0.0\n"
+              "DroneController.targetTr = Transform\n"
+              "\n"
+              "function DroneController:Start()\n"
+              "    Debug.Log(\"DroneController :: Start\");\n"
+              "end\n"
+              "\n"
+              "function DroneController:Update()\n"
+              "    Debug.Log(\"DroneController :: Update\");\n"
+              "\n"
+              "    local move = Vector3.right * self.motionSpeed * Time.deltaTime\n"
+              "    print('  next move ' .. move.x .. ' ' .. move.y .. ' ' .. move.z)\n"
+              "    self.transform:Translate(move);\n"
+              "end\n";
+        of.close();
+        ASSERT_TRUE(std::filesystem::is_regular_file("Scripts/DroneController.lua"));
+    }
 
-    auto *box1GO = new GameObject("id 0 :: Box 1", "Box 1");
+    auto *mainCameraGO = new GameObject("id 0 :: Main Camera", "Main Camera");
+    mainCameraGO->mTransform->mPosition.Set(100.0, 100.0, 100.0);
+    mainCameraGO->mComponents["Camera"] =
+            Component{
+                    "Camera",
+                    "Component/Camera",
+                    {
+                            {"backgroundColor",
+                             Property{"backgroundColor", PropType::PropTypeColor, Color{0.25, 0.75, 0.25, 1.0}}},
+                    }
+            };
+
+    auto *box1GO = new GameObject("id 1 :: Box 1", "Box 1");
     box1GO->mTransform->mPosition.Set(0.0, 0.0, 0.0);
 
-    auto *drone1GO = new GameObject("id 1 :: Drone 1", "Drone 1");
+    auto *drone1GO = new GameObject("id 2 :: Drone 1", "Drone 1");
     drone1GO->mTransform->mPosition.Set(4.0, 5.0, 6.0);
     drone1GO->mTransform->mRotation.Set(45.0, 45.0, 45.0);
     drone1GO->mComponents["DroneController"] =
@@ -149,14 +190,17 @@ TEST(TestLua53_update, _00_update_frame) {
                     "DroneController",
                     "Scripts/DroneController",
                     {
-                        {"motionSpeed", Prop{"motionSpeed", "2.0"}},
-                        {"targetTr", Prop{"targetTr", "allGameObjects['id 0 :: Box 1'].transform"}},
+                            {"motionSpeed",
+                             Property{"motionSpeed", PropType::PropTypeDouble, 2.0}},
+                            {"targetTr",
+                             Property{"targetTr", PropType::PropTypeGameObjectTransform, (std::string )"id 1 :: Box 1"}},
                     }
             };
 
     std::map<std::string, GameObject *> goList = {
-            {box1GO->mID,   box1GO},
-            {drone1GO->mID, drone1GO},
+            {mainCameraGO->mID, mainCameraGO},
+            {box1GO->mID,       box1GO},
+            {drone1GO->mID,     drone1GO},
     };
 
     EXPECT_EQ(0.0, box1GO->mTransform->mPosition.mX);

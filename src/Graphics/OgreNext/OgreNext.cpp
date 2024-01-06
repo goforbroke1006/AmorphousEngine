@@ -49,6 +49,9 @@ void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects
         auto &scale = tr->mLocalScale;
 
         if (pGO->isCamera()) {
+            auto backgroundColor = std::any_cast<Color>(
+                    pGO->mComponents["Camera"].mProperties["backgroundColor"].mValue);
+
             mCamera = mSceneManager->createCamera(pGO->mName);
             mCamera->setPosition(Ogre::Vector3(pos.mX, pos.mY, pos.mZ));
             mCamera->lookAt(0, 0, 0); // TODO:
@@ -60,7 +63,7 @@ void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects
             // The setup for a basic compositor with a blue clear colour
             Ogre::CompositorManager2 *compositorManager = mRoot->getCompositorManager2();
             const Ogre::String workspaceName("Demo Workspace");
-            const Ogre::ColourValue backgroundColour(0.2f, 0.4f, 0.6f); // TODO: set real color
+            const Ogre::ColourValue backgroundColour(backgroundColor.mR, backgroundColor.mG, backgroundColor.mB, backgroundColor.mA);
             compositorManager->createBasicWorkspaceDef(workspaceName, backgroundColour, Ogre::IdString());
             compositorManager->addWorkspace(mSceneManager, mWindow->getTexture(), mCamera, workspaceName, true);
 

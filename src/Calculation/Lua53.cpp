@@ -129,19 +129,30 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
 
         for (const auto &luaAttrState: cmpTbl->getValues()) {
             std::string luaAttrName = luaAttrState.first.ToString();
+            std::string luaAttrVal = luaAttrState.second->ToString();
 
             // skip "Start", "Update" and another functions of component
-            if (luaAttrState.second->ToString() == "function")
+            if (luaAttrVal == "function")
                 continue;
 
-            if (luaAttrState.first.ToString() == "__name")
+            if (luaAttrName == "__name")
                 continue;
-            if (luaAttrState.first.ToString() == "gameObject")
+            if (luaAttrName == "gameObject")
                 continue;
-            if (luaAttrState.first.ToString() == "transform")
+            if (luaAttrName == "transform")
                 continue;
 
-            cmp.mProperties[luaAttrState.first.ToString()].mValue = luaAttrState.second->ToString();
+            // skip private fields of component
+            if (cmp.mProperties.find(luaAttrName) == cmp.mProperties.end())
+                continue;
+
+            PropType::Kind kind = cmp.mProperties[luaAttrName].mType;
+            if (kind == PropType::PropTypeGameObject)
+                continue;
+            if (kind == PropType::PropTypeGameObjectTransform)
+                continue;
+
+            cmp.mProperties[luaAttrName].mValue = parsePropValFromLua(kind, luaAttrState.second.get());
         }
     }
 }
@@ -214,7 +225,7 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
 
             for (const auto &propPair: cmpPair.second.mProperties) {
                 initCode += std::string()
-                            + "cmp." + propPair.second.mName + " = " + propPair.second.mValue + "\n";
+                            + "cmp." + propPair.second.mName + " = " + propValToLuaCode(propPair.second) + "\n";
             }
             initCode += "\n";
 
@@ -232,4 +243,111 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
                                                                        "end\n";
 
     return initCode;
+}
+
+std::string Lua53::propValToLuaCode(const Property &prop) {
+    switch (prop.mType) {
+        case PropType::PropTypeUnknown:
+            return "";
+        case PropType::PropTypeDouble:
+            return std::to_string(std::any_cast<double>(prop.mValue));
+        case PropType::PropTypeString:
+            return "'" + std::any_cast<std::string>(prop.mValue) + "'";
+        case PropType::PropTypeColor: {
+            auto colorVal = std::any_cast<Color>(prop.mValue);
+            return "Color:new("
+                   + std::to_string(colorVal.mR)
+                   + ", "
+                   + std::to_string(colorVal.mG)
+                   + ", "
+                   + std::to_string(colorVal.mB)
+                   + ", "
+                   + std::to_string(colorVal.mA)
+                   + ")";
+        }
+        case PropType::PropTypeVector3: {
+            auto vecVal = std::any_cast<Vector3>(prop.mValue);
+            return "Vector:new("
+                   + std::to_string(vecVal.mX)
+                   + ", "
+                   + std::to_string(vecVal.mY)
+                   + ", "
+                   + std::to_string(vecVal.mZ)
+                   + ")";
+        }
+        case PropType::PropTypeGameObject: {
+            try {
+                auto goID = std::any_cast<std::string>(prop.mValue);
+                return std::string()
+                       + LUA53_G_VAR_GO_T + "['" + goID + "']";
+            } catch (const std::bad_any_cast &e) {
+                //Logger::Error(e.what());
+            }
+
+            try {
+                auto goID = std::any_cast<const char *>(prop.mValue);
+                return std::string()
+                       + LUA53_G_VAR_GO_T + "['" + goID + "']";
+            } catch (const std::bad_any_cast &e) {
+                //Logger::Error(e.what());
+            }
+        }
+        case PropType::PropTypeGameObjectTransform: {
+            try {
+                auto goID = std::any_cast<std::string>(prop.mValue);
+                return std::string()
+                       + LUA53_G_VAR_GO_T + "['" + goID + "'].transform";
+            } catch (const std::bad_any_cast &e) {
+                //Logger::Error(e.what());
+            }
+
+            try {
+                auto goID = std::any_cast<const char *>(prop.mValue);
+                return std::string()
+                       + LUA53_G_VAR_GO_T + "['" + goID + "'].transform";
+            } catch (const std::bad_any_cast &e) {
+                //Logger::Error(e.what());
+            }
+        }
+    }
+
+    throw std::runtime_error("unexpected type " + PropType::asString(prop.mType));
+}
+
+std::any Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal) {
+    switch (kind) {
+        case PropType::PropTypeUnknown:
+            break;
+        case PropType::PropTypeDouble: {
+            return ((LENum *) rawLuaVal)->getValue();
+        }
+        case PropType::PropTypeString: {
+            return ((LEString *) rawLuaVal)->getValue();
+        }
+        case PropType::PropTypeColor: {
+            auto colorTable = ((LETable *) rawLuaVal);
+            auto color = Color{
+                    ((LENum &) colorTable->getValue(LETKey("r"))).getValue(),
+                    ((LENum &) colorTable->getValue(LETKey("g"))).getValue(),
+                    ((LENum &) colorTable->getValue(LETKey("b"))).getValue(),
+                    ((LENum &) colorTable->getValue(LETKey("a"))).getValue(),
+            };
+            return color;
+        }
+        case PropType::PropTypeVector3: {
+            auto colorTable = ((LETable *) rawLuaVal);
+            auto vec = Vector3{
+                    ((LENum &) colorTable->getValue(LETKey("x"))).getValue(),
+                    ((LENum &) colorTable->getValue(LETKey("y"))).getValue(),
+                    ((LENum &) colorTable->getValue(LETKey("z"))).getValue(),
+            };
+            return vec;
+        }
+        case PropType::PropTypeGameObject:
+            break;
+        case PropType::PropTypeGameObjectTransform:
+            break;
+    }
+
+    throw std::runtime_error("unexpected type " + PropType::asString(kind));
 }

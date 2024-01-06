@@ -27,7 +27,11 @@ public:
 
     void update(std::map<std::string, GameObject *> &gameObjects) override;
 
-    std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
+    static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
+
+    static std::string propValToLuaCode(const Property & prop);
+
+    static std::any parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal);
 
 private:
     std::unique_ptr<LuaCpp::Engine::LuaState> L;

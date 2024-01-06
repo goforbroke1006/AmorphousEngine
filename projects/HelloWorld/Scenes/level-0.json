@@ -27,7 +27,8 @@
           "properties": [
             {
               "name": "backgroundColor",
-              "value": "Color:new(0.5, 0.75, 0.5, 1.0)"
+              "type": "Color",
+              "value": "0.5 0.75 0.5 1.0"
             }
           ]
         }
@@ -61,7 +62,8 @@
           "properties": [
             {
               "name": "rotationSpeed",
-              "value": 0.5
+              "type": "double",
+              "value": "0.5"
             }
           ]
         }
@@ -95,11 +97,13 @@
           "properties": [
             {
               "name": "motionSpeed",
-              "value": 0.000005
+              "type": "double",
+              "value": "0.000005"
             },
             {
               "name": "targetTr",
-              "value": "ref#allGameObjects['go 1 :: Cube 1'].transform"
+              "type": "GameObjectTransform",
+              "value": "go 1 :: Cube 1"
             }
           ]
         }
