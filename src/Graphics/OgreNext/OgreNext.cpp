@@ -140,6 +140,7 @@ void OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
 
     if (nullptr != mRoot->getRenderSystem()->getCurrentPassDescriptor()) {
         // TODO: can't solve - getCurrentPassDescriptor returns NULL
+        // https://forums.ogre3d.org/viewtopic.php?p=552706
 
         auto backgroundColor = std::any_cast<Color>(
                 gameObjectPtr->mComponents.at("Camera").mProperties.at("backgroundColor").mValue);
