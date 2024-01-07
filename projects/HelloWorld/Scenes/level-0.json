@@ -123,7 +123,7 @@
             {
               "name": "motionSpeed",
               "type": "double",
-              "value": "0.05"
+              "value": "0.25"
             },
             {
               "name": "targetTr",
@@ -133,7 +133,7 @@
             {
               "name": "maxDistance",
               "type": "double",
-              "value": "75.0"
+              "value": "100.0"
             }
           ]
         }

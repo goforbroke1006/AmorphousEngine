@@ -106,7 +106,14 @@ function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]],
 end
 
 function Quaternion:Normalize()
-    -- TODO:
+    local magnitude =  math.sqrt(
+            math.pow(self.x, 2) + math.pow(self.y, 2) + math.pow(self.z, 2) + math.pow(self.w, 2)
+    )
+    if (magnitude ~= 0.0) then
+        self.x = self.x / magnitude
+        self.y = self.y / magnitude
+        self.z = self.z / magnitude
+    end
 end
 
 Quaternion.__mul = function(qtr --[[Quaternion]], vec --[[Vector3]])

@@ -71,7 +71,8 @@ function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])
     worldUp = worldUp or Vector3.up
     -- TODO: implement me
 
-    local forwardVector = (target.position - self.position):Normalize()
+    local forwardVector = target.position - self.position
+    forwardVector:Normalize()
 
     local rotAxis = Vector3.Cross(Vector3.forward, forwardVector)
     local dot = Vector3.Dot(Vector3.forward, forwardVector)
@@ -82,7 +83,6 @@ function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])
             rotAxis.z,
             dot + 1
     );
-
     q:Normalize()
 
     self.rotation = q;

@@ -35,11 +35,11 @@ function DroneController:Update()
     self.transform:LookAt(self.targetTr);
     self.transform:Translate(Vector3.right * self.motionSpeed * Time.deltaTime);
 
-    --local distance = self.transform.position:Distance(self.targetTr.position);
-    --Debug.Log("Distance to target " .. distance);
-    --if distance > self.maxDistance then
-    --    local movement = distance - self.maxDistance
-    --    self.transform:LookAt(self.targetTr);
-    --    self.transform:Translate(Vector3.forward * movement * Time.deltaTime);
-    --end
+    local distance = self.transform.position:Distance(self.targetTr.position);
+    Debug.Log("Distance to target " .. distance);
+    if distance > self.maxDistance then
+        local movement = distance - self.maxDistance
+        self.transform:LookAt(self.targetTr);
+        self.transform:Translate(Vector3.forward * movement * Time.deltaTime);
+    end
 end
