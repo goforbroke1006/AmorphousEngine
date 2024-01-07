@@ -50,10 +50,16 @@ function Transform:Translate(translation --[[Vector3]], relativeTo)
     self.position.z = self.position.z + translation.z
 end
 
-function Transform:Rotate(angleX, angleY, angleZ, relativeTo)
+function Transform:Rotate(eulers --[[Vector3]], relativeTo)
+    eulers = eulers or Vector3.zero
     relativeTo = relativeTo or Space.Self
-    -- TODO: implement me
-    -- print('  Transform :: Rotate(' .. angleX .. ', ' .. angleY .. ', ' .. angleZ .. ', ' .. relativeTo .. ')')
+
+    local current = self.rotation.eulerAngles
+    current.x = current.x + eulers.x
+    current.y = current.y + eulers.y
+    current.z = current.z + eulers.z
+
+    self.rotation = Quaternion.Euler(current.x, current.y, current.z)
 end
 
 function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])

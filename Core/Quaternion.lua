@@ -6,7 +6,14 @@
 
 require 'math'
 
-Quaternion = { w = 0.0, x = 0.0, y = 0.0, z = 0.0 }
+Quaternion = {
+    w = 0.0,
+    x = 0.0,
+    y = 0.0,
+    z = 0.0,
+
+    eulerAngles = Vector3,
+}
 
 function Quaternion:new(newX --[[number]], newY --[[number]], newZ --[[number]], newW --[[number]])
     if type(newX) ~= "number"
@@ -17,14 +24,15 @@ function Quaternion:new(newX --[[number]], newY --[[number]], newZ --[[number]],
         error("Can not create Quaternion")
     end
 
-    qrt = {}
+    qrt = {
+        x = newX,
+        y = newY,
+        z = newZ,
+        w = newW,
+    }
+
     self.__index = self
     setmetatable(qrt, self)
-
-    qrt.x = newX
-    qrt.y = newY
-    qrt.z = newZ
-    qrt.w = newW
 
     return qrt
 end
@@ -34,22 +42,23 @@ Quaternion.identity = Quaternion:new(0.0, 0.0, 0.0, 0.0)
 function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]])
     -- https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
 
-    roll = math.rad(roll)
-    pitch = math.rad(pitch)
-    yaw = math.rad(yaw)
+    local rad_roll = math.rad(roll)
+    local rad_pitch = math.rad(pitch)
+    local rad_yaw = math.rad(yaw)
 
-    local cr = math.cos(roll * 0.5);
-    local sr = math.sin(roll * 0.5);
-    local cp = math.cos(pitch * 0.5);
-    local sp = math.sin(pitch * 0.5);
-    local cy = math.cos(yaw * 0.5);
-    local sy = math.sin(yaw * 0.5);
+    local cr = math.cos(rad_roll * 0.5);
+    local sr = math.sin(rad_roll * 0.5);
+    local cp = math.cos(rad_pitch * 0.5);
+    local sp = math.sin(rad_pitch * 0.5);
+    local cy = math.cos(rad_yaw * 0.5);
+    local sy = math.sin(rad_yaw * 0.5);
 
     q = Quaternion:new(0.0, 0.0, 0.0, 0.0);
     q.w = cr * cp * cy + sr * sp * sy;
     q.x = sr * cp * cy - cr * sp * sy;
     q.y = cr * sp * cy + sr * cp * sy;
     q.z = cr * cp * sy - sr * sp * cy;
+    q.eulerAngles = Vector3:new(roll, pitch, yaw)
 
     return q;
 end
@@ -67,6 +76,20 @@ function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]],
     self.y = newY
     self.z = newZ
     self.w = newW
+
+    local sinr_cosp = 2 * (self.w * self.x + self.y * self.z);
+    local cosr_cosp = 1 - 2 * (self.x * self.x + self.y * self.y);
+    local roll = math.atan2(sinr_cosp, cosr_cosp);
+
+    local sinp = math.sqrt(1 + 2 * (self.w * self.y - self.x * self.z));
+    local cosp = math.sqrt(1 - 2 * (self.w * self.y - self.x * self.z));
+    local pitch = 2 * math.atan2(sinp, cosp) - math.pi / 2;
+
+    local siny_cosp = 2 * (self.w * self.z + self.x * self.y);
+    local cosy_cosp = 1 - 2 * (self.y * self.y + self.z * self.z);
+    local yaw = math.atan2(siny_cosp, cosy_cosp);
+
+    self.eulerAngles = Vector3:new(roll, pitch, yaw)
 end
 
 Quaternion.__mul = function(qtr --[[Quaternion]], vec --[[Vector3]])

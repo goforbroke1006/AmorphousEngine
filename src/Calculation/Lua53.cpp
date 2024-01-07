@@ -199,7 +199,9 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
                     + std::to_string(rot.mY)
                     + ", "
                     + std::to_string(rot.mZ)
-                    + ", 1.0)\n";
+                    + ", "
+                    + std::to_string(rot.mW)
+                    + ")\n";
         if (!go->isCamera()) {
             initCode += std::string()
                         + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.localScale:Set("
