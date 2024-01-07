@@ -5,8 +5,6 @@
 #ifndef AMORPHOUS_ENGINE_PROPERTY_H
 #define AMORPHOUS_ENGINE_PROPERTY_H
 
-#include "types.h"
-
 #include <any>
 #include <sstream>
 #include <exception>

@@ -105,7 +105,8 @@ void OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
                 (float) backgroundColor.mR,
                 (float) backgroundColor.mG,
                 (float) backgroundColor.mB,
-                (float) backgroundColor.mA);
+                (float) backgroundColor.mA
+        );
         mCompositorManager->createBasicWorkspaceDef(workspaceName, backgroundColour, Ogre::IdString());
         mCompositorManager->addWorkspace(
                 mSceneManager,

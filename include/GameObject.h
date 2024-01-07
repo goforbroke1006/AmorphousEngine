@@ -7,7 +7,7 @@
 
 #include <map>
 
-#include "types.h"
+#include "Transform.h"
 #include "Component.h"
 
 struct GameObject {

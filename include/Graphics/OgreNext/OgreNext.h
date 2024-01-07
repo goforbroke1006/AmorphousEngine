@@ -8,7 +8,6 @@
 #include <string>
 #include <map>
 
-#include "../../types.h"
 #include "../../GameObject.h"
 #include "../../GraphicsEngine.h"
 #include "WindowEventListener.h"

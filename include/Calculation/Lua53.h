@@ -10,7 +10,6 @@
 
 #include <LuaCpp.hpp>
 
-#include "../types.h"
 #include "../GameObject.h"
 #include "../CalculationEngine.h"
 
