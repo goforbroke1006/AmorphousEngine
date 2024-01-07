@@ -22,7 +22,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects) {
 
     auto *bot1GO = new GameObject("go 1 :: Bot 1", "Bot 1");
     bot1GO->mTransform->mPosition.Set(40.0, 50.0, 60.0);
-    bot1GO->mTransform->mRotation.Set(0.0, 45.0, 0.0);
+    bot1GO->mTransform->mRotation = Quaternion::Euler(0.0, 45.0, 0.0);
 
     std::map<std::string, GameObject *> goList = {
             {playerGO->mID, playerGO},
@@ -39,12 +39,12 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects) {
               "\n"
               "allGameObjects['go 0 :: Player'] = GameObject:new('go 0 :: Player', 'Player')\n"
               "allGameObjects['go 0 :: Player'].transform.position:Set(10.000000, 20.000000, 30.000000)\n"
-              "allGameObjects['go 0 :: Player'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.0)\n"
+              "allGameObjects['go 0 :: Player'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 0.000000)\n"
               "allGameObjects['go 0 :: Player'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
               "\n"
               "allGameObjects['go 1 :: Bot 1'] = GameObject:new('go 1 :: Bot 1', 'Bot 1')\n"
               "allGameObjects['go 1 :: Bot 1'].transform.position:Set(40.000000, 50.000000, 60.000000)\n"
-              "allGameObjects['go 1 :: Bot 1'].transform.rotation:Set(0.000000, 45.000000, 0.000000, 1.0)\n"
+              "allGameObjects['go 1 :: Bot 1'].transform.rotation:Set(0.000000, 0.382683, 0.000000, 0.923880)\n"
               "allGameObjects['go 1 :: Bot 1'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
               "\n"
               "for _, cmpInstance in pairs(allComponents) do\n"
@@ -83,7 +83,7 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
 
     auto *bot1GO = new GameObject("go 2 :: Bot 1", "Bot 1");
     bot1GO->mTransform->mPosition.Set(4.0, 5.0, 6.0);
-    bot1GO->mTransform->mRotation.Set(0.0, 90.0, 0.0);
+    bot1GO->mTransform->mRotation = Quaternion::Euler(0.0, 90.0, 0.0);
 
     std::map<std::string, GameObject *> goList = {
             {mainCameraGO->mID, mainCameraGO},
@@ -98,16 +98,16 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
               "\n"
               "allGameObjects['go 0 :: Main Camera'] = GameObject:new('go 0 :: Main Camera', 'Main Camera')\n"
               "allGameObjects['go 0 :: Main Camera'].transform.position:Set(100.000000, 100.000000, 100.000000)\n"
-              "allGameObjects['go 0 :: Main Camera'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.0)\n"
+              "allGameObjects['go 0 :: Main Camera'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 0.000000)\n"
               "\n"
               "allGameObjects['go 1 :: Player'] = GameObject:new('go 1 :: Player', 'Player')\n"
               "allGameObjects['go 1 :: Player'].transform.position:Set(1.000000, 2.000000, 3.000000)\n"
-              "allGameObjects['go 1 :: Player'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.0)\n"
+              "allGameObjects['go 1 :: Player'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 0.000000)\n"
               "allGameObjects['go 1 :: Player'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
               "\n"
               "allGameObjects['go 2 :: Bot 1'] = GameObject:new('go 2 :: Bot 1', 'Bot 1')\n"
               "allGameObjects['go 2 :: Bot 1'].transform.position:Set(4.000000, 5.000000, 6.000000)\n"
-              "allGameObjects['go 2 :: Bot 1'].transform.rotation:Set(0.000000, 90.000000, 0.000000, 1.0)\n"
+              "allGameObjects['go 2 :: Bot 1'].transform.rotation:Set(0.000000, 0.707107, 0.000000, 0.707107)\n"
               "allGameObjects['go 2 :: Bot 1'].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
               "\n"
               "require 'Component/Camera'\n"
@@ -218,7 +218,7 @@ TEST(TestLua53_update, _00_update_frame) {
 
     auto *drone1GO = new GameObject("id 2 :: Drone 1", "Drone 1");
     drone1GO->mTransform->mPosition.Set(4.0, 5.0, 6.0);
-    drone1GO->mTransform->mRotation.Set(45.0, 45.0, 45.0);
+    drone1GO->mTransform->mRotation = Quaternion::Euler(45.0, 45.0, 45.0);
     drone1GO->mComponents["DroneController"] =
             Component(
                     "DroneController",

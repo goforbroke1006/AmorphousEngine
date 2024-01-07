@@ -11,6 +11,13 @@ class Quaternion {
 public:
     double mX, mY, mZ, mW;
 
+    /**
+     * https://docs.unity3d.com/ScriptReference/Quaternion.Set.html
+     * @param x
+     * @param y
+     * @param z
+     * @param w
+     */
     void Set(double x, double y, double z, double w) {
         mX = x;
         mY = y;

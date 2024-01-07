@@ -5,6 +5,7 @@
 ---
 
 require 'math'
+require 'Core/Debug'
 
 Quaternion = {
     w = 0.0,
@@ -42,9 +43,9 @@ Quaternion.identity = Quaternion:new(0.0, 0.0, 0.0, 0.0)
 function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]])
     -- https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
 
-    roll = roll % 180
-    pitch = pitch % 180
-    yaw = yaw % 180
+    roll = math.fmod(roll, 180)
+    pitch = math.fmod(pitch, 180)
+    yaw = math.fmod(yaw, 180)
 
     local rad_roll = math.rad(roll)
     local rad_pitch = math.rad(pitch)
@@ -68,6 +69,8 @@ function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]
 end
 
 function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]], newW --[[number]])
+    -- https://docs.unity3d.com/ScriptReference/Quaternion.Set.html
+
     if type(newX) ~= "number"
             or type(newY) ~= "number"
             or type(newZ) ~= "number"
@@ -95,9 +98,9 @@ function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]],
     local cosy_cosp = 1 - 2 * (self.y * self.y + self.z * self.z);
     local yaw = math.atan2(siny_cosp, cosy_cosp);
 
-    roll = roll % 180
-    pitch = pitch % 180
-    yaw = yaw % 180
+    roll = math.fmod(roll, 180)
+    pitch = math.fmod(pitch, 180)
+    yaw = math.fmod(yaw, 180)
 
     self.eulerAngles = Vector3:new(roll, pitch, yaw)
 end
