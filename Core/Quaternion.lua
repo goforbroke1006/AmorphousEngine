@@ -81,6 +81,8 @@ function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]],
     self.z = newZ
     self.w = newW
 
+    -- https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
+
     local sinr_cosp = 2 * (self.w * self.x + self.y * self.z);
     local cosr_cosp = 1 - 2 * (self.x * self.x + self.y * self.y);
     local roll = math.atan2(sinr_cosp, cosr_cosp);
