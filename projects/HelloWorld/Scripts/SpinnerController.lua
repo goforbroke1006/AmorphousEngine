@@ -4,8 +4,8 @@
 --- DateTime: 12/29/23 2:44 PM
 ---
 
-require 'Core/LuaBehaviour'
-require 'Core/Time'
+require "Core/LuaBehaviour"
+require "Core/Time"
 
 SpinnerController = LuaBehaviour:new()
 
@@ -15,7 +15,7 @@ function SpinnerController:Start()
     Debug.Log("SpinnerController :: Start");
 
     if (self.rotationSpeed == 0.0) then
-        Debug.LogWarning('rotationSpeed should not be equals zero')
+        Debug.LogWarning("rotationSpeed should not be equals zero")
     end
 end
 
