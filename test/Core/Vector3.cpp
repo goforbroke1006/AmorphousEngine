@@ -476,3 +476,81 @@ TEST(TestVector3___mul, _m1_mul_1_2_3) {
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ("-1.0 -2.0 -3.0\n", output);
 }
+
+TEST(TestVector3_Dot, _positive_1) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            "\n"
+            "local vec1 = Vector3:new(1.0, 2.0, 3.0)\n"
+            "local vec2 = Vector3:new(6.0, 7.0, 8.0)\n"
+            "\n"
+            "local res = Vector3.Dot(vec1, vec2)\n"
+            "print(res) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("44.0\n", output);
+}
+
+TEST(TestVector3_Dot, _positive_2) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            "\n"
+            "local vec1 = Vector3:new(-1.0,  2.0, -3.0)\n"
+            "local vec2 = Vector3:new( 1.0, -2.0,  3.0)\n"
+            "\n"
+            "local res = Vector3.Dot(vec1, vec2)\n"
+            "print(res) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("-14.0\n", output);
+}
+
+TEST(TestVector3_Cross, _positive_1) {
+    // https://www.nagwa.com/en/explainers/616184792816/
+    // Example 1
+
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            "\n"
+            "local vec1 = Vector3:new(1.0, 0.0, 0.0)\n"
+            "local vec2 = Vector3:new(3.0, 2.0, 4.0)\n"
+            "\n"
+            "local res = Vector3.Cross(vec1, vec2)\n"
+            "print(res:ToString()) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("(0.0, -4.0, 2.0)\n", output);
+}
+
+TEST(TestVector3_Cross, _positive_2) {
+    // https://www.nagwa.com/en/explainers/616184792816/
+    // Example 2
+
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            "\n"
+            "local vec1 = Vector3:new( 1.0, -1.0, 0.0)\n"
+            "local vec2 = Vector3:new(-7.0, -8.0, 6.0)\n"
+            "\n"
+            "local res = Vector3.Cross(vec1, vec2)\n"
+            "print(res:ToString()) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("(-6.0, -6.0, -15.0)\n", output);
+}

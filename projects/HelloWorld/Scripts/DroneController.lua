@@ -10,6 +10,7 @@ DroneController = LuaBehaviour:new()
 
 DroneController.motionSpeed = 0.0
 DroneController.targetTr = Transform
+DroneController.maxDistance = 75.0
 
 function DroneController:Start()
     Debug.Log("DroneController :: Start");
@@ -27,14 +28,18 @@ end
 function DroneController:Update()
     Debug.Log("DroneController :: Update");
 
-    --Debug.Log("targetTr = " .. self.targetTr.position:ToString())
-    self.transform:LookAt(self.targetTr.position);
+    if self.targetTr == nil then
+        return
+    end
 
-    local move = Vector3.right * self.motionSpeed * Time.deltaTime
-    print("  next move " .. move.x .. " " .. move.y .. " " .. move.z)
+    self.transform:LookAt(self.targetTr);
+    self.transform:Translate(Vector3.right * self.motionSpeed * Time.deltaTime);
 
-    self.transform:Translate(move);
-
-    local distance = self.transform.position:Distance(self.targetTr.position);
-    Debug.Log("Distance to target " .. distance);
+    --local distance = self.transform.position:Distance(self.targetTr.position);
+    --Debug.Log("Distance to target " .. distance);
+    --if distance > self.maxDistance then
+    --    local movement = distance - self.maxDistance
+    --    self.transform:LookAt(self.targetTr);
+    --    self.transform:Translate(Vector3.forward * movement * Time.deltaTime);
+    --end
 end

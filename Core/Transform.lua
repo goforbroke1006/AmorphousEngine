@@ -50,6 +50,9 @@ function Transform:Translate(translation --[[Vector3]], relativeTo)
     self.position.z = self.position.z + translation.z
 end
 
+--- Use Transform.Rotate to rotate GameObjects in a variety of ways.
+--- The rotation is often provided as an Euler angle and not a Quaternion.
+--- https://docs.unity3d.com/ScriptReference/Transform.Rotate.html
 function Transform:Rotate(eulers --[[Vector3]], relativeTo)
     eulers = eulers or Vector3.zero
     relativeTo = relativeTo or Space.Self
@@ -62,8 +65,25 @@ function Transform:Rotate(eulers --[[Vector3]], relativeTo)
     self.rotation = Quaternion.Euler(current.x, current.y, current.z)
 end
 
+--- Rotates the transform so the forward vector points at /target/'s current position.
+--- https://docs.unity3d.com/ScriptReference/Transform.LookAt.html
 function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])
     worldUp = worldUp or Vector3.up
     -- TODO: implement me
-    --print('  Transform :: LookAt(target, ' .. worldUp .. ')')
+
+    local forwardVector = (target.position - self.position):Normalize()
+
+    local rotAxis = Vector3.Cross(Vector3.forward, forwardVector)
+    local dot = Vector3.Dot(Vector3.forward, forwardVector)
+
+    local q = Quaternion:new(
+            rotAxis.x,
+            rotAxis.y,
+            rotAxis.z,
+            dot + 1
+    );
+
+    q:Normalize()
+
+    self.rotation = q;
 end

@@ -130,3 +130,24 @@ Vector3.__mul = function(op1, op2)
         error("Can not scale by non-number factor")
     end
 end
+
+--- https://docs.unity3d.com/ScriptReference/Vector3.Dot.html
+function Vector3.Dot(lhs --[[Vector3]], rhs --[[Vector3]])
+    -- https://chortle.ccsu.edu/vectorlessons/vch07/vch07_14.html
+    -- https://www.nagwa.com/en/explainers/325184982319/
+
+    return lhs.x * rhs.x +
+            lhs.y * rhs.y +
+            lhs.z * rhs.z
+end
+
+--- https://docs.unity3d.com/ScriptReference/Vector3.Cross.html
+function Vector3.Cross(lhs --[[Vector3]], rhs --[[Vector3]])
+    -- https://socratic.org/questions/what-is-the-cross-product-of-two-vectors
+
+    return Vector3:new(
+            lhs.y * rhs.z - lhs.z * rhs.y,
+            lhs.z * rhs.x - lhs.x * rhs.z,
+            lhs.x * rhs.y - lhs.y * rhs.x
+    )
+end

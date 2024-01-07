@@ -105,6 +105,10 @@ function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]],
     self.eulerAngles = Vector3:new(roll, pitch, yaw)
 end
 
+function Quaternion:Normalize()
+    -- TODO:
+end
+
 Quaternion.__mul = function(qtr --[[Quaternion]], vec --[[Vector3]])
     -- https://gamedev.stackexchange.com/a/28418
 

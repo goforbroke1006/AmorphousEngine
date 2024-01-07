@@ -129,6 +129,11 @@
               "name": "targetTr",
               "type": "GameObjectTransform",
               "value": "go 1 :: Cube 1"
+            },
+            {
+              "name": "maxDistance",
+              "type": "double",
+              "value": "75.0"
             }
           ]
         }
