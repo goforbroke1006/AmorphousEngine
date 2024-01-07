@@ -111,7 +111,8 @@ void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
         gameObjects[id]->mTransform->mRotation.Set(
                 ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
                 ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
-                ((LENum &) rotation.getValue(LETKey("z"))).getValue()
+                ((LENum &) rotation.getValue(LETKey("z"))).getValue(),
+                ((LENum &) rotation.getValue(LETKey("w"))).getValue()
         );
         gameObjects[id]->mTransform->mLocalScale.Set(
                 ((LENum &) localScale.getValue(LETKey("x"))).getValue(),

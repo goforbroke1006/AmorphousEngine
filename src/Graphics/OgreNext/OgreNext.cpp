@@ -10,6 +10,8 @@
 #include <OGRE/OgreMesh2.h>
 #include <OGRE/OgreMeshManager2.h>
 
+#define POS_Z_CORRECTION (-1)
+
 OgreNext::OgreNext(
         const std::string &pluginsCfgPathname,
         const std::string &resourcesCfgPathname
@@ -123,12 +125,23 @@ void OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
     auto *tr = gameObjectPtr->mTransform;
 
     auto &pos = tr->mPosition;
-//    auto &rot = tr->mRotation; // TODO:
+    auto &rot = tr->mRotation;
 
     mCameraNodes[gameObjectPtr->mID]->setPosition(
-            Ogre::Vector3((float) pos.mX, (float) pos.mY, (float) pos.mZ));
-    mCameraNodes[gameObjectPtr->mID]->lookAt(0, 0, 0); // TODO:
-//    mCameraNodes[gameObjectPtr->mID]->setOrientation(Ogre::Quaternion(0.0, rot.mX, rot.mY, rot.mZ));
+            Ogre::Vector3(
+                    (Ogre::Real) pos.mX,
+                    (Ogre::Real) pos.mY,
+                    (Ogre::Real) pos.mZ * POS_Z_CORRECTION
+            )
+    );
+    mCameraNodes[gameObjectPtr->mID]->setOrientation(
+            Ogre::Quaternion(
+                    (Ogre::Real) rot.mW,
+                    (Ogre::Real) rot.mX,
+                    (Ogre::Real) rot.mY,
+                    (Ogre::Real) rot.mZ
+            )
+    );
 
     auto &camProps = gameObjectPtr->mComponents.at("Camera").mProperties;
 
@@ -191,8 +204,26 @@ void OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
     auto &rot = tr->mRotation;
     auto &scale = tr->mLocalScale;
 
-    mSceneNodes[gameObjectPtr->mID]->setPosition(Ogre::Vector3((float) pos.mX, (float) pos.mY, (float) pos.mZ));
+    mSceneNodes[gameObjectPtr->mID]->setPosition(
+            Ogre::Vector3(
+                    (Ogre::Real) pos.mX,
+                    (Ogre::Real) pos.mY,
+                    (Ogre::Real) pos.mZ * POS_Z_CORRECTION
+            )
+    );
     mSceneNodes[gameObjectPtr->mID]->setOrientation(
-            Ogre::Quaternion(1.0, (float) rot.mX, (float) rot.mY, (float) rot.mZ)); // TODO:
-    mSceneNodes[gameObjectPtr->mID]->setScale(Ogre::Vector3((float) scale.mX, (float) scale.mY, (float) scale.mZ));
+            Ogre::Quaternion(
+                    (Ogre::Real) rot.mW,
+                    (Ogre::Real) rot.mX,
+                    (Ogre::Real) rot.mY,
+                    (Ogre::Real) rot.mZ
+            )
+    );
+    mSceneNodes[gameObjectPtr->mID]->setScale(
+            Ogre::Vector3(
+                    (Ogre::Real) scale.mX,
+                    (Ogre::Real) scale.mY,
+                    (Ogre::Real) scale.mZ
+            )
+    );
 }

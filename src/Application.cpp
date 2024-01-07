@@ -50,9 +50,11 @@ void Application::loadScene(const std::string &filepath) {
         pGO->mTransform->mPosition.mZ = posVal["z"].asDouble();
 
         auto &rotVal = goVal["transform"]["rotation"];
-        pGO->mTransform->mRotation.mX = rotVal["x"].asDouble();
-        pGO->mTransform->mRotation.mY = rotVal["y"].asDouble();
-        pGO->mTransform->mRotation.mZ = rotVal["z"].asDouble();
+        pGO->mTransform->mRotation = Quaternion::Euler(
+                rotVal["x"].asDouble(),
+                rotVal["y"].asDouble(),
+                rotVal["z"].asDouble()
+        );
 
         auto &scaleVal = goVal["transform"]["localScale"];
         pGO->mTransform->mLocalScale.mX = scaleVal["x"].asDouble();
