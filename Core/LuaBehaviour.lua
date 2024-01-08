@@ -12,10 +12,10 @@ require 'Core/Time'
 require 'Core/Space'
 
 LuaBehaviour = {
-    __name = "",
-    enabled = true,
-    gameObject = GameObject,
-    transform = Transform,
+    --__name = "",
+    --enabled = true,
+    --gameObject = GameObject,
+    --transform = Transform,
 }
 
 function LuaBehaviour:new()
@@ -37,6 +37,8 @@ function LuaBehaviour:GetComponent(name --[[string]])
     return nil
 end
 
+--- https://docs.unity3d.com/ScriptReference/Component.GetComponents.html
 function LuaBehaviour:GetComponents()
+    --
     return nil
 end

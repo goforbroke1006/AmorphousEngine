@@ -7,14 +7,13 @@
 #include "../../../include/Graphics/OgreNext/resources.h"
 
 #include <OGRE/OgreItem.h>
-#include <OGRE/OgreMesh2.h>
 #include <OGRE/OgreMeshManager2.h>
 
 #define POS_Z_CORRECTION (-1)
 
 OgreNext::OgreNext(
         const std::string &pluginsCfgPathname,
-        const std::string &resourcesCfgPathname
+        const std::string &projectRootPathname
 ) {
     mRoot = OGRE_NEW Ogre::Root(pluginsCfgPathname, "ogre.cfg", "Ogre.log");
     if (!mRoot->restoreConfig() && !mRoot->showConfigDialog())
@@ -23,13 +22,13 @@ OgreNext::OgreNext(
     mRoot->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
     mWindow = mRoot->initialise(true, "Hello Ogre-next");
 
-    registerHlms(resourcesCfgPathname);
+    registerHlmsForEngine();
 
     //const size_t numThreads = std::max<uint32_t>(1, Ogre::PlatformInformation::getNumLogicalCores());
     const size_t numThreads = 1u;
     mSceneManager = mRoot->createSceneManager(Ogre::ST_GENERIC, numThreads, "Hello Ogre-next SM");
 
-    loadResources(resourcesCfgPathname);
+    loadResourcesForProject(projectRootPathname);
 
     mWinListener = new WindowEventListener;
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, mWinListener);
@@ -72,6 +71,20 @@ bool OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
                     createCameraNode(pGO);
                 else
                     updateCameraNode(pGO);
+            } else if (pGO->isLight()) {
+                auto color = pGO->mComponents["Light"].mProperties["color"].asColor();
+
+                auto *light = mSceneManager->createLight();
+                light->setType(Ogre::Light::LT_POINT);
+                light->setDiffuseColour((Ogre::Real) color.mR, (Ogre::Real) color.mG, (Ogre::Real) color.mB);
+                light->setSpecularColour((Ogre::Real) color.mR, (Ogre::Real) color.mG, (Ogre::Real) color.mB);
+
+                auto *spotLightNode = mSceneManager->getRootSceneNode()->createChildSceneNode();
+                spotLightNode->attachObject(light);
+                spotLightNode->setDirection(-1, -1, 0);
+                spotLightNode->setPosition(Ogre::Vector3(200, 200, 0));
+
+                mSceneNodes[pGO->mID] = spotLightNode;
             } else {
                 bool isNewObj = mSceneNodes.find(pGO->mID) == mSceneNodes.end();
 
@@ -90,8 +103,12 @@ bool OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
 
 
 void OgreNext::stop() {
-    // TODO: implement me
     mRoot->saveConfig();
+
+    mSceneManager->getRootSceneNode(Ogre::SCENE_DYNAMIC)->removeAndDestroyAllChildren();
+
+    mSceneNodes.clear();
+    mCameraNodes.clear();
 }
 
 void OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
@@ -176,15 +193,19 @@ void OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
     if (!gameObjectPtr->mMeshPathname.empty()) {
         std::string meshV2Pathname = gameObjectPtr->mMeshPathname + " Imported";
 
-        Ogre::v1::MeshPtr v1Mesh = Ogre::v1::MeshManager::getSingleton().load(
-                gameObjectPtr->mMeshPathname, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
-                Ogre::v1::HardwareBuffer::HBU_STATIC, Ogre::v1::HardwareBuffer::HBU_STATIC);
-        //Create a v2 mesh to import to, with a different name.
-        Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().createByImportingV1(
-                meshV2Pathname, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                v1Mesh.get(), true, true, true);
-        v2Mesh->load();
-        v1Mesh->unload();
+        if (mMeshes.find(meshV2Pathname) == mMeshes.end()) {
+            Ogre::v1::MeshPtr v1Mesh = Ogre::v1::MeshManager::getSingleton().load(
+                    gameObjectPtr->mMeshPathname, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+                    Ogre::v1::HardwareBuffer::HBU_STATIC, Ogre::v1::HardwareBuffer::HBU_STATIC);
+            //Create a v2 mesh to import to, with a different name.
+            Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().createByImportingV1(
+                    meshV2Pathname, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                    v1Mesh.get(), true, true, true);
+            v2Mesh->load();
+            v1Mesh->unload();
+
+            mMeshes.insert(meshV2Pathname);
+        }
 
         Ogre::Item *item = mSceneManager->createItem(
                 meshV2Pathname,

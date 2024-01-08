@@ -7,6 +7,7 @@
 
 #include <string>
 #include <map>
+#include <set>
 
 #include "../../GameObject.h"
 #include "../../GraphicsEngine.h"
@@ -19,6 +20,7 @@
 #include <OGRE/OgreMesh.h>
 #include <OGRE/OgrePlatformInformation.h>
 #include <OGRE/Compositor/OgreCompositorWorkspace.h>
+#include <OGRE/OgreMesh2.h>
 
 class OgreNext : public GraphicsEngine {
 public:
@@ -55,6 +57,7 @@ private:
 
     std::map<std::string, Ogre::Camera *> mCameraNodes;
     std::map<std::string, Ogre::SceneNode *> mSceneNodes;
+    std::set<std::string> mMeshes;
 };
 
 #endif //AMORPHOUS_ENGINE_OGRE_NEXT_H

@@ -64,4 +64,12 @@ void registerHlms(const std::string &filepath) {
     mng->registerHlms(CreateHlms<HlmsPbs>(rootHlmsFolder));
 }
 
+void registerHlmsForEngine() {
+    std::string path = "./Media/";
+
+    auto mng = Ogre::Root::getSingleton().getHlmsManager();
+    mng->registerHlms(CreateHlms<Ogre::HlmsUnlit>(path));
+    mng->registerHlms(CreateHlms<Ogre::HlmsPbs>(path));
+}
+
 #endif //AMORPHOUS_ENGINE_HLMS_H

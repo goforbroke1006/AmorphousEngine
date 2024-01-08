@@ -19,3 +19,7 @@ GameObject::~GameObject() {
 bool GameObject::isCamera() const {
     return mComponents.find("Camera") != mComponents.end();
 }
+
+bool GameObject::isLight() const {
+    return mComponents.find("Light") != mComponents.end();
+}

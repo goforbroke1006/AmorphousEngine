@@ -13,8 +13,17 @@ class GraphicsEngine {
 public:
     virtual ~GraphicsEngine() = default;
 
+    /**
+     * Create all game objects and place its right positions and with right rotations.
+     * @param gameObjects
+     */
     virtual void initialize(const std::map<std::string, GameObject *> &gameObjects) = 0;
 
+    /**
+     * Update game objects.
+     * @param gameObjects
+     * @return
+     */
     virtual bool update(const std::map<std::string, GameObject *> &gameObjects) = 0;
 
     virtual void stop() = 0;

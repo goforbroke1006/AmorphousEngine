@@ -62,6 +62,10 @@ struct Property {
     PropType::Kind mType;
     std::any mValue;
 
+    Color asColor() {
+        return std::any_cast<Color>(mValue);
+    }
+
     static std::any parseValue(PropType::Kind propType, const std::string &raw) {
         switch (propType) {
             case PropType::PropTypeBoolean: {

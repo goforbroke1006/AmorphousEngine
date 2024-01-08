@@ -28,6 +28,11 @@ function GameObject:new(id --[[string]], name --[[string]])
     return go
 end
 
+function GameObject:AddComponent(name --[[string]])
+    -- TODO: implement me
+    return nil
+end
+
 function GameObject.Find(name --[[string]])
     -- TODO: implement me
     return nil

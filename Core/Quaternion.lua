@@ -119,7 +119,7 @@ end
 Quaternion.__mul = function(qtr --[[Quaternion]], vec --[[Vector3]])
     -- https://gamedev.stackexchange.com/a/28418
 
-    local result = Vector3:new(0.0, 0.0, 0.0)
+    local resultVec = Vector3:new(0.0, 0.0, 0.0)
 
     local num12 = qtr.x + qtr.x;
     local num2 = qtr.y + qtr.y;
@@ -137,9 +137,9 @@ Quaternion.__mul = function(qtr --[[Quaternion]], vec --[[Vector3]])
     local num14 = ((vec.x * (num7 + num9)) + (vec.y * ((1.0 - num8) - num3))) + (vec.z * (num4 - num11));
     local num13 = ((vec.x * (num6 - num10)) + (vec.y * (num4 + num11))) + (vec.z * ((1.0 - num8) - num5));
 
-    result.x = num15;
-    result.y = num14;
-    result.z = num13;
+    resultVec.x = num15;
+    resultVec.y = num14;
+    resultVec.z = num13;
 
-    return result;
+    return resultVec;
 end

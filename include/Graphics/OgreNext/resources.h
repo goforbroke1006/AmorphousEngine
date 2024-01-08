@@ -34,4 +34,20 @@ void loadResources(const std::string &filepath) {
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups(true);
 }
 
+void loadResourcesForProject(const std::string &projectRoot) {
+    Ogre::ResourceGroupManager::getSingleton()
+            .addResourceLocation(
+                    projectRoot,
+                    "FileSystem",
+                    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+    Ogre::ResourceGroupManager::getSingleton()
+            .addResourceLocation(
+                    projectRoot + "/Models",
+                    "FileSystem",
+                    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    // Initialise resources groups
+    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups(true);
+}
+
 #endif //AMORPHOUS_ENGINE_RESOURCES_H

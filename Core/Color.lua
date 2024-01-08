@@ -29,3 +29,18 @@ function Color:new(red --[[number]], green --[[number]], blue --[[number]], alph
 
     return clr
 end
+
+Color.clear = Color:new(0.0, 0.0, 0.0, 0.0);
+
+Color.black = Color:new(0.0, 0.0, 0.0, 1.0);
+Color.white = Color:new(1.0, 1.0, 1.0, 1.0);
+Color.grey = Color:new(0.5, 0.5, 0.5, 1.0);
+
+Color.red = Color:new(1.0, 0.0, 0.0, 1.0);
+Color.green = Color:new(0.0, 1.0, 0.0, 1.0);
+Color.blue = Color:new(0.0, 0.0, 1.0, 1.0);
+
+Color.magenta = Color:new(1.0, 0.0, 1.0, 1.0);
+Color.cyan = Color:new(0.0, 1.0, 1.0, 1.0);
+
+Color.yellow = Color:new(1.0, 0.92, 0.016, 1.0);

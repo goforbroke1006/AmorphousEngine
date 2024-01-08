@@ -4,137 +4,160 @@
       "id": "go 0 :: Main Camera",
       "name": "Main Camera",
       "transform": {
-        "position": {
-          "x": 0.0,
-          "y": 200.0,
-          "z": -200.0
-        },
-        "rotation": {
-          "x": -45.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "localScale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        }
+        "position": {"x": 0.0, "y": 150.0, "z": -150.0},
+        "rotation": {"x": -45.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
       },
       "components": [
         {
           "name": "Camera",
           "pathname": "Component/Camera",
           "properties": [
-            {
-              "name": "enabled",
-              "type": "boolean",
-              "value": "true"
-            },
-            {
-              "name": "backgroundColor",
-              "type": "Color",
-              "value": "0.5 0.5 0.75 1.0"
-            },
-            {
-              "name": "nearClipPlane",
-              "type": "double",
-              "value": "0.1"
-            },
-            {
-              "name": "farClipPlane",
-              "type": "double",
-              "value": "1000.0"
-            }
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "backgroundColor", "type": "Color", "value": "0.0 0.25 1.0 1.0"},
+            {"name": "nearClipPlane", "type": "double", "value": "0.1"},
+            {"name": "farClipPlane", "type": "double", "value": "1000.0"}
           ]
         }
       ]
     },
     {
-      "id": "go 1 :: Cube 1",
-      "name": "Cube 1",
-      "mesh": "./cube.mesh",
+      "id": "go 1 :: Light 1",
+      "name": "Light 1",
       "transform": {
-        "position": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "localScale": {
-          "x": 0.5,
-          "y": 0.5,
-          "z": 0.5
+        "position": {"x": 0.0, "y": 500.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "Light",
+          "pathname": "Component/Light",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "color", "type": "Color", "value": "1.0 0.92 0.016 1.0"}
+          ]
         }
+      ]
+    },
+    {
+      "id": "go 2 :: Barrel center",
+      "name": "Barrel center",
+      "mesh": "./Barrel.mesh",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.5, "y": 1.5, "z": 1.5}
       },
       "components": [
         {
           "name": "SpinnerController",
           "pathname": "Scripts/SpinnerController",
           "properties": [
-            {
-              "name": "enabled",
-              "type": "boolean",
-              "value": "true"
-            },
-            {
-              "name": "rotationSpeed",
-              "type": "double",
-              "value": "0.5"
-            }
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
           ]
         }
       ]
     },
     {
-      "id": "go 2 :: Drone 1",
+      "id": "go 3 :: Barrel front",
+      "name": "Barrel front",
+      "mesh": "./Barrel.mesh",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.5, "y": 1.5, "z": 1.5}
+      },
+      "components": [
+        {
+          "name": "SpinnerController",
+          "pathname": "Scripts/SpinnerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "rotationSpeed", "type": "double", "value": "5.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "go 4 :: Barrel back",
+      "name": "Barrel back",
+      "mesh": "./Barrel.mesh",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": -50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.5, "y": 1.5, "z": 1.5}
+      },
+      "components": [
+        {
+          "name": "SpinnerController",
+          "pathname": "Scripts/SpinnerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "go 5 :: Barrel right",
+      "name": "Barrel right",
+      "mesh": "./Barrel.mesh",
+      "transform": {
+        "position": {"x": 50.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.5, "y": 1.5, "z": 1.5}
+      },
+      "components": [
+        {
+          "name": "SpinnerController",
+          "pathname": "Scripts/SpinnerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "go 6 :: Barrel left",
+      "name": "Barrel left",
+      "mesh": "./Barrel.mesh",
+      "transform": {
+        "position": {"x": -50.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.5, "y": 1.5, "z": 1.5}
+      },
+      "components": [
+        {
+          "name": "SpinnerController",
+          "pathname": "Scripts/SpinnerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "go 7 :: Drone 1",
       "name": "Drone 1",
       "mesh": "./ogrehead.mesh",
       "transform": {
-        "position": {
-          "x": -50.0,
-          "y": 50.0,
-          "z": 50.0
-        },
-        "rotation": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
-        },
-        "localScale": {
-          "x": 1.0,
-          "y": 1.0,
-          "z": 1.0
-        }
+        "position": {"x": 1.0, "y": 0.0, "z": 50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.25, "y": 0.25, "z": 0.25}
       },
       "components": [
         {
           "name": "DroneController",
           "pathname": "Scripts/DroneController",
           "properties": [
-            {
-              "name": "enabled",
-              "type": "boolean",
-              "value": "true"
-            },
-            {
-              "name": "motionSpeed",
-              "type": "double",
-              "value": "0.25"
-            },
-            {
-              "name": "targetTr",
-              "type": "GameObjectTransform",
-              "value": "go 1 :: Cube 1"
-            },
-            {
-              "name": "maxDistance",
-              "type": "double",
-              "value": "100.0"
-            }
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "0.5"},
+            {"name": "targetTr", "type": "GameObjectTransform", "value": "go 2 :: Barrel center"},
+            {"name": "maxDistance", "type": "double", "value": "100.0"}
           ]
         }
       ]

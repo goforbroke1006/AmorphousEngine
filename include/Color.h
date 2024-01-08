@@ -13,9 +13,15 @@ public:
 
     Color(double mR, double mG, double mB, double mA);
 
+    static Color clear;
+    //
+    static Color black;
     static Color white;
     static Color grey;
-    static Color black;
+    //
+    static Color red;
+    static Color green;
+    static Color blue;
 };
 
 #endif //AMORPHOUS_ENGINE_COLOR_H

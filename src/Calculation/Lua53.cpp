@@ -6,6 +6,7 @@
 #include "../../include/Calculation/Lua53.h"
 
 #include <string>
+#include <map>
 
 using LETKey = LuaCpp::Engine::Table::Key;
 using LENum = LuaCpp::Engine::LuaTNumber;
@@ -47,7 +48,7 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 
     const std::string &initCode = buildInitLuaCode(gameObjects);
     luaL_loadstring(*L, initCode.c_str());
-//    Logger::Trace("\n" + initCode);
+    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
@@ -215,31 +216,50 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
         initCode += "\n";
     }
 
+    // TODO:
+    std::map<std::string, std::string> cmpNameToPath;
+    for (const auto &goPair: gameObjects) {
+        for (const auto &cmpPair: goPair.second->mComponents) {
+            cmpNameToPath[cmpPair.second.mName] = cmpPair.second.mPathname;
+        }
+    }
+    initCode += "require 'Core/LuaBehaviour'\n\n";
+    for (const auto &cmpPair: cmpNameToPath) {
+        initCode += "require '" + cmpPair.second + "'\n";
+        initCode += "\n";
+
+        initCode += std::string()
+                    + "function " + cmpPair.first + ":new()\n"
+                    + "    local instance = LuaBehaviour:new()\n"
+                    + "    setmetatable(instance, self)\n"
+                    + "    self.__index = self\n"
+                    + "    return instance\n"
+                    + "end\n\n";
+    }
+
     for (const auto &goPair: gameObjects) {
         auto *go = goPair.second;
 
         for (const auto &cmpPair: go->mComponents) {
             std::string cmpID = go->mID + " :: " + cmpPair.second.mName;
 
-            initCode += "require '" + cmpPair.second.mPathname + "'\n";
-            initCode += "\n";
-            initCode += "local cmp = " + cmpPair.second.mName + "\n";
-            initCode += "cmp.__name = '" + cmpPair.second.mName + "'\n";
             initCode += std::string()
-                        + "cmp.gameObject = " + LUA53_G_VAR_GO_T + "['" + go->mID + "']\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + cmpPair.second.mName + ":new()\n";
             initCode += std::string()
-                        + "cmp.transform = " + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + cmpPair.second.mName + "'\n";
+            initCode += std::string()
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = " + LUA53_G_VAR_GO_T + "['" + go->mID +
+                        "']\n";
+            initCode += std::string()
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform = " + LUA53_G_VAR_GO_T + "['" + go->mID +
+                        "'].transform\n";
             initCode += "\n";
 
             for (const auto &propPair: cmpPair.second.mProperties) {
                 initCode += std::string()
-                            + "cmp." + propPair.second.mName + " = " + propValToLuaCode(propPair.second) + "\n";
+                            + LUA53_G_VAR_CMP_T + "['" + cmpID + "']." + propPair.second.mName + " = " +
+                            propValToLuaCode(propPair.second) + "\n";
             }
-            initCode += "\n";
-
-            // append component to global list
-            initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = cmp\n";
 
             initCode += "\n";
         }

@@ -20,12 +20,12 @@ function SpinnerController:Start()
 end
 
 function SpinnerController:Update()
-    Debug.Log("SpinnerController :: Update");
+    --Debug.Log("SpinnerController :: Update");
 
     self.transform:Rotate(Vector3:new(
             0.0,
-            self.rotationSpeed * Time.deltaTime,
-            0.0
+            0.0,
+            self.rotationSpeed * Time.deltaTime
     ))
-    Debug.Log("Angle Y " .. self.transform.rotation.eulerAngles.y);
+    --Debug.Log("Angle Y for " .. self.gameObject.name .. " is " .. self.transform.rotation.eulerAngles.z);
 end

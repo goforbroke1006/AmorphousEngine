@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 
         pGraphicsEngine = new OgreNext(
                 pluginsCfgPathname,
-                "resources2.cfg"
+                projectRoot
         );
     }
     if (graphicsMode == "Irrlicht") {

@@ -18,6 +18,8 @@ public:
 
     [[nodiscard]] bool isCamera() const;
 
+    [[nodiscard]] bool isLight() const;
+
     std::string mID;
     std::string mName;
     Transform *mTransform;
