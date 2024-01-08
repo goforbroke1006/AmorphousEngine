@@ -1,0 +1,48 @@
+hlms Ogre/Earring pbs
+{
+	roughness	0.4
+	fresnel		1.33
+
+			ambient 0.7 0.7 0
+			diffuse 0.7 0.7 0
+
+
+				diffuse_map spheremap.png
+				colour_op_ex add src_texture src_current
+				colour_op_multipass_fallback one one
+				env_map spherical
+
+}
+
+hlms Ogre/Skin pbs
+{
+	roughness	0.4
+	fresnel		1.33
+
+			ambient 0.3 0.8 0.3
+
+				diffuse_map GreenSkin.jpg
+				tex_address_mode mirror
+}
+
+hlms Ogre/Tusks pbs
+{
+	roughness	0.4
+	fresnel		1.33
+
+			ambient 0.7 0.7 0.6
+
+				diffuse_map tusk.jpg
+				scale 0.2 0.2
+}
+
+hlms Ogre/Eyes pbs
+{
+	roughness	0.4
+	fresnel		1.33
+
+			ambient 1 0.4 0.4
+			diffuse 1 0.7 0
+			emissive 0.3 0.1 0
+
+}
