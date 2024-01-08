@@ -58,45 +58,24 @@ Plugin=Plugin_ParticleFX
 
 EOT
 
-cat <<EOT > ./release/resources2.cfg
-# Resources required by the sample browser and most samples.
-[Essential]
-Zip=./Media/packs/DebugPack.zip
-Zip=./Media/packs/CornellBox.zip
-#Zip=./Media/packs/profiler.zip
-
-# Common sample resources needed by many of the samples.
-# Rarely used resources should be separately loaded by the
-# samples which require them.
-[Popular]
-FileSystem=./Media/2.0/scripts/Compositors
-FileSystem=./Media/models
-FileSystem=./Media/materials/textures
-FileSystem=./Media/materials/textures/Cubemaps
-
-[General]
-FileSystem=./Media/2.0/scripts/materials/Common
-FileSystem=./Media/2.0/scripts/materials/Common/Any
-FileSystem=./Media/2.0/scripts/materials/Common/GLSL
-FileSystem=./Media/2.0/scripts/materials/Common/GLSLES
-FileSystem=./Media/2.0/scripts/materials/Common/HLSL
-FileSystem=./Media/2.0/scripts/materials/Common/Metal
-FileSystem=./Media/Hlms/Common/Any
-FileSystem=./Media/Hlms/Common/GLSL
-FileSystem=./Media/Hlms/Common/HLSL
-FileSystem=./Media/Hlms/Common/Metal
-FileSystem=./Media/Compute/Algorithms/IBL
-FileSystem=./Media/Compute/Tools/Any
-
-# Do not load this as a resource. It's here merely to tell the code where
-# the Hlms templates are located
-[Hlms]
-DoNotUseAsResource=./Media
-
-EOT
-
-cp -r ./third_party/ogre-next/Samples/Media/ ./release/Media/
+mkdir -p ./release/Media/
+cp -r ./third_party/ogre-next/Samples/Media/Hlms ./release/Media/Hlms
 
 cp ./cmake-build-release/AmorphousEngine ./release/
 
 cp -r ./projects/ ./release/projects/
+
+cat <<EOT > ./release/ogre.cfg
+Render System=OpenGL 3+ Rendering Subsystem
+
+[OpenGL 3+ Rendering Subsystem]
+Colour Depth=
+Display Frequency=N/A
+FSAA=0
+Full Screen=No
+RTT Preferred Mode=FBO
+VSync=No
+Video Mode= 800 x  600
+sRGB Gamma Conversion=Yes
+
+EOT
