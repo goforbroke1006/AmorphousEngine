@@ -4,7 +4,7 @@
       "id": "go 0 :: Main Camera",
       "name": "Main Camera",
       "transform": {
-        "position": {"x": 0.0, "y": 150.0, "z": -150.0},
+        "position": {"x": 0.0, "y": 100.0, "z": -100.0},
         "rotation": {"x": -45.0, "y": 0.0, "z": 0.0},
         "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
       },
@@ -157,7 +157,7 @@
             {"name": "enabled", "type": "boolean", "value": "true"},
             {"name": "motionSpeed", "type": "double", "value": "0.5"},
             {"name": "targetTr", "type": "GameObjectTransform", "value": "go 2 :: Barrel center"},
-            {"name": "maxDistance", "type": "double", "value": "100.0"}
+            {"name": "maxDistance", "type": "double", "value": "60.0"}
           ]
         }
       ]

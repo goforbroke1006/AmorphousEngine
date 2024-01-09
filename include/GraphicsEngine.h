@@ -27,6 +27,11 @@ public:
     virtual bool update(const std::map<std::string, GameObject *> &gameObjects) = 0;
 
     virtual void stop() = 0;
+
+    static Vector3 convertPositionLeftToRightHand(Vector3 position);
+
+    static Quaternion convertRotationLeftToRightHand(Quaternion rotation);
 };
+
 
 #endif //AMORPHOUS_ENGINE_GRAPHICS_ENGINE_H

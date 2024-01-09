@@ -9,8 +9,6 @@
 #include <OGRE/OgreItem.h>
 #include <OGRE/OgreMeshManager2.h>
 
-#define POS_Z_CORRECTION (-1)
-
 OgreNext::OgreNext(
         const std::string &pluginsCfgPathname,
         const std::string &projectRootPathname
@@ -141,14 +139,14 @@ void OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
 void OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
     auto *tr = gameObjectPtr->mTransform;
 
-    auto &pos = tr->mPosition;
-    auto &rot = tr->mRotation;
+    auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
+    auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
 
     mCameraNodes[gameObjectPtr->mID]->setPosition(
             Ogre::Vector3(
                     (Ogre::Real) pos.mX,
                     (Ogre::Real) pos.mY,
-                    (Ogre::Real) pos.mZ * POS_Z_CORRECTION
+                    (Ogre::Real) pos.mZ
             )
     );
     mCameraNodes[gameObjectPtr->mID]->setOrientation(
@@ -221,15 +219,15 @@ void OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
 void OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
     auto *tr = gameObjectPtr->mTransform;
 
-    auto &pos = tr->mPosition;
-    auto &rot = tr->mRotation;
+    auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
+    auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
     auto &scale = tr->mLocalScale;
 
     mSceneNodes[gameObjectPtr->mID]->setPosition(
             Ogre::Vector3(
                     (Ogre::Real) pos.mX,
                     (Ogre::Real) pos.mY,
-                    (Ogre::Real) pos.mZ * POS_Z_CORRECTION
+                    (Ogre::Real) pos.mZ
             )
     );
     mSceneNodes[gameObjectPtr->mID]->setOrientation(

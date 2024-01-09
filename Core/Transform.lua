@@ -8,6 +8,9 @@ require 'Core/Space'
 require 'Core/Vector3'
 require 'Core/Quaternion'
 
+--- https://docs.unity3d.com/Manual/QuaternionAndEulerRotationsInUnity.html
+--- https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/coordinate-systems.html
+
 Transform = {
     position = Vector3:new(0.0, 0.0, 0.0),
     rotation = Quaternion:new(0.0, 0.0, 0.0, 0.0),
