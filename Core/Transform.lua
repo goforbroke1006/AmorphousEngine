@@ -60,12 +60,27 @@ function Transform:Rotate(eulers --[[Vector3]], relativeTo)
     eulers = eulers or Vector3.zero
     relativeTo = relativeTo or Space.Self
 
-    local current = self.rotation.eulerAngles
-    current.x = current.x + eulers.x
-    current.y = current.y + eulers.y
-    current.z = current.z + eulers.z
+    if eulers.x ~= 0.0 then
+        local rotX = Quaternion:new(math.sin(eulers.x / 2), 0.0, 0.0, math.cos(eulers.x / 2))
+        self.rotation = self.rotation * rotX
+    end
 
-    self.rotation = Quaternion.Euler(current.x, current.y, current.z)
+    if eulers.y ~= 0.0 then
+        local rotY = Quaternion:new(0.0, math.sin(eulers.y / 2), 0.0, math.cos(eulers.y / 2))
+        self.rotation = self.rotation * rotY
+    end
+
+    if eulers.z ~= 0.0 then
+        local rotZ = Quaternion:new(0.0, 0.0, math.sin(eulers.z / 2), math.cos(eulers.z / 2))
+        self.rotation = self.rotation * rotZ
+    end
+
+    --local current = self.rotation.eulerAngles
+    --current.x = current.x + eulers.x
+    --current.y = current.y + eulers.y
+    --current.z = current.z + eulers.z
+    --
+    --self.rotation = Quaternion.Euler(current.x, current.y, current.z)
 end
 
 --- Rotates the transform so the forward vector points at /target/'s current position.

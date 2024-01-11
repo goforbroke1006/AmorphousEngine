@@ -106,7 +106,7 @@ function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]],
 end
 
 function Quaternion:Normalize()
-    local magnitude =  math.sqrt(
+    local magnitude = math.sqrt(
             math.pow(self.x, 2) + math.pow(self.y, 2) + math.pow(self.z, 2) + math.pow(self.w, 2)
     )
     if (magnitude ~= 0.0) then
@@ -116,30 +116,45 @@ function Quaternion:Normalize()
     end
 end
 
-Quaternion.__mul = function(qtr --[[Quaternion]], vec --[[Vector3]])
-    -- https://gamedev.stackexchange.com/a/28418
+Quaternion.__mul = function(qtr --[[Quaternion]], arg --[[Quaternion|Vector3]])
+    -- quaternion * quaternion
+    if arg.x ~= nil and arg.y ~= nil and arg.z ~= nil and arg.w ~= nil then
+        return Quaternion:new(
+                qtr.w * arg.x + qtr.x * arg.w + qtr.y * arg.z - qtr.z * arg.y, -- x
+                qtr.w * arg.y - qtr.x * arg.z + qtr.y * arg.w + qtr.z * arg.x, -- y
+                qtr.w * arg.z + qtr.x * arg.y - qtr.y * arg.x + qtr.z * arg.w, -- z
+                qtr.w * arg.w - qtr.x * arg.x - qtr.y * arg.y - qtr.z * arg.z -- w
+        )
+    end
 
-    local resultVec = Vector3:new(0.0, 0.0, 0.0)
+    -- quaternion * vector
+    if arg.x ~= nil and arg.y ~= nil and arg.z ~= nil then
+        -- https://gamedev.stackexchange.com/a/28418
 
-    local num12 = qtr.x + qtr.x;
-    local num2 = qtr.y + qtr.y;
-    local num = qtr.z + qtr.z;
-    local num11 = qtr.w * num12;
-    local num10 = qtr.w * num2;
-    local num9 = qtr.w * num;
-    local num8 = qtr.x * num12;
-    local num7 = qtr.x * num2;
-    local num6 = qtr.x * num;
-    local num5 = qtr.y * num2;
-    local num4 = qtr.y * num;
-    local num3 = qtr.z * num;
-    local num15 = ((vec.x * ((1.0 - num5) - num3)) + (vec.y * (num7 - num9))) + (vec.z * (num6 + num10));
-    local num14 = ((vec.x * (num7 + num9)) + (vec.y * ((1.0 - num8) - num3))) + (vec.z * (num4 - num11));
-    local num13 = ((vec.x * (num6 - num10)) + (vec.y * (num4 + num11))) + (vec.z * ((1.0 - num8) - num5));
+        local resultVec = Vector3:new(0.0, 0.0, 0.0)
 
-    resultVec.x = num15;
-    resultVec.y = num14;
-    resultVec.z = num13;
+        local num12 = qtr.x + qtr.x;
+        local num2 = qtr.y + qtr.y;
+        local num = qtr.z + qtr.z;
+        local num11 = qtr.w * num12;
+        local num10 = qtr.w * num2;
+        local num9 = qtr.w * num;
+        local num8 = qtr.x * num12;
+        local num7 = qtr.x * num2;
+        local num6 = qtr.x * num;
+        local num5 = qtr.y * num2;
+        local num4 = qtr.y * num;
+        local num3 = qtr.z * num;
+        local num15 = ((arg.x * ((1.0 - num5) - num3)) + (arg.y * (num7 - num9))) + (arg.z * (num6 + num10));
+        local num14 = ((arg.x * (num7 + num9)) + (arg.y * ((1.0 - num8) - num3))) + (arg.z * (num4 - num11));
+        local num13 = ((arg.x * (num6 - num10)) + (arg.y * (num4 + num11))) + (arg.z * ((1.0 - num8) - num5));
 
-    return resultVec;
+        resultVec.x = num15;
+        resultVec.y = num14;
+        resultVec.z = num13;
+
+        return resultVec;
+    end
+
+    error("second arg has unexpected type")
 end
