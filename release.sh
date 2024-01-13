@@ -43,6 +43,8 @@ cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsUnlit.so.2.3.3 ./release
 cp ./third_party/ogre-next/build/Release/lib/RenderSystem_GL3Plus.so.2.3.3 ./release/
 cp ./third_party/ogre-next/build/Release/lib/Plugin_ParticleFX.so.2.3.3 ./release/
 
+cp ./third_party/ogre-next/build/Release/bin/OgreMeshTool ./release/
+
 cp -r ./Component/ ./release/Component/
 cp -r ./Core/ ./release/Core/
 

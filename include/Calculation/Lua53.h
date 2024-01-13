@@ -13,8 +13,8 @@
 #include "../GameObject.h"
 #include "../CalculationEngine.h"
 
-#define LUA53_G_VAR_GO_T "allGameObjects"
-#define LUA53_G_VAR_CMP_T "allComponents"
+#define LUA53_G_VAR_GO_T "__all_game_objects"
+#define LUA53_G_VAR_CMP_T "__all_components"
 
 class Lua53 : public CalculationEngine {
 public:

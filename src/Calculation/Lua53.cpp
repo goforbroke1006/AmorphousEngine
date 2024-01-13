@@ -69,13 +69,13 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 }
 
 void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
+    // TODO: put key pressed/released set to Lua state
+
     std::string updateFrameCode
             = std::string() +
-              "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do \n" +
-              "    if (cmpInstance.enabled) then \n" +
-              "        cmpInstance:Update() \n" +
-              "    end\n" +
-              "end\n";
+              "__before_update_frame();\n"
+              "__on_update_frame();\n"
+              "__after_update_frame();\n";
     luaL_loadstring(*L, updateFrameCode.c_str());
 
     int res = lua_pcall(*L, 0, 0, 0);

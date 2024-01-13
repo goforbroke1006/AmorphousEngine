@@ -14,8 +14,8 @@ int main() {
     LuaCpp::Engine::LuaTTable allGameObjectsTbl;
     LuaCpp::Engine::LuaTTable allComponentsTbl;
 
-    allGameObjectsTbl.PushGlobal(*L, "allGameObjects");
-    allComponentsTbl.PushGlobal(*L, "allComponents");
+    allGameObjectsTbl.PushGlobal(*L, "__all_game_objects");
+    allComponentsTbl.PushGlobal(*L, "__all_components");
 
     try {
 
@@ -29,24 +29,24 @@ int main() {
 
                         "require 'Core' \n"
                         ""
-                        "allGameObjects['Cube-1'] = GameObject:new('Cube-1') \n"
-                        "allGameObjects['Cube-1'].transform.position:Set(0.0, 0.0, 0.0) \n"
-                        "allGameObjects['Cube-1'].transform.rotation:Set(0.0, 0.0, 0.0, 0.0) \n"
+                        "__all_game_objects['Cube-1'] = GameObject:new('Cube-1') \n"
+                        "__all_game_objects['Cube-1'].transform.position:Set(0.0, 0.0, 0.0) \n"
+                        "__all_game_objects['Cube-1'].transform.rotation:Set(0.0, 0.0, 0.0, 0.0) \n"
                         ""
-                        "allGameObjects['Drone-1'] = GameObject:new('Drone-1') \n"
-                        "allGameObjects['Drone-1'].transform.position:Set(50.0, 50.0, 50.0) \n"
-                        "allGameObjects['Drone-1'].transform.rotation:Set(0.0, 90.0, 0.0, 0.0) \n"
+                        "__all_game_objects['Drone-1'] = GameObject:new('Drone-1') \n"
+                        "__all_game_objects['Drone-1'].transform.position:Set(50.0, 50.0, 50.0) \n"
+                        "__all_game_objects['Drone-1'].transform.rotation:Set(0.0, 90.0, 0.0, 0.0) \n"
                         ""
                         "require 'Scripts/DroneController' \n"
                         ""
-                        "allComponents['Drone-1-DroneController'] = DroneController \n"
-                        "allComponents['Drone-1-DroneController'].gameObject = allGameObjects['Drone-1'] \n"
-                        "allComponents['Drone-1-DroneController'].transform = allGameObjects['Drone-1'].transform \n"
+                        "__all_components['Drone-1-DroneController'] = DroneController \n"
+                        "__all_components['Drone-1-DroneController'].gameObject = __all_game_objects['Drone-1'] \n"
+                        "__all_components['Drone-1-DroneController'].transform = __all_game_objects['Drone-1'].transform \n"
                         ""
-                        "allComponents['Drone-1-DroneController'].motionSpeed = 1.0 \n"
-                        "allComponents['Drone-1-DroneController'].targetTr = allGameObjects['Cube-1'].transform \n"
+                        "__all_components['Drone-1-DroneController'].motionSpeed = 1.0 \n"
+                        "__all_components['Drone-1-DroneController'].targetTr = __all_game_objects['Cube-1'].transform \n"
                         ""
-                        "for cmpName, cmpInstance in pairs(allComponents) do \n"
+                        "for cmpName, cmpInstance in pairs(__all_components) do \n"
                         "    cmpInstance:Start() \n"
                         "end \n"
         );
@@ -70,11 +70,12 @@ int main() {
         //
 
         for (int idx = 0; idx < 5; ++idx) {
-            luaL_loadstring(*L,
+            luaL_loadstring(
+                    *L,
 
-                            "for cmpName, cmpInstance in pairs(allComponents) do \n"
-                            "     cmpInstance:Update() \n"
-                            "end \n"
+                    "for cmpName, cmpInstance in pairs(__all_components) do \n"
+                    "     cmpInstance:Update() \n"
+                    "end \n"
             );
 
             int res = lua_pcall(*L, 0, 0, 0);

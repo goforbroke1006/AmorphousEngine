@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 OGRE_NEXT_BRANCH=v2.3.3
-CXX_STANDARD=14     # 11 | 14
+CXX_STANDARD=14 # 11 | 14
 
 set -e
 
@@ -9,8 +9,6 @@ sudo apt-get update
 
 sudo apt-get install -y \
   git ninja-build build-essential
-
-
 
 sudo apt-get install -y \
   libfreetype6-dev libfreeimage-dev libzzip-dev libxrandr-dev libxaw7-dev freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev libx11-xcb-dev \
@@ -41,17 +39,15 @@ fi
     -DCMAKE_CXX_STANDARD=${CXX_STANDARD} \
     ../
   cmake --build .
-#  cmake -D OGREDEPS_BUILD_FREEIMAGE=0 -D OGREDEPS_BUILD_FREETYPE=0 -D OGREDEPS_BUILD_ZLIB=0 ../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
+  #  cmake -D OGREDEPS_BUILD_FREEIMAGE=0 -D OGREDEPS_BUILD_FREETYPE=0 -D OGREDEPS_BUILD_ZLIB=0 ../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
   # Optionally configure build to use distro packages freeimage, freetype, and zlib if installed
   # cmake -D OGREDEPS_BUILD_FREEIMAGE=0 -D OGREDEPS_BUILD_FREETYPE=0 -D OGREDEPS_BUILD_ZLIB=0 ../
-#  make
+  #  make
 )
 
 if [[ ! -d ./third_party/ogre-next ]]; then
   git clone --depth 1 --single-branch --branch "${OGRE_NEXT_BRANCH}" https://github.com/OGRECave/ogre-next \
     ./third_party/ogre-next
-else
-  (cd ./third_party/ogre-next && git pull)
 fi
 
 (
@@ -73,7 +69,7 @@ fi
       -DCMAKE_BUILD_TYPE=Debug \
       -DCMAKE_CXX_STANDARD=${CXX_STANDARD} \
       ../../
-#    cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Debug ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
+    #    cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Debug ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
     cmake --build .
     sudo cmake --install . --config Debug
   )
@@ -91,8 +87,20 @@ fi
       -DCMAKE_CXX_STANDARD=${CXX_STANDARD} \
       ../../
     #cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Release ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
-#    cmake -DCMAKE_BUILD_TYPE=Release ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
+    #    cmake -DCMAKE_BUILD_TYPE=Release ../../ -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
     cmake --build .
     sudo cmake --install . --config Release
   )
 )
+
+if [[ ! -d ./third_party/ColladaOgreImporter ]]; then
+  git clone --depth 1 --single-branch --branch master https://github.com/OGRECave/ColladaOgreImporter.git \
+    ./third_party/ColladaOgreImporter
+fi
+
+#(
+#  sudo apt install libxml2-dev libpcre3-dev libboost-filesystem-dev
+#
+#  cd ./third_party/ColladaOgreImporter
+#  g++ -o collada2ogre collada2ogre.cpp
+#)
