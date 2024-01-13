@@ -11,8 +11,8 @@ Input = {}
 --- https://docs.unity3d.com/ScriptReference/Input.GetButtonDown.html
 --- Returns true during the frame the user pressed down the virtual button identified by buttonName.
 Input.GetButtonDown = function(buttonName --[[string]])
-    if axisName == "Fire1" then
-        return __global_buttons_pressed[KeyCode.Mouse0] ~= nil
+    if buttonName == "Fire1" then
+        return __global_buttons_pressed[KeyCode.Mouse0] == true
     end
 
     Debug.LogError("GetButtonDown: unexpected button name: " .. buttonName)
@@ -23,8 +23,8 @@ end
 --- https://docs.unity3d.com/ScriptReference/Input.GetButtonUp.html
 --- Returns true the first frame the user releases the virtual button identified by buttonName.
 Input.GetButtonUp = function(buttonName --[[string]])
-    if axisName == "Fire1" then
-        return __global_buttons_released[KeyCode.Mouse0] ~= nil
+    if buttonName == "Fire1" then
+        return __global_buttons_released[KeyCode.Mouse0] == true
     end
 
     Debug.LogError("GetButtonUp: unexpected button name: " .. buttonName)
@@ -35,8 +35,8 @@ end
 --- https://docs.unity3d.com/ScriptReference/Input.GetButton.html
 --- bool True when an axis has been pressed and not released.
 Input.GetButton = function(buttonName --[[string]])
-    if axisName == "Fire1" then
-        return __global_buttons_hold[KeyCode.Mouse0] ~= nil
+    if buttonName == "Fire1" then
+        return __global_buttons_hold[KeyCode.Mouse0] == true
     end
 
     Debug.LogError("GetButton: unexpected button name: " .. buttonName)

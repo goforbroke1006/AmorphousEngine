@@ -7,7 +7,7 @@
 
 #include <map>
 
-#include "GameObject.h"
+#include "Core/GameObject.h"
 
 class GraphicsEngine {
 public:

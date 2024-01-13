@@ -33,3 +33,5 @@ sudo apt-get remove libirrlicht1.8 libirrlicht-dev libirrlicht-doc
 # Deps for ColladaOgreImporter
 #sudo apt remove -y \
 #  libxml2-dev libpcre3-dev libboost-filesystem-dev
+
+sudo apt remove -y libsdl2-dev

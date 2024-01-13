@@ -20,6 +20,8 @@ Lua53::Lua53(const std::string &projectRoot) {
 
     mGameObjectsTbl.PushGlobal(*L, LUA53_G_VAR_GO_T);
     mComponentsTbl.PushGlobal(*L, LUA53_G_VAR_CMP_T);
+    mBtnPressedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_P_T);
+    mBtnReleasedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_R_T);
 
     std::string setLuaPathCode;
     setLuaPathCode += "package.path = package.path .. ';" + projectRoot + "?.lua'\n";
@@ -48,7 +50,7 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 
     const std::string &initCode = buildInitLuaCode(gameObjects);
     luaL_loadstring(*L, initCode.c_str());
-    Logger::Trace("\n" + initCode);
+//    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
@@ -62,18 +64,32 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
 
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);
+    mBtnPressedTbl.PopGlobal(*L);
+    mBtnReleasedTbl.PopGlobal(*L);
 
     Logger::Debug("Scene initialization finished...");
     Logger::Debug("Game objects: " + std::to_string(mGameObjectsTbl.getValues().size()));
     Logger::Debug("Components:   " + std::to_string(mComponentsTbl.getValues().size()));
 }
 
-void Lua53::update(std::map<std::string, GameObject *> &gameObjects) {
-    // TODO: put key pressed/released set to Lua state
+void Lua53::update(
+        std::map<std::string, GameObject *> &gameObjects,
+        const std::map<KeyCode, bool> &keysPressed,
+        const std::map<KeyCode, bool> &keysReleased
+) {
+    for (const auto &kp: keysPressed) {
+        auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.mCode));
+        val.setValue(kp.second);
+    }
+    for (const auto &kp: keysReleased) {
+        auto &val = (LEBoolean &) mBtnReleasedTbl.getValue(LETKey(kp.first.mCode));
+        val.setValue(kp.second);
+    }
+    mBtnPressedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_P_T);
+    mBtnReleasedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_R_T);
 
     std::string updateFrameCode
-            = std::string() +
-              "__before_update_frame();\n"
+            = "__before_update_frame();\n"
               "__on_update_frame();\n"
               "__after_update_frame();\n";
     luaL_loadstring(*L, updateFrameCode.c_str());

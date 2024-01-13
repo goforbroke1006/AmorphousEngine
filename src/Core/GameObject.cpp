@@ -5,7 +5,7 @@
 #include <utility>
 #include <algorithm>
 
-#include "../include/GameObject.h"
+#include "../../include/Core/GameObject.h"
 
 GameObject::GameObject(std::string mID, std::string mName)
         : mID(std::move(mID)),

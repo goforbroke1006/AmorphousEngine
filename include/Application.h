@@ -6,11 +6,12 @@
 #define AMORPHOUS_ENGINE_APPLICATION_H
 
 #include <string>
-#include <map>
 
-#include "GameObject.h"
+#include "Core/KeyCode.h"
+#include "Core/GameObject.h"
 #include "GraphicsEngine.h"
 #include "CalculationEngine.h"
+#include "InputReader.h"
 
 class Application {
 public:
@@ -33,6 +34,7 @@ private:
 
     GraphicsEngine *mGraphicsEngine;
     CalculationEngine *mCalculationEngine;
+    InputReader *mInputReader;
 
     std::map<std::string, GameObject *> mGameObjects;
 };

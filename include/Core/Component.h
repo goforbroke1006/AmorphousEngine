@@ -10,7 +10,7 @@
 #include <utility>
 
 #include "Property.h"
-#include "Logger.h"
+#include "../Logger.h"
 
 class Component {
 public:

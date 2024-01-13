@@ -5,20 +5,22 @@ set(CMAKE_CXX_STANDARD 17)
 project(AmorphousEngine)
 
 add_executable(${PROJECT_NAME} main.cpp
+        src/Core/Color.cpp
+        src/Core/GameObject.cpp
+        src/Core/KeyCode.cpp
         src/Application.cpp
         src/Graphics/OgreNext/OgreNext.cpp
         src/Graphics/Irrlicht.cpp
         src/Calculation/Lua53.cpp
-        src/Color.cpp
-        src/GameObject.cpp
         src/GraphicsEngine.cpp
+        src/InputReader.cpp
 )
 
 if (NOT MSVC)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}			-DDEBUG=1 -D_DEBUG=1 -g")
-    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL}		-Os -DNDEBUG")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}			-O2 -DNDEBUG")
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}	-O2 -g")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}	-DDEBUG=1 -D_DEBUG=1 -g")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -Os -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}	-O2 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O2 -g")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-overloaded-virtual")
 endif ()
 if (LINUX)
@@ -40,14 +42,8 @@ target_link_libraries(${PROJECT_NAME}
         ${OGRE_HlmsUnlit_LIBRARIES})
 
 find_package(LuaCpp REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE
-        ${LUA_INCLUDE_DIR}
-        ${LUACPP_INCLUDE_DIR}
-)
-target_link_libraries(${PROJECT_NAME}
-        ${LUA_LIBRARIES}
-        ${LUACPP_LIBRARIES}
-)
+target_include_directories(${PROJECT_NAME} PRIVATE ${LUA_INCLUDE_DIR} ${LUACPP_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${LUA_LIBRARIES} ${LUACPP_LIBRARIES})
 
 find_package(jsoncpp REQUIRED)
 target_link_libraries(${PROJECT_NAME} jsoncpp)
@@ -55,6 +51,11 @@ target_link_libraries(${PROJECT_NAME} jsoncpp)
 #find_package(irrlicht REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE "/usr/include/irrlicht")
 target_link_libraries(${PROJECT_NAME} "/usr/lib/x86_64-linux-gnu/libIrrlicht.so")
+
+# SDL2
+find_package(SDL2 REQUIRED)
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2MAIN_LIBRARY})
 
 file(COPY ./Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./Component DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

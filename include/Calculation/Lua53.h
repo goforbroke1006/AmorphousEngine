@@ -10,11 +10,14 @@
 
 #include <LuaCpp.hpp>
 
-#include "../GameObject.h"
+#include "../Core/GameObject.h"
+#include "../Core/KeyCode.h"
 #include "../CalculationEngine.h"
 
 #define LUA53_G_VAR_GO_T "__all_game_objects"
 #define LUA53_G_VAR_CMP_T "__all_components"
+#define LUA53_G_VAR_BTN_P_T "__global_buttons_pressed"
+#define LUA53_G_VAR_BTN_R_T "__global_buttons_released"
 
 class Lua53 : public CalculationEngine {
 public:
@@ -24,11 +27,15 @@ public:
 
     void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
-    void update(std::map<std::string, GameObject *> &gameObjects) override;
+    void update(
+            std::map<std::string, GameObject *> &gameObjects,
+            const std::map<KeyCode, bool> &keysPressed,
+            const std::map<KeyCode, bool> &keysReleased
+    ) override;
 
     static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
 
-    static std::string propValToLuaCode(const Property & prop);
+    static std::string propValToLuaCode(const Property &prop);
 
     static std::any parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal);
 
@@ -37,6 +44,8 @@ private:
 
     LuaCpp::Engine::LuaTTable mGameObjectsTbl;
     LuaCpp::Engine::LuaTTable mComponentsTbl;
+    LuaCpp::Engine::LuaTTable mBtnPressedTbl;
+    LuaCpp::Engine::LuaTTable mBtnReleasedTbl;
 };
 
 #endif //AMORPHOUS_ENGINE_LUA53_H

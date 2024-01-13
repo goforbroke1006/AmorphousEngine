@@ -4,11 +4,10 @@
 
 #include <gtest/gtest.h>
 
+#include "../../../include/Calculation/Lua53.h"
+
 #include <fstream>
 #include <filesystem>
-
-#include "../../../include/GameObject.h"
-#include "../../../include/Calculation/Lua53.h"
 
 TEST(TestLua53_buildInitLuaCode, _00_empty_scene) {
     const auto &actual = Lua53::buildInitLuaCode({});
@@ -158,6 +157,11 @@ TEST(TestLua53_buildInitLuaCode, _01_scene_with_gObjects_and_cmp) {
     EXPECT_EQ(expected, actual);
 }
 
+TEST(TestLua53_buildInitLuaCode, _02_scene_with_2_GO_and_same_cmp) {
+    // TODO: create test with 2 GOs and same component.
+    // TODO: ensure that component modify both GOs independently.
+}
+
 TEST(TestLua53_update, _00_update_frame) {
     // create Component/Camera.lua
     if (!std::filesystem::is_directory("Component"))
@@ -262,9 +266,9 @@ TEST(TestLua53_update, _00_update_frame) {
 
     Lua53 target("./");
     target.initialize(goList);
-    target.update(goList);
-    target.update(goList);
-    target.update(goList);
+    target.update(goList, {}, {});
+    target.update(goList, {}, {});
+    target.update(goList, {}, {});
 
     EXPECT_EQ(0.0, box1GO->mTransform->mPosition.mX);
     EXPECT_EQ(0.0, box1GO->mTransform->mPosition.mY);
@@ -275,7 +279,121 @@ TEST(TestLua53_update, _00_update_frame) {
 //    EXPECT_NE(6.0, drone1GO->mTransform->mPosition.mZ); // TODO:
 }
 
-TEST(TestLua53_buildInitLuaCode, _02_scene_with_2_GO_and_same_cmp) {
-    // TODO: create test with 2 GOs and same component.
-    // TODO: ensure that component modify both GOs independently.
+TEST(TestLua53_update, _01_update_frame_with_input_press_Fire1) {
+    // create Scripts/PlayerInput.lua
+    if (!std::filesystem::is_directory("Scripts"))
+        std::filesystem::create_directory("Scripts");
+    ASSERT_TRUE(std::filesystem::is_directory("Scripts"));
+
+    {
+        std::ofstream of("Scripts/PlayerInput.lua", std::ofstream::out | std::ofstream::trunc);
+        of << "require 'Core'"
+              ""
+              "PlayerInput = LuaBehaviour:new()\n"
+              "\n"
+              "function PlayerInput:Start()\n"
+              "    -- do nothing\n"
+              "end\n"
+              "\n"
+              "function PlayerInput:Update()\n"
+              "    if Input.GetButtonDown('Fire1') then\n"
+              "        Debug.Log(\"PlayerInput :: Fire1 pressed\");\n"
+              "    end\n"
+              "    if Input.GetButton('Fire1') then\n"
+              "        Debug.Log(\"PlayerInput :: Fire1 hold\");\n"
+              "    end\n"
+              "    if Input.GetButtonUp('Fire1') then\n"
+              "        Debug.Log(\"PlayerInput :: Fire1 released\");\n"
+              "    end\n"
+              "end\n";
+        of.close();
+        ASSERT_TRUE(std::filesystem::is_regular_file("Scripts/PlayerInput.lua"));
+    }
+
+    auto *playerGO = new GameObject("id 0 :: Player", "Player");
+    playerGO->mComponents["PlayerInput"] = Component("PlayerInput", "Scripts/PlayerInput", {});
+
+    std::map<std::string, GameObject *> goList = {
+            {playerGO->mID, playerGO},
+    };
+
+    Lua53 target("./");
+    target.initialize(goList);
+
+    testing::internal::CaptureStdout();
+    target.update(goList, {{KeyCode::Mouse0, true}}, {{KeyCode::Mouse0, false}});
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("DEBUG: PlayerInput :: Fire1 pressed\n"
+              "DEBUG: PlayerInput :: Fire1 hold\n", output);
+}
+
+TEST(TestLua53_update, _01_update_frame_with_input_full_Fire1) {
+    // create Scripts/PlayerInput.lua
+    if (!std::filesystem::is_directory("Scripts"))
+        std::filesystem::create_directory("Scripts");
+    ASSERT_TRUE(std::filesystem::is_directory("Scripts"));
+
+    {
+        std::ofstream of("Scripts/PlayerInput.lua", std::ofstream::out | std::ofstream::trunc);
+        of << "require 'Core'"
+              ""
+              "PlayerInput = LuaBehaviour:new()\n"
+              "\n"
+              "function PlayerInput:Start()\n"
+              "    -- do nothing\n"
+              "end\n"
+              "\n"
+              "function PlayerInput:Update()\n"
+              "    if Input.GetButtonDown('Fire1') then\n"
+              "        Debug.Log(\"PlayerInput :: Fire1 pressed\");\n"
+              "    end\n"
+              "    if Input.GetButton('Fire1') then\n"
+              "        Debug.Log(\"PlayerInput :: Fire1 hold\");\n"
+              "    end\n"
+              "    if Input.GetButtonUp('Fire1') then\n"
+              "        Debug.Log(\"PlayerInput :: Fire1 released\");\n"
+              "    end\n"
+              "end\n";
+        of.close();
+        ASSERT_TRUE(std::filesystem::is_regular_file("Scripts/PlayerInput.lua"));
+    }
+
+    auto *playerGO = new GameObject("id 0 :: Player", "Player");
+    playerGO->mComponents["PlayerInput"] = Component("PlayerInput", "Scripts/PlayerInput", {});
+
+    std::map<std::string, GameObject *> goList = {
+            {playerGO->mID, playerGO},
+    };
+
+    Lua53 target("./");
+    target.initialize(goList);
+
+    {
+        testing::internal::CaptureStdout();
+        target.update(goList, {{KeyCode::Mouse0, true}}, {{KeyCode::Mouse0, false}});
+        std::string output = testing::internal::GetCapturedStdout();
+        EXPECT_EQ("DEBUG: PlayerInput :: Fire1 pressed\n"
+                  "DEBUG: PlayerInput :: Fire1 hold\n", output);
+    }
+
+    {
+        testing::internal::CaptureStdout();
+        target.update(goList, {{KeyCode::Mouse0, true}}, {{KeyCode::Mouse0, false}});
+        std::string output = testing::internal::GetCapturedStdout();
+        EXPECT_EQ("DEBUG: PlayerInput :: Fire1 hold\n", output);
+    }
+
+    {
+        testing::internal::CaptureStdout();
+        target.update(goList, {{KeyCode::Mouse0, true}}, {{KeyCode::Mouse0, false}});
+        std::string output = testing::internal::GetCapturedStdout();
+        EXPECT_EQ("DEBUG: PlayerInput :: Fire1 hold\n", output);
+    }
+
+    {
+        testing::internal::CaptureStdout();
+        target.update(goList, {{KeyCode::Mouse0, false}}, {{KeyCode::Mouse0, true}});
+        std::string output = testing::internal::GetCapturedStdout();
+        EXPECT_EQ("DEBUG: PlayerInput :: Fire1 released\n", output);
+    }
 }

@@ -2,7 +2,7 @@
 // Created by goforbroke on 1/6/24.
 //
 
-#include "../include/Color.h"
+#include "../../include/Core/Color.h"
 
 Color::Color(double mR, double mG, double mB, double mA) : mR(mR), mG(mG), mB(mB), mA(mA) {}
 

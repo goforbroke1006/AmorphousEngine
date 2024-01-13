@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../../include/GameObject.h"
+#include "../../include/Core/GameObject.h"
 
 TEST(TestProperty_parseValue, _double) {
     auto actual = Property::parseValue(PropType::PropTypeDouble, "0.123");

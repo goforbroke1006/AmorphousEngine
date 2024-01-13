@@ -8,7 +8,7 @@
 #include <jsoncpp/json/json.h>
 
 #include "../include/Application.h"
-#include "../include/Property.h"
+#include "../include/Core/Property.h"
 
 #include "../include/Logger.h"
 
@@ -21,12 +21,16 @@ Application::Application(
         : mEngineRoot(std::move(mEngineRoot)),
           mProjectRoot(std::move(mProjectRoot)),
           mGraphicsEngine(mGraphicsEngine),
-          mCalculationEngine(mCalculationEngine) {}
+          mCalculationEngine(mCalculationEngine),
+          mInputReader(new InputReader()) {}
 
 Application::~Application() {
     for (const auto &go: mGameObjects)
         delete go.second;
     Logger::Debug("Clear " + std::to_string(mGameObjects.size()) + " game objects");
+
+    delete mInputReader;
+    mInputReader = nullptr;
 }
 
 void Application::loadScene(const std::string &filepath) {
@@ -92,7 +96,13 @@ void Application::runMainLoop() {
     mCalculationEngine->initialize(mGameObjects);
 
     while (true) {
-        mCalculationEngine->update(mGameObjects);
+        mInputReader->collectCodes();
+
+        mCalculationEngine->update(
+                mGameObjects,
+                mInputReader->pressed(),
+                mInputReader->released()
+        );
 
         if (!mGraphicsEngine->update(mGameObjects))
             break;
@@ -100,3 +110,5 @@ void Application::runMainLoop() {
 
     mGraphicsEngine->stop();
 }
+
+

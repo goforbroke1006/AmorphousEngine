@@ -6,15 +6,19 @@
 
 KeyCode = {}
 
-KeyCode.W = 119; -- 87 119
-KeyCode.A = 97; -- 65  97
-KeyCode.S = 115; -- 83 115
-KeyCode.D = 100; -- 68 100
+KeyCode.W = "w";
+KeyCode.A = "a";
+KeyCode.S = "s";
+KeyCode.D = "d";
 
-KeyCode.Escape = 27;
-KeyCode.Ctrl = 17;
-KeyCode.Alt = "<alt>";
-KeyCode.Space = 32;
+KeyCode.UpArrow = "arrow-up";
+KeyCode.DownArrow = "arrow-down";
+KeyCode.RightArrow = "arrow-right";
+KeyCode.LeftArrow = "arrow-left";
+
+KeyCode.Escape = "ESC";
+KeyCode.Ctrl = "CTRL";
+KeyCode.Space = "SPACE";
 
 KeyCode.Mouse0 = "MSL"; -- The Left (or primary) mouse button.
 KeyCode.Mouse1 = "MSR"; -- Right mouse button (or secondary mouse button).

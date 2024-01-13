@@ -4,20 +4,66 @@
 --- DateTime: 1/13/24 4:54 AM
 ---
 
+require "Core/KeyCode"
+
 __all_game_objects = {}
 __all_components = {}
 
-__global_buttons_pressed = {}
+__global_buttons_pressed = {
+    [KeyCode.W] = false,
+    [KeyCode.A] = false,
+    [KeyCode.S] = false,
+    [KeyCode.D] = false,
+
+    [KeyCode.UpArrow] = false,
+    [KeyCode.DownArrow] = false,
+    [KeyCode.RightArrow] = false,
+    [KeyCode.LeftArrow] = false,
+
+    [KeyCode.Escape] = false,
+    [KeyCode.Ctrl] = false,
+    [KeyCode.Space] = false,
+
+    [KeyCode.Mouse0] = false,
+    [KeyCode.Mouse1] = false,
+    [KeyCode.Mouse2] = false,
+}
 __global_buttons_hold = {}
-__global_buttons_released = {}
+__global_buttons_released = {
+    [KeyCode.W] = false,
+    [KeyCode.A] = false,
+    [KeyCode.S] = false,
+    [KeyCode.D] = false,
+
+    [KeyCode.UpArrow] = false,
+    [KeyCode.DownArrow] = false,
+    [KeyCode.RightArrow] = false,
+    [KeyCode.LeftArrow] = false,
+
+    [KeyCode.Escape] = false,
+    [KeyCode.Ctrl] = false,
+    [KeyCode.Space] = false,
+
+    [KeyCode.Mouse0] = false,
+    [KeyCode.Mouse1] = false,
+    [KeyCode.Mouse2] = false,
+}
 
 function __before_update_frame()
-    for keyCode, _ in pairs(__global_buttons_pressed) do
-        __global_buttons_hold[keyCode] = true
+    for keyCode, keyState in pairs(__global_buttons_pressed) do
+        if keyState == true then
+            if __global_buttons_hold[keyCode] == true then
+                __global_buttons_pressed[keyCode] = false
+            else
+                __global_buttons_hold[keyCode] = true
+            end
+        end
     end
 
-    for keyCode, _ in pairs(__global_buttons_released) do
-        table.remove(__global_buttons_hold, keyCode)
+    for keyCode, keyState in pairs(__global_buttons_released) do
+        if keyState == true then
+            __global_buttons_hold[keyCode] = false
+        end
     end
 end
 
@@ -31,10 +77,10 @@ end
 
 function __after_update_frame()
     for keyCode, _ in pairs(__global_buttons_pressed) do
-        table.remove(__global_buttons_pressed, keyCode)
+        __global_buttons_pressed[keyCode] = false
     end
 
     for keyCode, _ in pairs(__global_buttons_released) do
-        table.remove(__global_buttons_released, keyCode)
+        __global_buttons_released[keyCode] = false
     end
 end

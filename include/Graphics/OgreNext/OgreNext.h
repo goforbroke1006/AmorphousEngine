@@ -9,7 +9,7 @@
 #include <map>
 #include <set>
 
-#include "../../GameObject.h"
+#include "../../Core/GameObject.h"
 #include "../../GraphicsEngine.h"
 #include "WindowEventListener.h"
 
