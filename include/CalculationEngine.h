@@ -10,19 +10,21 @@
 #include "Core/KeyCode.h"
 #include "Core/GameObject.h"
 
-class CalculationEngine {
-public:
-    /**
-     * Prepare calculation engine.
-     * @param gameObjects
-     */
-    virtual void initialize(const std::map<std::string, GameObject *> &gameObjects) = 0;
+namespace AmE {
+    class CalculationEngine {
+    public:
+        /**
+         * Prepare calculation engine.
+         * @param gameObjects
+         */
+        virtual void initialize(const std::map<std::string, GameObject *> &gameObjects) = 0;
 
-    virtual void update(
-            std::map<std::string, GameObject *> &gameObjects,
-            const std::map<KeyCode, bool> &keysPressed,
-            const std::map<KeyCode, bool> &keysReleased
-    ) = 0;
-};
+        virtual void update(
+                std::map<std::string, GameObject *> &gameObjects,
+                const std::map<KeyCode, bool> &keysPressed,
+                const std::map<KeyCode, bool> &keysReleased
+        ) = 0;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_CALCULATION_ENGINE_H

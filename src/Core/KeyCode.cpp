@@ -6,26 +6,12 @@
 
 #include "../../include/Core/KeyCode.h"
 
-KeyCode::KeyCode(std::string code) : mCode(std::move(code)) {}
+AmE::KeyCode::KeyCode(std::string code) : mCode(std::move(code)) {}
 
-const KeyCode KeyCode::W = KeyCode("w");
-const KeyCode KeyCode::A = KeyCode("a");
-const KeyCode KeyCode::S = KeyCode("s");
-const KeyCode KeyCode::D = KeyCode("d");
+std::string AmE::KeyCode::toString() const {
+    return mCode;
+}
 
-const KeyCode KeyCode::UpArrow = KeyCode("arrow-up");
-const KeyCode KeyCode::DownArrow = KeyCode("arrow-down");
-const KeyCode KeyCode::RightArrow = KeyCode("arrow-right");
-const KeyCode KeyCode::LeftArrow = KeyCode("arrow-left");
-
-const KeyCode KeyCode::Escape = KeyCode("ESC");
-const KeyCode KeyCode::Ctrl = KeyCode("CTRL");
-const KeyCode KeyCode::Space = KeyCode("SPACE");
-
-const KeyCode KeyCode::Mouse0 = KeyCode("MSL"); // The Left (or primary) mouse button.
-const KeyCode KeyCode::Mouse1 = KeyCode("MSR"); // Right mouse button (or secondary mouse button).
-const KeyCode KeyCode::Mouse2 = KeyCode("MSM"); // Middle mouse button (or third button).
-
-bool KeyCode::operator<(const KeyCode &rhs) const {
+bool AmE::KeyCode::operator<(const KeyCode &rhs) const {
     return mCode < rhs.mCode;
 }

@@ -55,7 +55,7 @@
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
+            {"name": "rotationSpeed", "type": "double", "value": "0.25"}
           ]
         }
       ]
@@ -75,7 +75,7 @@
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "rotationSpeed", "type": "double", "value": "5.0"}
+            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
           ]
         }
       ]
@@ -95,7 +95,7 @@
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
+            {"name": "rotationSpeed", "type": "double", "value": "0.25"}
           ]
         }
       ]
@@ -115,7 +115,7 @@
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
+            {"name": "rotationSpeed", "type": "double", "value": "0.25"}
           ]
         }
       ]
@@ -135,7 +135,7 @@
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "rotationSpeed", "type": "double", "value": "0.5"}
+            {"name": "rotationSpeed", "type": "double", "value": "0.25"}
           ]
         }
       ]
@@ -155,9 +155,7 @@
           "pathname": "Scripts/DroneController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "motionSpeed", "type": "double", "value": "0.5"},
-            {"name": "targetTr", "type": "GameObjectTransform", "value": "go 2 :: Barrel center"},
-            {"name": "maxDistance", "type": "double", "value": "60.0"}
+            {"name": "motionSpeed", "type": "double", "value": "0.5"}
           ]
         }
       ]

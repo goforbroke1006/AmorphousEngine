@@ -22,42 +22,47 @@
 #include <OGRE/Compositor/OgreCompositorWorkspace.h>
 #include <OGRE/OgreMesh2.h>
 
-class OgreNext : public GraphicsEngine {
-public:
-    explicit OgreNext(
-            const std::string &pluginsCfgPathname,
-            const std::string &resourcesCfgPathname);
+namespace AmE {
+    class OgreNext : public GraphicsEngine {
+    public:
+        explicit OgreNext(
+                const std::string &pluginsCfgPathname,
+                const std::string &resourcesCfgPathname);
 
-    virtual ~OgreNext();
+        virtual ~OgreNext();
 
-    void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
+        [[nodiscard]] size_t getWindowHnd() const override;
 
-    bool update(const std::map<std::string, GameObject *> &gameObjects) override;
+        void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
-    void stop() override;
+        bool update(const std::map<std::string, GameObject *> &gameObjects) override;
 
-private:
-    void createCameraNode(const GameObject *gameObjectPtr);
+        void stop() override;
 
-    void updateCameraNode(const GameObject *gameObjectPtr);
+    private:
+        void createCameraNode(const GameObject *gameObjectPtr);
 
-    void createSceneNode(const GameObject *gameObjectPtr);
+        void updateCameraNode(const GameObject *gameObjectPtr);
 
-    void updateSceneNode(const GameObject *gameObjectPtr);
+        void createSceneNode(const GameObject *gameObjectPtr);
 
-private:
-    bool mQuit = false;
+        void updateSceneNode(const GameObject *gameObjectPtr);
 
-    Ogre::Root *mRoot;
-    Ogre::Window *mWindow;
-    Ogre::SceneManager *mSceneManager;
-    Ogre::CompositorManager2 *mCompositorManager;
+    private:
+        bool mQuit = false;
 
-    WindowEventListener *mWinListener;
+        Ogre::Root *mRoot;
+        Ogre::Window *mWindow;
+        size_t mWindowHnd;
+        Ogre::SceneManager *mSceneManager;
+        Ogre::CompositorManager2 *mCompositorManager;
 
-    std::map<std::string, Ogre::Camera *> mCameraNodes;
-    std::map<std::string, Ogre::SceneNode *> mSceneNodes;
-    std::set<std::string> mMeshes;
-};
+        WindowEventListener *mWinListener;
+
+        std::map<std::string, Ogre::Camera *> mCameraNodes;
+        std::map<std::string, Ogre::SceneNode *> mSceneNodes;
+        std::set<std::string> mMeshes;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_OGRE_NEXT_H

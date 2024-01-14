@@ -57,6 +57,9 @@ find_package(SDL2 REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2MAIN_LIBRARY})
 
+# OIS
+target_link_libraries(${PROJECT_NAME} OIS)
+
 file(COPY ./Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./Component DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./projects DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

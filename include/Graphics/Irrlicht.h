@@ -11,27 +11,31 @@
 
 #define TO_COLOR 255.0
 
-class Irrlicht : public GraphicsEngine {
-public:
-    Irrlicht();
+namespace AmE {
+    class Irrlicht : public GraphicsEngine {
+    public:
+        Irrlicht();
 
-    virtual ~Irrlicht();
+        ~Irrlicht() override;
 
-    void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
+        [[nodiscard]] size_t getWindowHnd() const override;
 
-    bool update(const std::map<std::string, GameObject *> &gameObjects) override;
+        void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
-    void stop() override;
+        bool update(const std::map<std::string, GameObject *> &gameObjects) override;
 
-private:
-    bool mQuit = false;
+        void stop() override;
 
-    irr::IrrlichtDevice *mDevice;
-    irr::video::IVideoDriver *mVideoDriver;
-    irr::scene::ISceneManager *mSceneManager;
-    irr::gui::IGUIEnvironment *mGuiEnv;
+    private:
+        bool mQuit = false;
 
-    Color mBackgroundColor{};
-};
+        irr::IrrlichtDevice *mDevice;
+        irr::video::IVideoDriver *mVideoDriver;
+        irr::scene::ISceneManager *mSceneManager;
+        irr::gui::IGUIEnvironment *mGuiEnv;
+
+        Color mBackgroundColor{};
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_IRRLICHT_H

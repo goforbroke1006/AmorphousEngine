@@ -10,22 +10,24 @@
 #include "Transform.h"
 #include "Component.h"
 
-struct GameObject {
-public:
-    explicit GameObject(std::string mID, std::string mName);
+namespace AmE {
+    struct GameObject {
+    public:
+        explicit GameObject(std::string mID, std::string mName);
 
-    virtual ~GameObject();
+        virtual ~GameObject();
 
-    [[nodiscard]] bool isCamera() const;
+        [[nodiscard]] bool isCamera() const;
 
-    [[nodiscard]] bool isLight() const;
+        [[nodiscard]] bool isLight() const;
 
-    std::string mID;
-    std::string mName;
-    Transform *mTransform;
-    std::map<std::string, Component> mComponents;
+        std::string mID;
+        std::string mName;
+        Transform *mTransform;
+        std::map<std::string, Component> mComponents;
 
-    std::string mMeshPathname;
-};
+        std::string mMeshPathname;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_GAME_OBJECT_H

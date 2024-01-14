@@ -9,7 +9,7 @@
 #include <OGRE/OgreItem.h>
 #include <OGRE/OgreMeshManager2.h>
 
-OgreNext::OgreNext(
+AmE::OgreNext::OgreNext(
         const std::string &pluginsCfgPathname,
         const std::string &projectRootPathname
 ) {
@@ -19,6 +19,7 @@ OgreNext::OgreNext(
 
     mRoot->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
     mWindow = mRoot->initialise(true, "Hello Ogre-next");
+    mWindow->getCustomAttribute("WINDOW", &mWindowHnd);
 
     registerHlmsForEngine();
 
@@ -34,14 +35,14 @@ OgreNext::OgreNext(
     mCompositorManager = nullptr;
 }
 
-OgreNext::~OgreNext() {
+AmE::OgreNext::~OgreNext() {
     GraphicsEngine::~GraphicsEngine();
 
     Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, mWinListener);
     delete mRoot;
 }
 
-void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects) {
+void AmE::OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects) {
     for (const auto &goPair: gameObjects) {
         GameObject *pGO = goPair.second;
 
@@ -53,7 +54,7 @@ void OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects
     }
 }
 
-bool OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
+bool AmE::OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
     Ogre::WindowEventUtilities::messagePump();
 
     mQuit |= mWinListener->shouldQuit();
@@ -100,7 +101,7 @@ bool OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
 }
 
 
-void OgreNext::stop() {
+void AmE::OgreNext::stop() {
     mRoot->saveConfig();
 
     mSceneManager->getRootSceneNode(Ogre::SCENE_DYNAMIC)->removeAndDestroyAllChildren();
@@ -109,7 +110,7 @@ void OgreNext::stop() {
     mCameraNodes.clear();
 }
 
-void OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
+void AmE::OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
     mCameraNodes[gameObjectPtr->mID] = mSceneManager->createCamera(gameObjectPtr->mName);
 
     if (gameObjectPtr->mComponents.at("Camera").isEnabled()) {
@@ -136,7 +137,7 @@ void OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
     updateCameraNode(gameObjectPtr);
 }
 
-void OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
+void AmE::OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
     auto *tr = gameObjectPtr->mTransform;
 
     auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
@@ -182,7 +183,7 @@ void OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
     }
 }
 
-void OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
+void AmE::OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
     auto *sceneNode = mSceneManager->getRootSceneNode(Ogre::SCENE_DYNAMIC)
             ->createChildSceneNode(Ogre::SCENE_DYNAMIC);
     sceneNode->setName(gameObjectPtr->mID);
@@ -216,7 +217,7 @@ void OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
     updateSceneNode(gameObjectPtr);
 }
 
-void OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
+void AmE::OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
     auto *tr = gameObjectPtr->mTransform;
 
     auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
@@ -245,4 +246,8 @@ void OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
                     (Ogre::Real) scale.mZ
             )
     );
+}
+
+size_t AmE::OgreNext::getWindowHnd() const {
+    return mWindowHnd;
 }

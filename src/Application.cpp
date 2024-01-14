@@ -12,7 +12,7 @@
 
 #include "../include/Logger.h"
 
-Application::Application(
+AmE::Application::Application(
         std::string mEngineRoot,
         std::string mProjectRoot,
         GraphicsEngine *mGraphicsEngine,
@@ -21,10 +21,11 @@ Application::Application(
         : mEngineRoot(std::move(mEngineRoot)),
           mProjectRoot(std::move(mProjectRoot)),
           mGraphicsEngine(mGraphicsEngine),
-          mCalculationEngine(mCalculationEngine),
-          mInputReader(new InputReader()) {}
+          mCalculationEngine(mCalculationEngine) {
+    mInputReader = new InputReader(mGraphicsEngine->getWindowHnd());
+}
 
-Application::~Application() {
+AmE::Application::~Application() {
     for (const auto &go: mGameObjects)
         delete go.second;
     Logger::Debug("Clear " + std::to_string(mGameObjects.size()) + " game objects");
@@ -33,7 +34,7 @@ Application::~Application() {
     mInputReader = nullptr;
 }
 
-void Application::loadScene(const std::string &filepath) {
+void AmE::Application::loadScene(const std::string &filepath) {
     const std::string path = mProjectRoot + std::filesystem::path::preferred_separator + filepath;
     std::ifstream ifs(path);
     Json::Reader reader;
@@ -91,7 +92,7 @@ void Application::loadScene(const std::string &filepath) {
     }
 }
 
-void Application::runMainLoop() {
+void AmE::Application::runMainLoop() {
     mGraphicsEngine->initialize(mGameObjects);
     mCalculationEngine->initialize(mGameObjects);
 

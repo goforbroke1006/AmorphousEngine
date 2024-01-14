@@ -30,6 +30,10 @@ function Transform:new()
     return tr
 end
 
+function Transform:IsA(className --[[string]])
+    return className == "Transform"
+end
+
 --- Moves the transform in the direction and distance of translation.
 --- https://docs.unity3d.com/ScriptReference/Transform.Translate.html
 function Transform:Translate(translation --[[Vector3]], relativeTo)

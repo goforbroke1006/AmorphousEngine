@@ -35,3 +35,9 @@ sudo apt-get remove libirrlicht1.8 libirrlicht-dev libirrlicht-doc
 #  libxml2-dev libpcre3-dev libboost-filesystem-dev
 
 sudo apt remove -y libsdl2-dev
+
+# clear OIS
+sudo rm -rf /usr/local/include/ois/
+sudo rm -f /usr/local/lib/libOIS.*
+sudo rm -f /usr/local/lib/pkgconfig/OIS.pc
+

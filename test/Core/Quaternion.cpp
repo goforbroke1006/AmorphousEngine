@@ -11,6 +11,40 @@ TEST(TestQuaternion, file_compilation) {
     EXPECT_NO_THROW(ctx.CompileString("", "require 'Core/Quaternion'"));
 }
 
+TEST(TestQuaternion_isA, positive_1) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Quaternion' \n"
+            ""
+            "local qtr = Quaternion.identity \n"
+            "print(qtr:IsA('Quaternion')) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("true\n", output);
+}
+
+TEST(TestQuaternion_isA, negative_all) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Quaternion' \n"
+            ""
+            "local qtr = Quaternion.identity \n"
+            "print(qtr:IsA('Vector3')) \n"
+            "print(qtr:IsA('Transform')) \n"
+            "print(qtr:IsA('GameObject')) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("false\n"
+              "false\n"
+              "false\n", output);
+}
+
 TEST(TestQuaternion___mul, look_forward_rotate_right) {
     testing::internal::CaptureStdout();
 

@@ -7,19 +7,19 @@
 
 #include "../../include/Core/GameObject.h"
 
-GameObject::GameObject(std::string mID, std::string mName)
+AmE::GameObject::GameObject(std::string mID, std::string mName)
         : mID(std::move(mID)),
           mName(std::move(mName)),
           mTransform(new Transform()) {}
 
-GameObject::~GameObject() {
+AmE::GameObject::~GameObject() {
     delete mTransform;
 }
 
-bool GameObject::isCamera() const {
+bool AmE::GameObject::isCamera() const {
     return mComponents.find("Camera") != mComponents.end();
 }
 
-bool GameObject::isLight() const {
+bool AmE::GameObject::isLight() const {
     return mComponents.find("Light") != mComponents.end();
 }

@@ -4,12 +4,12 @@
 
 #include "../include/GraphicsEngine.h"
 
-Vector3 GraphicsEngine::convertPositionLeftToRightHand(Vector3 position) {
+AmE::Vector3 AmE::GraphicsEngine::convertPositionLeftToRightHand(Vector3 position) {
     position.mZ *= -1;
     return position;
 }
 
-Quaternion GraphicsEngine::convertRotationLeftToRightHand(Quaternion rotation) {
+AmE::Quaternion AmE::GraphicsEngine::convertRotationLeftToRightHand(Quaternion rotation) {
     rotation.mY *= -1;
     return rotation;
 }

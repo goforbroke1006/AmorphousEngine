@@ -12,16 +12,12 @@ SpinnerController = LuaBehaviour:new()
 SpinnerController.rotationSpeed = 0.0
 
 function SpinnerController:Start()
-    Debug.Log("SpinnerController :: Start");
-
     if (self.rotationSpeed == 0.0) then
         Debug.LogWarning("rotationSpeed should not be equals zero")
     end
 end
 
 function SpinnerController:Update()
-    --Debug.Log("SpinnerController :: Update");
-
     self.transform:Rotate(Vector3:new(
             0.0,
             0.0,

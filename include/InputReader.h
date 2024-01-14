@@ -7,26 +7,49 @@
 
 #include <map>
 
-#include <SDL2/SDL.h>
+#include <ois/OIS.h>
 
 #include "Core/KeyCode.h"
 
-class InputReader {
-public:
-    explicit InputReader();
+namespace AmE {
+    class InputReader : public OIS::KeyListener, OIS::MouseListener {
+    public:
+        explicit InputReader(size_t windowHnd);
 
-    void collectCodes();
+        ~InputReader() override;
 
-    [[nodiscard]] const std::map<KeyCode, bool> &pressed() const;
+        void collectCodes();
 
-    [[nodiscard]] const std::map<KeyCode, bool> &released() const;
+        [[nodiscard]] const std::map<KeyCode, bool> &pressed() const;
 
-private:
-    std::map<KeyCode, bool> mKeysPressed;
-    std::map<KeyCode, bool> mKeysReleased;
+        [[nodiscard]] const std::map<KeyCode, bool> &released() const;
 
-private:
-    static const std::map<SDL_Keycode, KeyCode> sdlToAMEKeyCode;
-};
+    private:
+        OIS::InputManager *mInputManager;
+        OIS::Keyboard *mKeyboard;
+        OIS::Mouse *mMouse;
+
+        std::map<KeyCode, bool> mKeysPressed;
+        std::map<KeyCode, bool> mKeysReleased;
+
+    private:
+        static std::map<OIS::KeyCode, KeyCode> kbOisToAME;
+        static std::map<OIS::MouseButtonID, KeyCode> msOisToAME;
+
+        // OIS::KeyListener implementation
+    public:
+        bool keyPressed(const OIS::KeyEvent &arg) override;
+
+        bool keyReleased(const OIS::KeyEvent &arg) override;
+
+        // OIS::MouseListener implementation
+    public:
+        bool mouseMoved(const OIS::MouseEvent &arg) override;
+
+        bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
+
+        bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_INPUT_READER_H

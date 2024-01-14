@@ -38,6 +38,10 @@ function Quaternion:new(newX --[[number]], newY --[[number]], newZ --[[number]],
     return qrt
 end
 
+function Quaternion:IsA(className --[[string]])
+    return className == "Quaternion"
+end
+
 Quaternion.identity = Quaternion:new(0.0, 0.0, 0.0, 0.0)
 
 function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]])

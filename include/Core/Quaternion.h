@@ -7,45 +7,47 @@
 
 #include <cmath>
 
-class Quaternion {
-public:
-    double mX, mY, mZ, mW;
+namespace AmE {
+    class Quaternion {
+    public:
+        double mX, mY, mZ, mW;
 
-    /**
-     * https://docs.unity3d.com/ScriptReference/Quaternion.Set.html
-     * @param x
-     * @param y
-     * @param z
-     * @param w
-     */
-    void Set(double x, double y, double z, double w) {
-        mX = x;
-        mY = y;
-        mZ = z;
-        mW = w;
-    }
+        /**
+         * https://docs.unity3d.com/ScriptReference/Quaternion.Set.html
+         * @param x
+         * @param y
+         * @param z
+         * @param w
+         */
+        void Set(double x, double y, double z, double w) {
+            mX = x;
+            mY = y;
+            mZ = z;
+            mW = w;
+        }
 
-    static Quaternion Euler(double roll, double pitch, double yaw) {
-        roll = roll * (M_PI / 180);
-        pitch = pitch * (M_PI / 180);
-        yaw = yaw * (M_PI / 180);
+        static Quaternion Euler(double roll, double pitch, double yaw) {
+            roll = roll * (M_PI / 180);
+            pitch = pitch * (M_PI / 180);
+            yaw = yaw * (M_PI / 180);
 
-        double cr = std::cos(roll * 0.5);
-        double sr = std::sin(roll * 0.5);
-        double cp = std::cos(pitch * 0.5);
-        double sp = std::sin(pitch * 0.5);
-        double cy = std::cos(yaw * 0.5);
-        double sy = std::sin(yaw * 0.5);
+            double cr = std::cos(roll * 0.5);
+            double sr = std::sin(roll * 0.5);
+            double cp = std::cos(pitch * 0.5);
+            double sp = std::sin(pitch * 0.5);
+            double cy = std::cos(yaw * 0.5);
+            double sy = std::sin(yaw * 0.5);
 
-        auto q = Quaternion();
+            auto q = Quaternion();
 
-        q.mW = cr * cp * cy + sr * sp * sy;
-        q.mX = sr * cp * cy - cr * sp * sy;
-        q.mY = cr * sp * cy + sr * cp * sy;
-        q.mZ = cr * cp * sy - sr * sp * cy;
+            q.mW = cr * cp * cy + sr * sp * sy;
+            q.mX = sr * cp * cy - cr * sp * sy;
+            q.mY = cr * sp * cy + sr * cp * sy;
+            q.mZ = cr * cp * sy - sr * sp * cy;
 
-        return q;
-    }
-};
+            return q;
+        }
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_QUATERNION_H

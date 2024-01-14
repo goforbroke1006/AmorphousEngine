@@ -26,6 +26,55 @@ TEST(TestVector3_predefined, zero) {
     EXPECT_EQ("0.0 0.0 0.0\n", output);
 }
 
+TEST(TestVector3_isA, positive_1) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            ""
+            "local vec = Vector3.zero \n"
+            "print(vec:IsA('Vector3')) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("true\n", output);
+}
+
+TEST(TestVector3_isA, negative_all) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            ""
+            "local vec = Vector3.zero \n"
+            "print(vec:IsA('Quaternion')) \n"
+            "print(vec:IsA('Transform')) \n"
+            "print(vec:IsA('GameObject')) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("false\n"
+              "false\n"
+              "false\n", output);
+}
+
+TEST(TestVector3_ToString, positive_1) {
+    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileStringAndRun(
+            "require 'Core/Vector3' \n"
+            ""
+            "local vec = Vector3:new(1.0, 2.5, 3.0) \n"
+            "print(vec:ToString()) \n"
+    );
+
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("(1.0, 2.5, 3.0)\n", output);
+}
+
 TEST(TestVector3_predefined, forward) {
     testing::internal::CaptureStdout();
 

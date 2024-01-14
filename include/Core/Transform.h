@@ -8,10 +8,12 @@
 #include "Vector3.h"
 #include "Quaternion.h"
 
-struct Transform {
-    Vector3 mPosition;
-    Quaternion mRotation;
-    Vector3 mLocalScale;
-};
+namespace AmE {
+    struct Transform {
+        Vector3 mPosition;
+        Quaternion mRotation;
+        Vector3 mLocalScale;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_TRANSFORM_H

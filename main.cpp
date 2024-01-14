@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
     std::cout << "Project root:   " << projectRoot << std::endl;
     std::cout << "Scene filename: " << sceneFilename << std::endl;
 
-    GraphicsEngine *pGraphicsEngine = nullptr;
+    AmE::GraphicsEngine *pGraphicsEngine = nullptr;
 
     if (graphicsMode == "OgreNext") {
 #ifdef DEBUG
@@ -37,17 +37,17 @@ int main(int argc, char **argv) {
         std::string pluginsCfgPathname = "plugins.cfg";
 #endif
 
-        pGraphicsEngine = new OgreNext(
+        pGraphicsEngine = new AmE::OgreNext(
                 pluginsCfgPathname,
                 projectRoot
         );
     }
     if (graphicsMode == "Irrlicht") {
-        pGraphicsEngine = new Irrlicht();
+        pGraphicsEngine = new AmE::Irrlicht();
     }
 
-    auto *pCalculationEngine = new Lua53(projectRoot);
-    auto *pApplication = new Application(engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine);
+    auto *pCalculationEngine = new AmE::Lua53(projectRoot);
+    auto *pApplication = new AmE::Application(engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine);
     pApplication->loadScene(sceneFilename);
     pApplication->runMainLoop();
 

@@ -4,8 +4,10 @@
 --- DateTime: 12/31/23 11:10 AM
 ---
 
+require 'Core/Object'
 require 'Core/Transform'
 
+GameObject = Object:new(0)
 GameObject = {
     id = "",
     name = "",
@@ -16,16 +18,20 @@ function GameObject:new(id --[[string]], name --[[string]])
     id = id or ""
     name = name or ""
 
-    go = {
+    gameObj = {
         id = id,
         name = name,
         transform = Transform:new(),
     }
 
     self.__index = self
-    setmetatable(go, self)
+    setmetatable(gameObj, self)
 
-    return go
+    return gameObj
+end
+
+function GameObject:IsA(className --[[string]])
+    return className == "GameObject"
 end
 
 function GameObject:AddComponent(name --[[string]])

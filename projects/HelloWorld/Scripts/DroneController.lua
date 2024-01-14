@@ -9,37 +9,27 @@ require "Core/LuaBehaviour"
 DroneController = LuaBehaviour:new()
 
 DroneController.motionSpeed = 0.0
-DroneController.targetTr = Transform
-DroneController.maxDistance = 75.0
 
 function DroneController:Start()
-    Debug.Log("DroneController :: Start");
-
     if (self.motionSpeed == 0.0) then
         Debug.LogWarning("motionSpeed should not be equals zero")
-    end
-    if (self.targetTr == nil) then
-        Debug.LogError("targetTr is required")
-    else
-        Debug.Log("targetTr = " .. self.targetTr.position:ToString())
     end
 end
 
 function DroneController:Update()
-    Debug.Log("DroneController :: Update");
-
-    if self.targetTr == nil then
-        return
+    if Input.GetButtonDown("Fire1") then
+        Debug.Log("Fire!!!")
     end
 
-    self.transform:LookAt(self.targetTr);
-    self.transform:Translate(Vector3.right * self.motionSpeed * Time.deltaTime);
+    local horMove = Input.GetAxis("Horizontal");
+    if horMove ~= 0.0 then
+        local move = Vector3:new(horMove, 0.0, 0.0)
+        self.transform:Translate(move * self.motionSpeed * Time.deltaTime);
+    end
 
-    local distance = self.transform.position:Distance(self.targetTr.position);
-    Debug.Log("Distance to target " .. distance);
-    if distance > self.maxDistance then
-        local movement = distance - self.maxDistance
-        self.transform:LookAt(self.targetTr);
-        self.transform:Translate(Vector3.forward * movement * Time.deltaTime);
+    local verMove = Input.GetAxis("Vertical")
+    if verMove ~= 0.0 then
+        local move = Vector3:new(0.0, 0.0, verMove)
+        self.transform:Translate(move * self.motionSpeed * Time.deltaTime);
     end
 end

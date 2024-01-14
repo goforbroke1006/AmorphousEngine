@@ -7,7 +7,7 @@
 #include <irrlicht.h>
 #include <stdexcept>
 
-Irrlicht::Irrlicht() {
+AmE::Irrlicht::Irrlicht() {
     mDevice = irr::createDevice(
             irr::video::EDT_SOFTWARE,
             irr::core::dimension2d<irr::u32>(800, 600),
@@ -24,10 +24,10 @@ Irrlicht::Irrlicht() {
     mGuiEnv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
                            irr::core::rect<irr::s32>(10, 10, 260, 22), true);
 
-    mBackgroundColor = Color::grey;
+    mBackgroundColor = AmE::grey;
 }
 
-Irrlicht::~Irrlicht() {
+AmE::Irrlicht::~Irrlicht() {
     GraphicsEngine::~GraphicsEngine();
 
 //    delete mGuiEnv;
@@ -36,7 +36,11 @@ Irrlicht::~Irrlicht() {
 //    delete mDevice;
 }
 
-void Irrlicht::initialize(const std::map<std::string, GameObject *> &gameObjects) {
+size_t AmE::Irrlicht::getWindowHnd() const {
+    return 0;
+}
+
+void AmE::Irrlicht::initialize(const std::map<std::string, GameObject *> &gameObjects) {
     for (const auto &goPair: gameObjects) {
         GameObject *pGO = goPair.second;
 
@@ -64,7 +68,7 @@ void Irrlicht::initialize(const std::map<std::string, GameObject *> &gameObjects
     }
 }
 
-bool Irrlicht::update(const std::map<std::string, GameObject *> &gameObjects) {
+bool AmE::Irrlicht::update(const std::map<std::string, GameObject *> &gameObjects) {
     mQuit |= !mDevice->run();
     if (mQuit)
         return false;
@@ -87,7 +91,7 @@ bool Irrlicht::update(const std::map<std::string, GameObject *> &gameObjects) {
     return true;
 }
 
-void Irrlicht::stop() {
+void AmE::Irrlicht::stop() {
     mDevice->drop();
 }
 

@@ -27,6 +27,10 @@ function Vector3:new(newX --[[number]], newY --[[number]], newZ --[[number]])
     return vec
 end
 
+function Vector3:IsA(className --[[string]])
+    return className == "Vector3"
+end
+
 Vector3.zero = Vector3:new(0.0, 0.0, 0.0)
 
 Vector3.forward = Vector3:new(0.0, 0.0, 1.0)

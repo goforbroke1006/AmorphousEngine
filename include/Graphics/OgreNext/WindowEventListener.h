@@ -7,21 +7,23 @@
 
 #include <OGRE/OgreWindowEventUtilities.h>
 
-class WindowEventListener : public Ogre::WindowEventListener {
-public:
-    WindowEventListener() : mShouldQuit(false) {}
+namespace AmE {
+    class WindowEventListener : public Ogre::WindowEventListener {
+    public:
+        WindowEventListener() : mShouldQuit(false) {}
 
-    void windowClosed(Ogre::Window *window) override {
-        printf("Window closed!\n");
-        mShouldQuit = true;
-    }
+        void windowClosed(Ogre::Window *window) override {
+            printf("Window closed!\n");
+            mShouldQuit = true;
+        }
 
-    [[nodiscard]] bool shouldQuit() const {
-        return mShouldQuit;
-    }
+        [[nodiscard]] bool shouldQuit() const {
+            return mShouldQuit;
+        }
 
-private:
-    bool mShouldQuit;
-};
+    private:
+        bool mShouldQuit;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_WINDOW_EVENT_LISTENER_H

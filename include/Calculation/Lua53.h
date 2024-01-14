@@ -8,7 +8,8 @@
 #include <vector>
 #include <string>
 
-#include <LuaCpp.hpp>
+#include <LuaCpp/Engine/LuaState.hpp>
+#include <LuaCpp/Engine/LuaTTable.hpp>
 
 #include "../Core/GameObject.h"
 #include "../Core/KeyCode.h"
@@ -19,33 +20,35 @@
 #define LUA53_G_VAR_BTN_P_T "__global_buttons_pressed"
 #define LUA53_G_VAR_BTN_R_T "__global_buttons_released"
 
-class Lua53 : public CalculationEngine {
-public:
-    explicit Lua53(const std::string &projectRoot);
+namespace AmE {
+    class Lua53 : public CalculationEngine {
+    public:
+        explicit Lua53(const std::string &projectRoot);
 
-    virtual ~Lua53();
+        virtual ~Lua53();
 
-    void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
+        void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
 
-    void update(
-            std::map<std::string, GameObject *> &gameObjects,
-            const std::map<KeyCode, bool> &keysPressed,
-            const std::map<KeyCode, bool> &keysReleased
-    ) override;
+        void update(
+                std::map<std::string, GameObject *> &gameObjects,
+                const std::map<KeyCode, bool> &keysPressed,
+                const std::map<KeyCode, bool> &keysReleased
+        ) override;
 
-    static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
+        static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
 
-    static std::string propValToLuaCode(const Property &prop);
+        static std::string propValToLuaCode(const Property &prop);
 
-    static std::any parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal);
+        static std::any parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal);
 
-private:
-    std::unique_ptr<LuaCpp::Engine::LuaState> L;
+    private:
+        std::unique_ptr<LuaCpp::Engine::LuaState> L;
 
-    LuaCpp::Engine::LuaTTable mGameObjectsTbl;
-    LuaCpp::Engine::LuaTTable mComponentsTbl;
-    LuaCpp::Engine::LuaTTable mBtnPressedTbl;
-    LuaCpp::Engine::LuaTTable mBtnReleasedTbl;
-};
+        LuaCpp::Engine::LuaTTable mGameObjectsTbl;
+        LuaCpp::Engine::LuaTTable mComponentsTbl;
+        LuaCpp::Engine::LuaTTable mBtnPressedTbl;
+        LuaCpp::Engine::LuaTTable mBtnReleasedTbl;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_LUA53_H

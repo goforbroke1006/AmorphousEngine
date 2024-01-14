@@ -13,30 +13,32 @@
 #include "CalculationEngine.h"
 #include "InputReader.h"
 
-class Application {
-public:
-    explicit Application(
-            std::string mEngineRoot,
-            std::string mProjectRoot,
-            GraphicsEngine *mGraphicsEngine,
-            CalculationEngine *mCalculationEngine
-    );
+namespace AmE {
+    class Application {
+    public:
+        explicit Application(
+                std::string mEngineRoot,
+                std::string mProjectRoot,
+                GraphicsEngine *mGraphicsEngine,
+                CalculationEngine *mCalculationEngine
+        );
 
-    virtual ~Application();
+        virtual ~Application();
 
-    void loadScene(const std::string &filepath);
+        void loadScene(const std::string &filepath);
 
-    void runMainLoop();
+        void runMainLoop();
 
-private:
-    std::string mEngineRoot;
-    std::string mProjectRoot;
+    private:
+        std::string mEngineRoot;
+        std::string mProjectRoot;
 
-    GraphicsEngine *mGraphicsEngine;
-    CalculationEngine *mCalculationEngine;
-    InputReader *mInputReader;
+        GraphicsEngine *mGraphicsEngine;
+        CalculationEngine *mCalculationEngine;
+        InputReader *mInputReader;
 
-    std::map<std::string, GameObject *> mGameObjects;
-};
+        std::map<std::string, GameObject *> mGameObjects;
+    };
+}
 
 #endif //AMORPHOUS_ENGINE_APPLICATION_H

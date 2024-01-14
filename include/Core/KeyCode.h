@@ -7,34 +7,38 @@
 
 #include <string>
 
-class KeyCode {
-public:
-    explicit KeyCode() = default;
+namespace AmE {
+    class KeyCode {
+    public:
+        explicit KeyCode() = default;
 
-    explicit KeyCode(std::string code);
+        explicit KeyCode(std::string code);
 
-    std::string mCode;
+        [[nodiscard]] std::string toString() const;
 
-public:
-    const static KeyCode W;
-    const static KeyCode A;
-    const static KeyCode S;
-    const static KeyCode D;
+        bool operator<(const KeyCode &rhs) const;
 
-    const static KeyCode UpArrow;
-    const static KeyCode DownArrow;
-    const static KeyCode RightArrow;
-    const static KeyCode LeftArrow;
+    private:
+        std::string mCode;
+    };
 
-    const static KeyCode Escape;
-    const static KeyCode Ctrl;
-    const static KeyCode Space;
+    const static KeyCode KeyCode_W = KeyCode("w");
+    const static KeyCode KeyCode_S = KeyCode("s");
+    const static KeyCode KeyCode_A = KeyCode("a");
+    const static KeyCode KeyCode_D = KeyCode("d");
 
-    const static KeyCode Mouse0;
-    const static KeyCode Mouse1;
-    const static KeyCode Mouse2;
+    const static KeyCode KeyCode_UpArrow = KeyCode("arrow-up");
+    const static KeyCode KeyCode_DownArrow = KeyCode("arrow-down");
+    const static KeyCode KeyCode_RightArrow = KeyCode("arrow-right");
+    const static KeyCode KeyCode_LeftArrow = KeyCode("arrow-left");
 
-    bool operator<(const KeyCode &rhs) const;
-};
+    const static KeyCode KeyCode_Escape = KeyCode("ESC");
+    const static KeyCode KeyCode_Ctrl = KeyCode("CTRL");
+    const static KeyCode KeyCode_Space = KeyCode("SPACE");
+
+    const KeyCode KeyCode_Mouse0 = KeyCode("MSL"); // The Left (or primary) mouse button.
+    const KeyCode KeyCode_Mouse1 = KeyCode("MSR"); // Right mouse button (or secondary mouse button).
+    const KeyCode KeyCode_Mouse2 = KeyCode("MSM"); // Middle mouse button (or third button).
+}
 
 #endif //AMORPHOUS_ENGINE_KEYCODE_H

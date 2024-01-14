@@ -2,11 +2,15 @@
 // Created by goforbroke on 1/1/24.
 //
 
-#include "../../include/Logger.h"
 #include "../../include/Calculation/Lua53.h"
 
 #include <string>
 #include <map>
+
+#include <LuaCpp/LuaContext.hpp>
+#include <LuaCpp/Engine/LuaTNumber.hpp>
+#include <LuaCpp/Engine/LuaTString.hpp>
+#include <LuaCpp/Engine/LuaTBoolean.hpp>
 
 using LETKey = LuaCpp::Engine::Table::Key;
 using LENum = LuaCpp::Engine::LuaTNumber;
@@ -14,7 +18,7 @@ using LEString = LuaCpp::Engine::LuaTString;
 using LEBoolean = LuaCpp::Engine::LuaTBoolean;
 using LETable = LuaCpp::Engine::LuaTTable;
 
-Lua53::Lua53(const std::string &projectRoot) {
+AmE::Lua53::Lua53(const std::string &projectRoot) {
     LuaCpp::LuaContext ctx;
     L = ctx.newState();
 
@@ -37,11 +41,11 @@ Lua53::Lua53(const std::string &projectRoot) {
     mComponentsTbl.PopGlobal(*L);
 }
 
-Lua53::~Lua53() {
+AmE::Lua53::~Lua53() {
 //    lua_close(*L);
 }
 
-void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
+void AmE::Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
     // 1) Include LUA modules from 'Core'
     // 2) Create all game objects (set name, set transform)
     // 3) Create all components (set gameObject, set transform)
@@ -72,17 +76,17 @@ void Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
     Logger::Debug("Components:   " + std::to_string(mComponentsTbl.getValues().size()));
 }
 
-void Lua53::update(
+void AmE::Lua53::update(
         std::map<std::string, GameObject *> &gameObjects,
         const std::map<KeyCode, bool> &keysPressed,
         const std::map<KeyCode, bool> &keysReleased
 ) {
     for (const auto &kp: keysPressed) {
-        auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.mCode));
+        auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
     for (const auto &kp: keysReleased) {
-        auto &val = (LEBoolean &) mBtnReleasedTbl.getValue(LETKey(kp.first.mCode));
+        auto &val = (LEBoolean &) mBtnReleasedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
     mBtnPressedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_P_T);
@@ -178,7 +182,7 @@ void Lua53::update(
     }
 }
 
-std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects) {
+std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects) {
     if (gameObjects.empty())
         return "";
 
@@ -289,7 +293,7 @@ std::string Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &g
     return initCode;
 }
 
-std::string Lua53::propValToLuaCode(const Property &prop) {
+std::string AmE::Lua53::propValToLuaCode(const Property &prop) {
     switch (prop.mType) {
         case PropType::PropTypeBoolean:
             return std::any_cast<bool>(prop.mValue) ? "true" : "false";
@@ -358,7 +362,7 @@ std::string Lua53::propValToLuaCode(const Property &prop) {
     throw std::runtime_error("unexpected type " + PropType::asString(prop.mType));
 }
 
-std::any Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal) {
+std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal) {
     switch (kind) {
         case PropType::PropTypeBoolean: {
             return ((LEBoolean *) rawLuaVal)->getValue();
@@ -389,8 +393,10 @@ std::any Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::
             return vec;
         }
         case PropType::PropTypeGameObject:
+            // TODO:
             break;
         case PropType::PropTypeGameObjectTransform:
+            // TODO:
             break;
     }
 
