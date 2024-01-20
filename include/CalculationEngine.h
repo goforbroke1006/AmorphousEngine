@@ -22,7 +22,8 @@ namespace AmE {
         virtual void update(
                 std::map<std::string, GameObject *> &gameObjects,
                 const std::map<KeyCode, bool> &keysPressed,
-                const std::map<KeyCode, bool> &keysReleased
+                const std::map<KeyCode, bool> &keysReleased,
+                bool &appQuit
         ) = 0;
     };
 }

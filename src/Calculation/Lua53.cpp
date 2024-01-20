@@ -22,10 +22,13 @@ AmE::Lua53::Lua53(const std::string &projectRoot) {
     LuaCpp::LuaContext ctx;
     L = ctx.newState();
 
+    mAppQuit = new LEBoolean(false);
+
     mGameObjectsTbl.PushGlobal(*L, LUA53_G_VAR_GO_T);
     mComponentsTbl.PushGlobal(*L, LUA53_G_VAR_CMP_T);
     mBtnPressedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_P_T);
     mBtnReleasedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_R_T);
+    mAppQuit->PushGlobal(*L, LUA53_G_VAR_APP_QUIT);
 
     std::string setLuaPathCode;
     setLuaPathCode += "package.path = package.path .. ';" + projectRoot + "?.lua'\n";
@@ -42,6 +45,7 @@ AmE::Lua53::Lua53(const std::string &projectRoot) {
 }
 
 AmE::Lua53::~Lua53() {
+    delete mAppQuit;
 //    lua_close(*L);
 }
 
@@ -79,7 +83,8 @@ void AmE::Lua53::initialize(const std::map<std::string, GameObject *> &gameObjec
 void AmE::Lua53::update(
         std::map<std::string, GameObject *> &gameObjects,
         const std::map<KeyCode, bool> &keysPressed,
-        const std::map<KeyCode, bool> &keysReleased
+        const std::map<KeyCode, bool> &keysReleased,
+        bool &appQuit
 ) {
     for (const auto &kp: keysPressed) {
         auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.toString()));
@@ -180,6 +185,9 @@ void AmE::Lua53::update(
             cmp.mProperties[luaAttrName].mValue = parsePropValFromLua(kind, luaAttrState.second.get());
         }
     }
+
+    mAppQuit->PopGlobal(*L);
+    appQuit = mAppQuit->getValue();
 }
 
 std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects) {

@@ -49,7 +49,38 @@ __global_buttons_released = {
     [KeyCode.Mouse2] = false,
 }
 
+-- TODO: load from ${PROJECT_DIR}/input-mapping.json
+__input_mapping = {
+    axes = {
+        ["Vertical"] = {
+            ["positive"] = { [0] = KeyCode.W, [1] = KeyCode.UpArrow },
+            ["negative"] = { [0] = KeyCode.S, [1] = KeyCode.DownArrow },
+        },
+        ["Horizontal"] = {
+            ["positive"] = { [0] = KeyCode.D, [1] = KeyCode.RightArrow },
+            ["negative"] = { [0] = KeyCode.A, [1] = KeyCode.LeftArrow },
+        },
+    },
+    buttons = {
+        ["Fire1"] = {
+            ["triggers"] = { [0] = KeyCode.Mouse0 }
+        },
+    }
+}
+--__input_mapping.axes["Vertical"] = {}
+--__input_mapping.axes["Vertical"]["positive"] = { KeyCode.W, KeyCode.UpArrow }
+--__input_mapping.axes["Vertical"]["negative"] = { KeyCode.S, KeyCode.DownArrow }
+--__input_mapping.axes["Horizontal"] = {}
+--__input_mapping.axes["Horizontal"]["positive"] = { KeyCode.D, KeyCode.RightArrow }
+--__input_mapping.axes["Horizontal"]["negative"] = { KeyCode.A, KeyCode.LeftArrow }
+
+__application_quit = false
+
 function __before_update_frame()
+    if __application_quit then
+        return
+    end
+
     for keyCode, keyState in pairs(__global_buttons_pressed) do
         if keyState == true then
             if __global_buttons_hold[keyCode] == true then
@@ -68,6 +99,10 @@ function __before_update_frame()
 end
 
 function __on_update_frame()
+    if __application_quit then
+        return
+    end
+
     for _, cmpInstance in pairs(__all_components) do
         if (cmpInstance.enabled) then
             cmpInstance:Update()
@@ -76,6 +111,10 @@ function __on_update_frame()
 end
 
 function __after_update_frame()
+    if __application_quit then
+        return
+    end
+
     for keyCode, _ in pairs(__global_buttons_pressed) do
         __global_buttons_pressed[keyCode] = false
     end

@@ -5,17 +5,23 @@
 ---
 
 require "Core/KeyCode"
+require "Core/__external"
 
 Input = {}
 
 --- https://docs.unity3d.com/ScriptReference/Input.GetButtonDown.html
 --- Returns true during the frame the user pressed down the virtual button identified by buttonName.
 Input.GetButtonDown = function(buttonName --[[string]])
-    if buttonName == "Fire1" then
-        return __global_buttons_pressed[KeyCode.Mouse0] == true
+    if __input_mapping.buttons[buttonName] == nil then
+        Debug.LogError("GetButtonDown: unexpected button name: " .. buttonName)
+        return false
     end
 
-    Debug.LogError("GetButtonDown: unexpected button name: " .. buttonName)
+    for _, keyCode in pairs(__input_mapping.buttons[buttonName]["triggers"]) do
+        if __global_buttons_pressed[keyCode] == true then
+            return true
+        end
+    end
 
     return false
 end
@@ -23,11 +29,16 @@ end
 --- https://docs.unity3d.com/ScriptReference/Input.GetButtonUp.html
 --- Returns true the first frame the user releases the virtual button identified by buttonName.
 Input.GetButtonUp = function(buttonName --[[string]])
-    if buttonName == "Fire1" then
-        return __global_buttons_released[KeyCode.Mouse0] == true
+    if __input_mapping.buttons[buttonName] == nil then
+        Debug.LogError("GetButtonUp: unexpected button name: " .. buttonName)
+        return false
     end
 
-    Debug.LogError("GetButtonUp: unexpected button name: " .. buttonName)
+    for _, keyCode in pairs(__input_mapping.buttons[buttonName]["triggers"]) do
+        if __global_buttons_released[keyCode] == true then
+            return true
+        end
+    end
 
     return false
 end
@@ -35,50 +46,71 @@ end
 --- https://docs.unity3d.com/ScriptReference/Input.GetButton.html
 --- bool True when an axis has been pressed and not released.
 Input.GetButton = function(buttonName --[[string]])
-    if buttonName == "Fire1" then
-        return __global_buttons_hold[KeyCode.Mouse0] == true
+    if __input_mapping.buttons[buttonName] == nil then
+        Debug.LogError("GetButton: unexpected button name: " .. buttonName)
+        return false
     end
 
-    Debug.LogError("GetButton: unexpected button name: " .. buttonName)
+    for _, keyCode in pairs(__input_mapping.buttons[buttonName]["triggers"]) do
+        if __global_buttons_hold[keyCode] == true then
+            return true
+        end
+    end
 
     return false
+end
+
+--- https://docs.unity3d.com/ScriptReference/Input.GetKeyDown.html
+--- Returns true during the frame the user starts pressing down the key identified by name.
+Input.GetKeyDown = function(name --[[string]])
+    return __global_buttons_pressed[name] == true
+end
+
+--- https://docs.unity3d.com/ScriptReference/Input.GetKey.html
+--- Returns true while the user holds down the key identified by name.
+Input.GetKey = function(name --[[string]])
+    return __global_buttons_hold[name] == true
+end
+
+--- https://docs.unity3d.com/ScriptReference/Input.GetKeyUp.html
+--- Returns true during the frame the user releases the key identified by name.
+Input.GetKeyUp = function(name --[[string]])
+    return __global_buttons_released[name] == true
 end
 
 --- https://docs.unity3d.com/ScriptReference/Input.GetAxis.html
 --- Returns the value of the virtual axis identified by axisName.
 Input.GetAxis = function(axisName --[[string]])
-    if axisName == "Vertical" then
-        if __global_buttons_hold[KeyCode.W] == true and __global_buttons_hold[KeyCode.S] == true then
-            -- press both
-            return 0.0
-        end
-
-        if __global_buttons_hold[KeyCode.W] == true then
-            return 1.0
-        end
-        if __global_buttons_hold[KeyCode.S] == true then
-            return -1.0
-        end
-
-        return 0.0
-    end
-    if axisName == "Horizontal" then
-        if __global_buttons_hold[KeyCode.D] == true and __global_buttons_hold[KeyCode.A] == true then
-            -- press both
-            return 0.0
-        end
-
-        if __global_buttons_hold[KeyCode.D] == true then
-            return 1.0
-        end
-        if __global_buttons_hold[KeyCode.A] == true then
-            return -1.0
-        end
-
+    if __input_mapping.axes[axisName] == nil then
+        Debug.LogError("GetAxis: unexpected axis name: " .. axisName)
         return 0.0
     end
 
-    Debug.LogError("GetAxis: unexpected axis name: " .. axisName)
+    local posDetected = false;
+    local negDetected = false;
+
+    for _, keyCode in pairs(__input_mapping.axes[axisName]["positive"]) do
+        if __global_buttons_hold[keyCode] == true then
+            posDetected = true
+        end
+    end
+    for _, keyCode in pairs(__input_mapping.axes[axisName]["negative"]) do
+        if __global_buttons_hold[keyCode] == true then
+            negDetected = true
+        end
+    end
+
+    if posDetected == true and negDetected == true then
+        -- press both
+        return 0.0
+    end
+
+    if posDetected == true then
+        return 1.0
+    end
+    if negDetected == true then
+        return -1.0
+    end
 
     return 0.0
 end

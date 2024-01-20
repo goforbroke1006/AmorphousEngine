@@ -27,10 +27,10 @@ namespace AmE {
     const static KeyCode KeyCode_A = KeyCode("a");
     const static KeyCode KeyCode_D = KeyCode("d");
 
-    const static KeyCode KeyCode_UpArrow = KeyCode("arrow-up");
-    const static KeyCode KeyCode_DownArrow = KeyCode("arrow-down");
-    const static KeyCode KeyCode_RightArrow = KeyCode("arrow-right");
-    const static KeyCode KeyCode_LeftArrow = KeyCode("arrow-left");
+    const static KeyCode KeyCode_UpArrow = KeyCode("ARROW ^");
+    const static KeyCode KeyCode_DownArrow = KeyCode("ARROW v");
+    const static KeyCode KeyCode_RightArrow = KeyCode("ARROW >");
+    const static KeyCode KeyCode_LeftArrow = KeyCode("ARROW <");
 
     const static KeyCode KeyCode_Escape = KeyCode("ESC");
     const static KeyCode KeyCode_Ctrl = KeyCode("CTRL");

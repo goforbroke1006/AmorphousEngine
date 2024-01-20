@@ -10,6 +10,7 @@
 
 #include <LuaCpp/Engine/LuaState.hpp>
 #include <LuaCpp/Engine/LuaTTable.hpp>
+#include <LuaCpp/Engine/LuaTBoolean.hpp>
 
 #include "../Core/GameObject.h"
 #include "../Core/KeyCode.h"
@@ -19,6 +20,7 @@
 #define LUA53_G_VAR_CMP_T "__all_components"
 #define LUA53_G_VAR_BTN_P_T "__global_buttons_pressed"
 #define LUA53_G_VAR_BTN_R_T "__global_buttons_released"
+#define LUA53_G_VAR_APP_QUIT "__application_quit"
 
 namespace AmE {
     class Lua53 : public CalculationEngine {
@@ -32,7 +34,8 @@ namespace AmE {
         void update(
                 std::map<std::string, GameObject *> &gameObjects,
                 const std::map<KeyCode, bool> &keysPressed,
-                const std::map<KeyCode, bool> &keysReleased
+                const std::map<KeyCode, bool> &keysReleased,
+                bool &appQuit
         ) override;
 
         static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
@@ -48,6 +51,7 @@ namespace AmE {
         LuaCpp::Engine::LuaTTable mComponentsTbl;
         LuaCpp::Engine::LuaTTable mBtnPressedTbl;
         LuaCpp::Engine::LuaTTable mBtnReleasedTbl;
+        LuaCpp::Engine::LuaTBoolean *mAppQuit;
     };
 }
 

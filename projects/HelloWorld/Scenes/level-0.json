@@ -1,6 +1,24 @@
 {
   "gameObjects": [
     {
+      "id": "go 0 :: Application System",
+      "name": "Application System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "name": "ApplicationSystem",
+          "pathname": "Scripts/ApplicationSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
       "id": "go 0 :: Main Camera",
       "name": "Main Camera",
       "transform": {

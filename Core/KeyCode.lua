@@ -11,10 +11,10 @@ KeyCode.A = "a";
 KeyCode.S = "s";
 KeyCode.D = "d";
 
-KeyCode.UpArrow = "arrow-up";
-KeyCode.DownArrow = "arrow-down";
-KeyCode.RightArrow = "arrow-right";
-KeyCode.LeftArrow = "arrow-left";
+KeyCode.UpArrow = "ARROW ^";
+KeyCode.DownArrow = "ARROW v";
+KeyCode.RightArrow = "ARROW >";
+KeyCode.LeftArrow = "ARROW <";
 
 KeyCode.Escape = "ESC";
 KeyCode.Ctrl = "CTRL";

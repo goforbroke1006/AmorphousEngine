@@ -96,13 +96,15 @@ void AmE::Application::runMainLoop() {
     mGraphicsEngine->initialize(mGameObjects);
     mCalculationEngine->initialize(mGameObjects);
 
-    while (true) {
+    bool appQuit = false;
+    while (!appQuit) {
         mInputReader->collectCodes();
 
         mCalculationEngine->update(
                 mGameObjects,
                 mInputReader->pressed(),
-                mInputReader->released()
+                mInputReader->released(),
+                appQuit
         );
 
         if (!mGraphicsEngine->update(mGameObjects))
