@@ -13,6 +13,9 @@
 #include "Core/KeyCode.h"
 
 namespace AmE {
+    /**
+     * InputReader use OIS to fill InputsState with actual keyboard and mouse buttons state.
+     */
     class InputReader : public OIS::KeyListener, OIS::MouseListener {
     public:
         explicit InputReader(size_t windowHnd, InputsState *const preUpdateFrameData);

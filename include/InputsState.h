@@ -11,6 +11,9 @@
 #include "Core/KeyCode.h"
 
 namespace AmE {
+    /**
+     * InputsState is an DTO to transfer keyboard and mouse state.
+     */
     class InputsState {
     public:
         std::map<KeyCode, bool> pressed;

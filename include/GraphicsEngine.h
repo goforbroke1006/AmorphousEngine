@@ -10,6 +10,14 @@
 #include "Core/GameObject.h"
 
 namespace AmE {
+    /**
+     * GraphicsEngine is a wrapper over 3D implementation.
+     * It controls:
+     * - Window creation
+     * - Scene objects/nodes initialization for each game object
+     * - Camera initialization
+     * - Update game object's position, rotation and scale after each frame
+     */
     class GraphicsEngine {
     public:
         virtual ~GraphicsEngine() = default;

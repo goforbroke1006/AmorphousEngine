@@ -12,6 +12,9 @@
 #include "Core/KeyCode.h"
 
 namespace AmE {
+    /**
+     * SceneState is an DTO to share scene content between LUA and graphics engine.
+     */
     class SceneState {
     public:
         explicit SceneState(std::map<GameObjectInstanceID, GameObject *> gameObjects) {

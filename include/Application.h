@@ -25,8 +25,20 @@ namespace AmE {
 
         virtual ~Application();
 
+        /**
+         * Loads scene from JSON file.
+         * @param filepath - can be related to project root
+         */
         void loadScene(const std::string &filepath);
 
+        /**
+         * Main execution method.
+         * - Read inputs
+         * - Put date to calculation engine
+         * - Calculate for one frame
+         * - Pull game objects data
+         * - Apply game objects data to graphic engine scene
+         */
         void runMainLoop();
 
     private:

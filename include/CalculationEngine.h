@@ -11,14 +11,26 @@
 #include "SceneState.h"
 
 namespace AmE {
+    /**
+     * CalculationEngine executes components code.
+     */
     class CalculationEngine {
     public:
         /**
          * Prepare calculation engine.
+         * - Create game objects
+         * - Attach components to each game object
          * @param gameObjects
          */
         virtual void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) = 0;
 
+        /**
+         * Calculation lifecycle:
+         * - Execute each component
+         * - For each game object pull position, rotation and scale
+         * @param preUpdateFrameData
+         * @param sceneState
+         */
         virtual void update(
                 const InputsState *preUpdateFrameData,
                 SceneState *sceneState
