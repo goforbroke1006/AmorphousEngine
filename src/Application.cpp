@@ -22,16 +22,12 @@ AmE::Application::Application(
           mProjectRoot(std::move(mProjectRoot)),
           mGraphicsEngine(mGraphicsEngine),
           mCalculationEngine(mCalculationEngine) {
-    mInputReader = new InputReader(mGraphicsEngine->getWindowHnd());
 }
 
 AmE::Application::~Application() {
     for (const auto &go: mGameObjects)
         delete go.second;
     Logger::Debug("Clear " + std::to_string(mGameObjects.size()) + " game objects");
-
-    delete mInputReader;
-    mInputReader = nullptr;
 }
 
 void AmE::Application::loadScene(const std::string &filepath) {
@@ -44,27 +40,31 @@ void AmE::Application::loadScene(const std::string &filepath) {
 
     const Json::Value &gameObjectsVals = obj["gameObjects"];
 
-    for (const auto &goVal: gameObjectsVals) {
-        auto *pGO = new GameObject(goVal["id"].asString(), goVal["name"].asString());
+    GameObjectInstanceID nextID = 0;
 
-        pGO->mTransform = new Transform;
+    for (const auto &goVal: gameObjectsVals) {
+        auto *pGO = new GameObject(nextID, goVal["name"].asString());
 
         auto &posVal = goVal["transform"]["position"];
-        pGO->mTransform->mPosition.mX = posVal["x"].asDouble();
-        pGO->mTransform->mPosition.mY = posVal["y"].asDouble();
-        pGO->mTransform->mPosition.mZ = posVal["z"].asDouble();
+        pGO->getTransform()->mPosition.Set(
+                posVal["x"].asDouble(),
+                posVal["y"].asDouble(),
+                posVal["z"].asDouble());
 
         auto &rotVal = goVal["transform"]["rotation"];
-        pGO->mTransform->mRotation = Quaternion::Euler(
+        pGO->getTransform()->mRotation.Set(
                 rotVal["x"].asDouble(),
                 rotVal["y"].asDouble(),
-                rotVal["z"].asDouble()
+                rotVal["z"].asDouble(),
+                rotVal["w"].asDouble()
         );
 
         auto &scaleVal = goVal["transform"]["localScale"];
-        pGO->mTransform->mLocalScale.mX = scaleVal["x"].asDouble();
-        pGO->mTransform->mLocalScale.mY = scaleVal["y"].asDouble();
-        pGO->mTransform->mLocalScale.mZ = scaleVal["z"].asDouble();
+        pGO->getTransform()->mLocalScale.Set(
+                scaleVal["x"].asDouble(),
+                scaleVal["y"].asDouble(),
+                scaleVal["z"].asDouble()
+        );
 
         const Json::Value &componentsVals = goVal["components"];
         for (const auto &cmpVal: componentsVals) {
@@ -81,14 +81,14 @@ void AmE::Application::loadScene(const std::string &filepath) {
                 cmp.mProperties[prop.mName] = prop;
             }
 
-            pGO->mComponents[cmp.mName] = cmp;
+            pGO->getComponents()[cmp.mName] = cmp;
         }
 
         if (!goVal["mesh"].empty() && goVal["mesh"].isString()) {
-            pGO->mMeshPathname = goVal["mesh"].asString();
+            pGO->setMeshPathname(goVal["mesh"].asString());
         }
 
-        mGameObjects[pGO->mID] = pGO;
+        mGameObjects[nextID] = pGO;
     }
 }
 
@@ -96,22 +96,25 @@ void AmE::Application::runMainLoop() {
     mGraphicsEngine->initialize(mGameObjects);
     mCalculationEngine->initialize(mGameObjects);
 
-    bool appQuit = false;
-    while (!appQuit) {
-        mInputReader->collectCodes();
+    auto *preUpdateFrameData = new PreUpdateFrameData();
+    auto *sceneState = new SceneState(mGameObjects);
 
-        mCalculationEngine->update(
-                mGameObjects,
-                mInputReader->pressed(),
-                mInputReader->released(),
-                appQuit
-        );
+    auto *inputReader = new InputReader(mGraphicsEngine->getWindowHnd(), preUpdateFrameData);
+
+    while (!sceneState->appQuit) {
+        inputReader->collectCodes();
+
+        mCalculationEngine->update(preUpdateFrameData, sceneState);
 
         if (!mGraphicsEngine->update(mGameObjects))
             break;
     }
 
     mGraphicsEngine->stop();
+
+    delete inputReader;
+    delete sceneState;
+    delete preUpdateFrameData;
 }
 
 

@@ -20,6 +20,10 @@ namespace AmE {
          * @param w
          */
         void Set(double x, double y, double z, double w) {
+            if (std::isnan(x) || std::isnan(y) || std::isnan(z) || std::isnan(w)) {
+                return;
+            }
+
             mX = x;
             mY = y;
             mZ = z;

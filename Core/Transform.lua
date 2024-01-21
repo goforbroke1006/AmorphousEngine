@@ -64,6 +64,11 @@ function Transform:Rotate(eulers --[[Vector3]], relativeTo)
     eulers = eulers or Vector3.zero
     relativeTo = relativeTo or Space.Self
 
+    if eulers:magnitude() == 0.0 then
+        -- zero movement has no impact
+        return
+    end
+
     if eulers.x ~= 0.0 then
         local rotX = Quaternion:new(math.sin(eulers.x / 2), 0.0, 0.0, math.cos(eulers.x / 2))
         self.rotation = self.rotation * rotX

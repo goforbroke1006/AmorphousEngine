@@ -19,6 +19,7 @@ AmE::OgreNext::OgreNext(
 
     mRoot->getRenderSystem()->setConfigOption("sRGB Gamma Conversion", "Yes");
     mWindow = mRoot->initialise(true, "Hello Ogre-next");
+    mWindowHnd = -1;
     mWindow->getCustomAttribute("WINDOW", &mWindowHnd);
 
     registerHlmsForEngine();
@@ -42,7 +43,7 @@ AmE::OgreNext::~OgreNext() {
     delete mRoot;
 }
 
-void AmE::OgreNext::initialize(const std::map<std::string, GameObject *> &gameObjects) {
+void AmE::OgreNext::initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
     for (const auto &goPair: gameObjects) {
         GameObject *pGO = goPair.second;
 
@@ -54,7 +55,7 @@ void AmE::OgreNext::initialize(const std::map<std::string, GameObject *> &gameOb
     }
 }
 
-bool AmE::OgreNext::update(const std::map<std::string, GameObject *> &gameObjects) {
+bool AmE::OgreNext::update(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
     Ogre::WindowEventUtilities::messagePump();
 
     mQuit |= mWinListener->shouldQuit();
@@ -64,14 +65,14 @@ bool AmE::OgreNext::update(const std::map<std::string, GameObject *> &gameObject
             GameObject *pGO = goPair.second;
 
             if (pGO->isCamera()) {
-                bool isNewObj = mCameraNodes.find(pGO->mID) == mCameraNodes.end();
+                bool isNewObj = mCameraNodes.find(pGO->getID()) == mCameraNodes.end();
 
                 if (isNewObj)
                     createCameraNode(pGO);
                 else
                     updateCameraNode(pGO);
             } else if (pGO->isLight()) {
-                auto color = pGO->mComponents["Light"].mProperties["color"].asColor();
+                auto color = pGO->getComponents()["Light"].mProperties["color"].asColor();
 
                 auto *light = mSceneManager->createLight();
                 light->setType(Ogre::Light::LT_POINT);
@@ -83,9 +84,9 @@ bool AmE::OgreNext::update(const std::map<std::string, GameObject *> &gameObject
                 spotLightNode->setDirection(-1, -1, 0);
                 spotLightNode->setPosition(Ogre::Vector3(200, 200, 0));
 
-                mSceneNodes[pGO->mID] = spotLightNode;
+                mSceneNodes[pGO->getID()] = spotLightNode;
             } else {
-                bool isNewObj = mSceneNodes.find(pGO->mID) == mSceneNodes.end();
+                bool isNewObj = mSceneNodes.find(pGO->getID()) == mSceneNodes.end();
 
                 if (isNewObj)
                     createSceneNode(pGO);
@@ -111,11 +112,11 @@ void AmE::OgreNext::stop() {
 }
 
 void AmE::OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
-    mCameraNodes[gameObjectPtr->mID] = mSceneManager->createCamera(gameObjectPtr->mName);
+    mCameraNodes[gameObjectPtr->getID()] = mSceneManager->createCamera(gameObjectPtr->getName());
 
-    if (gameObjectPtr->mComponents.at("Camera").isEnabled()) {
+    if (gameObjectPtr->getComponent("Camera").isEnabled()) {
         auto backgroundColor = std::any_cast<Color>(
-                gameObjectPtr->mComponents.at("Camera").mProperties.at("backgroundColor").mValue);
+                gameObjectPtr->getComponent("Camera").mProperties.at("backgroundColor").mValue);
 
         mCompositorManager = mRoot->getCompositorManager2();
         const Ogre::String workspaceName("Demo Workspace");
@@ -129,7 +130,7 @@ void AmE::OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
         mCompositorManager->addWorkspace(
                 mSceneManager,
                 mWindow->getTexture(),
-                mCameraNodes[gameObjectPtr->mID],
+                mCameraNodes[gameObjectPtr->getID()],
                 workspaceName,
                 true);
     }
@@ -138,19 +139,19 @@ void AmE::OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
 }
 
 void AmE::OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
-    auto *tr = gameObjectPtr->mTransform;
+    auto *tr = gameObjectPtr->getTransform();
 
     auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
     auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
 
-    mCameraNodes[gameObjectPtr->mID]->setPosition(
+    mCameraNodes[gameObjectPtr->getID()]->setPosition(
             Ogre::Vector3(
                     (Ogre::Real) pos.mX,
                     (Ogre::Real) pos.mY,
                     (Ogre::Real) pos.mZ
             )
     );
-    mCameraNodes[gameObjectPtr->mID]->setOrientation(
+    mCameraNodes[gameObjectPtr->getID()]->setOrientation(
             Ogre::Quaternion(
                     (Ogre::Real) rot.mW,
                     (Ogre::Real) rot.mX,
@@ -159,21 +160,20 @@ void AmE::OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
             )
     );
 
-    auto &camProps = gameObjectPtr->mComponents.at("Camera").mProperties;
+    auto camProps = gameObjectPtr->getComponent("Camera").mProperties;
 
     auto nearClipPlane = std::any_cast<double>(camProps.at("nearClipPlane").mValue);
     auto farClipPlane = std::any_cast<double>(camProps.at("farClipPlane").mValue);
 
-    mCameraNodes[gameObjectPtr->mID]->setNearClipDistance((Ogre::Real) nearClipPlane);
-    mCameraNodes[gameObjectPtr->mID]->setFarClipDistance((Ogre::Real) farClipPlane);
-    mCameraNodes[gameObjectPtr->mID]->setAutoAspectRatio(true);
+    mCameraNodes[gameObjectPtr->getID()]->setNearClipDistance((Ogre::Real) nearClipPlane);
+    mCameraNodes[gameObjectPtr->getID()]->setFarClipDistance((Ogre::Real) farClipPlane);
+    mCameraNodes[gameObjectPtr->getID()]->setAutoAspectRatio(true);
 
     if (nullptr != mRoot->getRenderSystem()->getCurrentPassDescriptor()) {
         // TODO: can't solve - getCurrentPassDescriptor returns NULL
         // https://forums.ogre3d.org/viewtopic.php?p=552706
 
-        auto backgroundColor = std::any_cast<Color>(
-                gameObjectPtr->mComponents.at("Camera").mProperties.at("backgroundColor").mValue);
+        auto backgroundColor = std::any_cast<Color>(camProps.at("backgroundColor").mValue);
         const Ogre::ColourValue backgroundColour(
                 (float) backgroundColor.mR,
                 (float) backgroundColor.mG,
@@ -186,15 +186,15 @@ void AmE::OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
 void AmE::OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
     auto *sceneNode = mSceneManager->getRootSceneNode(Ogre::SCENE_DYNAMIC)
             ->createChildSceneNode(Ogre::SCENE_DYNAMIC);
-    sceneNode->setName(gameObjectPtr->mID);
-    mSceneNodes[gameObjectPtr->mID] = sceneNode;
+    sceneNode->setName(gameObjectPtr->getName());
+    mSceneNodes[gameObjectPtr->getID()] = sceneNode;
 
-    if (!gameObjectPtr->mMeshPathname.empty()) {
-        std::string meshV2Pathname = gameObjectPtr->mMeshPathname + " Imported";
+    if (!gameObjectPtr->getMeshPathname().empty()) {
+        std::string meshV2Pathname = gameObjectPtr->getMeshPathname() + " Imported";
 
         if (mMeshes.find(meshV2Pathname) == mMeshes.end()) {
             Ogre::v1::MeshPtr v1Mesh = Ogre::v1::MeshManager::getSingleton().load(
-                    gameObjectPtr->mMeshPathname, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+                    gameObjectPtr->getMeshPathname(), Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
                     Ogre::v1::HardwareBuffer::HBU_STATIC, Ogre::v1::HardwareBuffer::HBU_STATIC);
             //Create a v2 mesh to import to, with a different name.
             Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().createByImportingV1(
@@ -218,20 +218,20 @@ void AmE::OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
 }
 
 void AmE::OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
-    auto *tr = gameObjectPtr->mTransform;
+    auto *tr = gameObjectPtr->getTransform();
 
     auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
     auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
     auto &scale = tr->mLocalScale;
 
-    mSceneNodes[gameObjectPtr->mID]->setPosition(
+    mSceneNodes[gameObjectPtr->getID()]->setPosition(
             Ogre::Vector3(
                     (Ogre::Real) pos.mX,
                     (Ogre::Real) pos.mY,
                     (Ogre::Real) pos.mZ
             )
     );
-    mSceneNodes[gameObjectPtr->mID]->setOrientation(
+    mSceneNodes[gameObjectPtr->getID()]->setOrientation(
             Ogre::Quaternion(
                     (Ogre::Real) rot.mW,
                     (Ogre::Real) rot.mX,
@@ -239,7 +239,7 @@ void AmE::OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
                     (Ogre::Real) rot.mZ
             )
     );
-    mSceneNodes[gameObjectPtr->mID]->setScale(
+    mSceneNodes[gameObjectPtr->getID()]->setScale(
             Ogre::Vector3(
                     (Ogre::Real) scale.mX,
                     (Ogre::Real) scale.mY,

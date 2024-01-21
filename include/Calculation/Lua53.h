@@ -29,16 +29,14 @@ namespace AmE {
 
         virtual ~Lua53();
 
-        void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
+        void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) override;
 
         void update(
-                std::map<std::string, GameObject *> &gameObjects,
-                const std::map<KeyCode, bool> &keysPressed,
-                const std::map<KeyCode, bool> &keysReleased,
-                bool &appQuit
+                const PreUpdateFrameData *preUpdateFrameData,
+                SceneState *sceneState
         ) override;
 
-        static std::string buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects);
+        static std::string buildInitLuaCode(const std::map<GameObjectInstanceID, GameObject *> &gameObjects);
 
         static std::string propValToLuaCode(const Property &prop);
 

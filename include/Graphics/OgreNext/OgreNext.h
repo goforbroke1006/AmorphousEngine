@@ -33,9 +33,9 @@ namespace AmE {
 
         [[nodiscard]] size_t getWindowHnd() const override;
 
-        void initialize(const std::map<std::string, GameObject *> &gameObjects) override;
+        void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) override;
 
-        bool update(const std::map<std::string, GameObject *> &gameObjects) override;
+        bool update(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) override;
 
         void stop() override;
 
@@ -59,8 +59,8 @@ namespace AmE {
 
         WindowEventListener *mWinListener;
 
-        std::map<std::string, Ogre::Camera *> mCameraNodes;
-        std::map<std::string, Ogre::SceneNode *> mSceneNodes;
+        std::map<GameObjectInstanceID, Ogre::Camera *> mCameraNodes;
+        std::map<GameObjectInstanceID, Ogre::SceneNode *> mSceneNodes;
         std::set<std::string> mMeshes;
     };
 }

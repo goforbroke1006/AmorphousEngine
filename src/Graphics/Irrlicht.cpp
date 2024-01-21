@@ -40,11 +40,11 @@ size_t AmE::Irrlicht::getWindowHnd() const {
     return 0;
 }
 
-void AmE::Irrlicht::initialize(const std::map<std::string, GameObject *> &gameObjects) {
+void AmE::Irrlicht::initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
     for (const auto &goPair: gameObjects) {
         GameObject *pGO = goPair.second;
 
-        auto *tr = pGO->mTransform;
+        auto *tr = pGO->getTransform();
 
         auto &pos = tr->mPosition;
 //        auto &rot = tr->mRotation;
@@ -52,7 +52,7 @@ void AmE::Irrlicht::initialize(const std::map<std::string, GameObject *> &gameOb
 
         if (pGO->isCamera()) {
             mBackgroundColor = std::any_cast<Color>(
-                    pGO->mComponents["Camera"].mProperties["backgroundColor"].mValue);
+                    pGO->getComponent("Camera").mProperties["backgroundColor"].mValue);
 
             mSceneManager->addCameraSceneNode(
                     nullptr,
@@ -68,7 +68,7 @@ void AmE::Irrlicht::initialize(const std::map<std::string, GameObject *> &gameOb
     }
 }
 
-bool AmE::Irrlicht::update(const std::map<std::string, GameObject *> &gameObjects) {
+bool AmE::Irrlicht::update(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
     mQuit |= !mDevice->run();
     if (mQuit)
         return false;

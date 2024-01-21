@@ -63,7 +63,11 @@ namespace AmE {
         PropType::Kind mType;
         std::any mValue;
 
-        Color asColor() {
+        int asInt() const {
+            return std::any_cast<int>(mValue);
+        }
+
+        Color asColor() const {
             return std::any_cast<Color>(mValue);
         }
 

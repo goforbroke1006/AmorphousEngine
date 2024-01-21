@@ -49,7 +49,7 @@ AmE::Lua53::~Lua53() {
 //    lua_close(*L);
 }
 
-void AmE::Lua53::initialize(const std::map<std::string, GameObject *> &gameObjects) {
+void AmE::Lua53::initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
     // 1) Include LUA modules from 'Core'
     // 2) Create all game objects (set name, set transform)
     // 3) Create all components (set gameObject, set transform)
@@ -81,81 +81,82 @@ void AmE::Lua53::initialize(const std::map<std::string, GameObject *> &gameObjec
 }
 
 void AmE::Lua53::update(
-        std::map<std::string, GameObject *> &gameObjects,
-        const std::map<KeyCode, bool> &keysPressed,
-        const std::map<KeyCode, bool> &keysReleased,
-        bool &appQuit
+        const PreUpdateFrameData *const preUpdateFrameData,
+        SceneState *const sceneState
 ) {
-    for (const auto &kp: keysPressed) {
+    // push info about keyboard and mouse state
+    for (const auto &kp: preUpdateFrameData->keysPressed) {
         auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
-    for (const auto &kp: keysReleased) {
+    for (const auto &kp: preUpdateFrameData->keysReleased) {
         auto &val = (LEBoolean &) mBtnReleasedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
     mBtnPressedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_P_T);
     mBtnReleasedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_R_T);
 
+    // calculate new frame in LUA
     std::string updateFrameCode
             = "__before_update_frame();\n"
               "__on_update_frame();\n"
               "__after_update_frame();\n";
     luaL_loadstring(*L, updateFrameCode.c_str());
-
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
         throw std::runtime_error(lua_tostring(*L, 1));
     }
 
+    // extract scene state
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);
-
-    for (const auto &goState: mGameObjectsTbl.getValues()) {
-        auto *goTbl = (LETable *) goState.second.get();
+    for (const auto &[gameObjID, gameObjPtr]: mGameObjectsTbl.getValues()) {
+        auto *goTbl = (LETable *) gameObjPtr.get();
 
         auto &idVal = goTbl->getValue(LETKey("id"));
-        auto id = ((LEString &) idVal).getValue();
+        auto id = (GameObjectInstanceID) ((LENum &) idVal).getValue();
 
-        auto &transform = (LETable &) goTbl->getValue(LETKey("transform"));
-
-        auto &position = (LETable &) transform.getValue(LETKey("position"));
-        auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
-        auto &localScale = (LETable &) transform.getValue(LETKey("localScale"));
-
-        if (gameObjects.find(id) == gameObjects.end()) {
+        // register new GO, that was created with user scripts
+        if (sceneState->gameObjects.find(id) == sceneState->gameObjects.end()) {
             auto &nameVal = ((LEString &) goTbl->getValue(LETKey("name")));
-
-            gameObjects[id] = new GameObject(id, nameVal.getValue());
+            sceneState->gameObjects[id] = new GameObject(id, nameVal.getValue());
         }
 
-        gameObjects[id]->mTransform->mPosition.Set(
-                ((LENum &) position.getValue(LETKey("x"))).getValue(),
-                ((LENum &) position.getValue(LETKey("y"))).getValue(),
-                ((LENum &) position.getValue(LETKey("z"))).getValue()
-        );
-        gameObjects[id]->mTransform->mRotation.Set(
-                ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
-                ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
-                ((LENum &) rotation.getValue(LETKey("z"))).getValue(),
-                ((LENum &) rotation.getValue(LETKey("w"))).getValue()
-        );
-        gameObjects[id]->mTransform->mLocalScale.Set(
-                ((LENum &) localScale.getValue(LETKey("x"))).getValue(),
-                ((LENum &) localScale.getValue(LETKey("y"))).getValue(),
-                ((LENum &) localScale.getValue(LETKey("z"))).getValue()
-        );
+        {
+            auto &transform = (LETable &) goTbl->getValue(LETKey("transform"));
+
+            auto &position = (LETable &) transform.getValue(LETKey("position"));
+            auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
+            auto &localScale = (LETable &) transform.getValue(LETKey("localScale"));
+
+            sceneState->gameObjects[id]->getTransform()->mPosition.Set(
+                    ((LENum &) position.getValue(LETKey("x"))).getValue(),
+                    ((LENum &) position.getValue(LETKey("y"))).getValue(),
+                    ((LENum &) position.getValue(LETKey("z"))).getValue()
+            );
+            sceneState->gameObjects[id]->getTransform()->mRotation.Set(
+                    ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
+                    ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
+                    ((LENum &) rotation.getValue(LETKey("z"))).getValue(),
+                    ((LENum &) rotation.getValue(LETKey("w"))).getValue()
+            );
+            sceneState->gameObjects[id]->getTransform()->mLocalScale.Set(
+                    ((LENum &) localScale.getValue(LETKey("x"))).getValue(),
+                    ((LENum &) localScale.getValue(LETKey("y"))).getValue(),
+                    ((LENum &) localScale.getValue(LETKey("z"))).getValue()
+            );
+        }
     }
 
     for (const auto &cmpState: mComponentsTbl.getValues()) {
         auto *cmpTbl = (LETable *) cmpState.second.get();
 
         LETable &goVal = (LETable &) cmpTbl->getValue(LETKey("gameObject"));
-        const std::string &goID = goVal.getValue(LETKey("id")).ToString();
+        const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(LETKey("id"))).getValue();
 
         const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 
-        Component &cmp = gameObjects[goID]->mComponents[cmpName];
+        Component &cmp = sceneState->gameObjects[goID]->getComponents()[cmpName];
 
         for (const auto &luaAttrState: cmpTbl->getValues()) {
             std::string luaAttrName = luaAttrState.first.ToString();
@@ -187,10 +188,10 @@ void AmE::Lua53::update(
     }
 
     mAppQuit->PopGlobal(*L);
-    appQuit = mAppQuit->getValue();
+    sceneState->appQuit = mAppQuit->getValue();
 }
 
-std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject *> &gameObjects) {
+std::string AmE::Lua53::buildInitLuaCode(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
     if (gameObjects.empty())
         return "";
 
@@ -203,18 +204,18 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject 
 //                + LUA53_G_VAR_CMP_T + " = {}\n"
 //                                      "\n";
 
-    for (const auto &goPair: gameObjects) {
-        auto *go = goPair.second;
+    for (const auto &[goID, goPtr]: gameObjects) {
+        auto idStr = std::to_string(goID);
 
-        auto pos = go->mTransform->mPosition;
-        auto rot = go->mTransform->mRotation;
-        auto scale = go->mTransform->mLocalScale;
+        auto pos = goPtr->getTransform()->mPosition;
+        auto rot = goPtr->getTransform()->mRotation;
+        auto scale = goPtr->getTransform()->mLocalScale;
 
         initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "['" + go->mID + "'] = GameObject:new('" + go->mID + "', '" + go->mName +
+                    + LUA53_G_VAR_GO_T + "[" + idStr + "] = GameObject:new(" + idStr + ", '" + goPtr->getName() +
                     "')\n";
         initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.position:Set("
+                    + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.position:Set("
                     + std::to_string(pos.mX)
                     + ", "
                     + std::to_string(pos.mY)
@@ -222,7 +223,7 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject 
                     + std::to_string(pos.mZ)
                     + ")\n";
         initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.rotation:Set("
+                    + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.rotation:Set("
                     + std::to_string(rot.mX)
                     + ", "
                     + std::to_string(rot.mY)
@@ -231,9 +232,9 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject 
                     + ", "
                     + std::to_string(rot.mW)
                     + ")\n";
-        if (!go->isCamera()) {
+        if (!goPtr->isCamera()) {
             initCode += std::string()
-                        + LUA53_G_VAR_GO_T + "['" + go->mID + "'].transform.localScale:Set("
+                        + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.localScale:Set("
                         + std::to_string(scale.mX)
                         + ", "
                         + std::to_string(scale.mY)
@@ -247,7 +248,7 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject 
     // TODO:
     std::map<std::string, std::string> cmpNameToPath;
     for (const auto &goPair: gameObjects) {
-        for (const auto &cmpPair: goPair.second->mComponents) {
+        for (const auto &cmpPair: goPair.second->getComponents()) {
             cmpNameToPath[cmpPair.second.mName] = cmpPair.second.mPathname;
         }
     }
@@ -267,20 +268,21 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject 
 
     for (const auto &goPair: gameObjects) {
         auto *go = goPair.second;
+        const auto &idStr = std::to_string(go->getID());
 
-        for (const auto &cmpPair: go->mComponents) {
-            std::string cmpID = go->mID + " :: " + cmpPair.second.mName;
+        for (const auto &cmpPair: go->getComponents()) {
+            std::string cmpID = idStr + " :: " + cmpPair.second.mName;
 
             initCode += std::string()
                         + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + cmpPair.second.mName + ":new()\n";
             initCode += std::string()
                         + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + cmpPair.second.mName + "'\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = " + LUA53_G_VAR_GO_T + "['" + go->mID +
-                        "']\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = "
+                        + LUA53_G_VAR_GO_T + "[" + idStr + "]\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform = " + LUA53_G_VAR_GO_T + "['" + go->mID +
-                        "'].transform\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform = "
+                        + LUA53_G_VAR_GO_T + "[" + idStr +"].transform\n";
             initCode += "\n";
 
             for (const auto &propPair: cmpPair.second.mProperties) {
@@ -295,8 +297,8 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<std::string, GameObject 
 
     initCode += std::string()
                 + "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do\n"
-                                                                       "    cmpInstance:Start()\n"
-                                                                       "end\n";
+                + "    cmpInstance:Start()\n"
+                + "end\n";
 
     return initCode;
 }
@@ -333,37 +335,22 @@ std::string AmE::Lua53::propValToLuaCode(const Property &prop) {
         }
         case PropType::PropTypeGameObject: {
             try {
-                auto goID = std::any_cast<std::string>(prop.mValue);
+                auto goID = prop.asInt();
                 return std::string()
-                       + LUA53_G_VAR_GO_T + "['" + goID + "']";
-            } catch (const std::bad_any_cast &e) {
-                //Logger::Error(e.what());
-            }
-
-            try {
-                auto goID = std::any_cast<const char *>(prop.mValue);
-                return std::string()
-                       + LUA53_G_VAR_GO_T + "['" + goID + "']";
+                       + LUA53_G_VAR_GO_T + "[" + std::to_string(goID) + "]";
             } catch (const std::bad_any_cast &e) {
                 //Logger::Error(e.what());
             }
         }
         case PropType::PropTypeGameObjectTransform: {
             try {
-                auto goID = std::any_cast<std::string>(prop.mValue);
+                auto goID = prop.asInt();
                 return std::string()
-                       + LUA53_G_VAR_GO_T + "['" + goID + "'].transform";
+                       + LUA53_G_VAR_GO_T + "[" + std::to_string(goID) + "].transform";
             } catch (const std::bad_any_cast &e) {
                 //Logger::Error(e.what());
             }
 
-            try {
-                auto goID = std::any_cast<const char *>(prop.mValue);
-                return std::string()
-                       + LUA53_G_VAR_GO_T + "['" + goID + "'].transform";
-            } catch (const std::bad_any_cast &e) {
-                //Logger::Error(e.what());
-            }
         }
     }
 

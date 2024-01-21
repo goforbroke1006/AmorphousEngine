@@ -7,13 +7,41 @@
 
 #include "../../include/Core/GameObject.h"
 
-AmE::GameObject::GameObject(std::string mID, std::string mName)
-        : mID(std::move(mID)),
-          mName(std::move(mName)),
+AmE::GameObject::GameObject(GameObjectInstanceID key, std::string name)
+        : mID(key),
+          mName(std::move(name)),
           mTransform(new Transform()) {}
 
 AmE::GameObject::~GameObject() {
     delete mTransform;
+}
+
+GameObjectInstanceID AmE::GameObject::getID() const {
+    return mID;
+}
+
+const std::string &AmE::GameObject::getName() const {
+    return mName;
+}
+
+AmE::Transform *const AmE::GameObject::getTransform() const {
+    return mTransform;
+}
+
+std::map<std::string, AmE::Component> &AmE::GameObject::getComponents() {
+    return mComponents;
+}
+
+AmE::Component AmE::GameObject::getComponent(const std::string &name) const {
+    return mComponents.at(name);
+}
+
+const std::string &AmE::GameObject::getMeshPathname() const {
+    return mMeshPathname;
+}
+
+void AmE::GameObject::setMeshPathname(const std::string &meshPathname) {
+    GameObject::mMeshPathname = meshPathname;
 }
 
 bool AmE::GameObject::isCamera() const {

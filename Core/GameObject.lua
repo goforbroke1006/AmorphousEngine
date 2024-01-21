@@ -9,17 +9,17 @@ require 'Core/Transform'
 
 GameObject = Object:new(0)
 GameObject = {
-    id = "",
+    __instanceID = "",
     name = "",
     transform = Transform:new(),
 }
 
-function GameObject:new(id --[[string]], name --[[string]])
-    id = id or ""
+function GameObject:new(__instanceID --[[integer]], name --[[string]])
+    __instanceID = __instanceID or -1
     name = name or ""
 
     gameObj = {
-        id = id,
+        __instanceID = __instanceID,
         name = name,
         transform = Transform:new(),
     }

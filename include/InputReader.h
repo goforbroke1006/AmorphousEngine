@@ -9,28 +9,24 @@
 
 #include <ois/OIS.h>
 
+#include "PreUpdateFrameData.h"
 #include "Core/KeyCode.h"
 
 namespace AmE {
     class InputReader : public OIS::KeyListener, OIS::MouseListener {
     public:
-        explicit InputReader(size_t windowHnd);
+        explicit InputReader(size_t windowHnd, PreUpdateFrameData *const preUpdateFrameData);
 
         ~InputReader() override;
 
         void collectCodes();
 
-        [[nodiscard]] const std::map<KeyCode, bool> &pressed() const;
-
-        [[nodiscard]] const std::map<KeyCode, bool> &released() const;
-
     private:
+        PreUpdateFrameData * mPreUpdateFrameData;
+
         OIS::InputManager *mInputManager;
         OIS::Keyboard *mKeyboard;
         OIS::Mouse *mMouse;
-
-        std::map<KeyCode, bool> mKeysPressed;
-        std::map<KeyCode, bool> mKeysReleased;
 
     private:
         static std::map<OIS::KeyCode, KeyCode> kbOisToAME;

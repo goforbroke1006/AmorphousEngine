@@ -6,7 +6,9 @@
 
 #include <sstream>
 
-AmE::InputReader::InputReader(const size_t windowHnd) {
+AmE::InputReader::InputReader(const size_t windowHnd, PreUpdateFrameData *const preUpdateFrameData) {
+    mPreUpdateFrameData = preUpdateFrameData;
+
     std::ostringstream windowHndStr;
     windowHndStr << windowHnd;
 
@@ -26,20 +28,17 @@ AmE::InputReader::InputReader(const size_t windowHnd) {
 
     // put all keys for keyboard
     for (const auto &pair: InputReader::kbOisToAME) {
-        mKeysPressed[pair.second] = false;
-        mKeysReleased[pair.second] = false;
+        mPreUpdateFrameData->keysPressed[pair.second] = false;
+        mPreUpdateFrameData->keysReleased[pair.second] = false;
     }
     // put all keys for mouse
     for (const auto &pair: InputReader::msOisToAME) {
-        mKeysPressed[pair.second] = false;
-        mKeysReleased[pair.second] = false;
+        mPreUpdateFrameData->keysPressed[pair.second] = false;
+        mPreUpdateFrameData->keysReleased[pair.second] = false;
     }
 }
 
 AmE::InputReader::~InputReader() {
-    mKeysPressed.clear();
-    mKeysReleased.clear();
-
     if (mMouse) {
         mInputManager->destroyInputObject(mMouse);
         mMouse = nullptr;
@@ -56,21 +55,13 @@ AmE::InputReader::~InputReader() {
 
 void AmE::InputReader::collectCodes() {
     // reset all states
-    for (auto &[_, v]: mKeysPressed) v = false;
-    for (auto &[_, v]: mKeysReleased) v = false;
+    for (auto &[_, v]: mPreUpdateFrameData->keysPressed) v = false;
+    for (auto &[_, v]: mPreUpdateFrameData->keysReleased) v = false;
 
     // https://wiki.ogre3d.org/Using+OIS
 
     if (mKeyboard != nullptr) mKeyboard->capture();
     if (mMouse != nullptr) mMouse->capture();
-}
-
-const std::map<AmE::KeyCode, bool> &AmE::InputReader::pressed() const {
-    return mKeysPressed;
-}
-
-const std::map<AmE::KeyCode, bool> &AmE::InputReader::released() const {
-    return mKeysReleased;
 }
 
 std::map<OIS::KeyCode, AmE::KeyCode> AmE::InputReader::kbOisToAME = {
@@ -99,7 +90,7 @@ bool AmE::InputReader::keyPressed(const OIS::KeyEvent &arg) {
     if (InputReader::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
-    mKeysPressed[kbOisToAME[arg.key]] = true;
+    mPreUpdateFrameData->keysPressed[kbOisToAME[arg.key]] = true;
 
     return true;
 }
@@ -108,7 +99,7 @@ bool AmE::InputReader::keyReleased(const OIS::KeyEvent &arg) {
     if (InputReader::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
-    mKeysReleased[kbOisToAME[arg.key]] = true;
+    mPreUpdateFrameData->keysReleased[kbOisToAME[arg.key]] = true;
 
     return true;
 }
@@ -123,7 +114,7 @@ bool AmE::InputReader::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButton
     if (InputReader::msOisToAME.find(id) == msOisToAME.end())
         return true;
 
-    mKeysPressed[msOisToAME[id]] = true;
+    mPreUpdateFrameData->keysPressed[msOisToAME[id]] = true;
 
     return true;
 }
@@ -132,7 +123,7 @@ bool AmE::InputReader::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButto
     if (InputReader::msOisToAME.find(id) == msOisToAME.end())
         return true;
 
-    mKeysReleased[msOisToAME[id]] = true;
+    mPreUpdateFrameData->keysReleased[msOisToAME[id]] = true;
 
     return true;
 }

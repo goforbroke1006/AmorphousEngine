@@ -7,8 +7,8 @@
 
 #include <map>
 
-#include "Core/KeyCode.h"
-#include "Core/GameObject.h"
+#include "PreUpdateFrameData.h"
+#include "SceneState.h"
 
 namespace AmE {
     class CalculationEngine {
@@ -17,13 +17,11 @@ namespace AmE {
          * Prepare calculation engine.
          * @param gameObjects
          */
-        virtual void initialize(const std::map<std::string, GameObject *> &gameObjects) = 0;
+        virtual void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) = 0;
 
         virtual void update(
-                std::map<std::string, GameObject *> &gameObjects,
-                const std::map<KeyCode, bool> &keysPressed,
-                const std::map<KeyCode, bool> &keysReleased,
-                bool &appQuit
+                const PreUpdateFrameData *preUpdateFrameData,
+                SceneState *sceneState
         ) = 0;
     };
 }

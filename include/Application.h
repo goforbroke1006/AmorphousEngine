@@ -35,9 +35,8 @@ namespace AmE {
 
         GraphicsEngine *mGraphicsEngine;
         CalculationEngine *mCalculationEngine;
-        InputReader *mInputReader;
 
-        std::map<std::string, GameObject *> mGameObjects;
+        std::map<GameObjectInstanceID, GameObject *> mGameObjects;
     };
 }
 
