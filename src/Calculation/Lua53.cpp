@@ -81,15 +81,15 @@ void AmE::Lua53::initialize(const std::map<GameObjectInstanceID, GameObject *> &
 }
 
 void AmE::Lua53::update(
-        const PreUpdateFrameData *const preUpdateFrameData,
+        const InputsState *const preUpdateFrameData,
         SceneState *const sceneState
 ) {
     // push info about keyboard and mouse state
-    for (const auto &kp: preUpdateFrameData->keysPressed) {
+    for (const auto &kp: preUpdateFrameData->pressed) {
         auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
-    for (const auto &kp: preUpdateFrameData->keysReleased) {
+    for (const auto &kp: preUpdateFrameData->released) {
         auto &val = (LEBoolean &) mBtnReleasedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
@@ -113,19 +113,19 @@ void AmE::Lua53::update(
     for (const auto &[_, gameObjPtr]: mGameObjectsTbl.getValues()) {
         auto *goTbl = (LETable *) gameObjPtr.get();
 
-        auto &idVal = goTbl->getValue(LETKey("__instanceID"));
+        auto &idVal = goTbl->getValue(LETKey(GO_PROP_INSTANCE_ID));
         auto id = (GameObjectInstanceID) ((LENum &) idVal).getValue();
 
         // register new GO, that was created with user scripts
         if (sceneState->gameObjects.find(id) == sceneState->gameObjects.end()) {
-            auto &nameVal = ((LEString &) goTbl->getValue(LETKey("name")));
+            auto &nameVal = ((LEString &) goTbl->getValue(LETKey(GO_PROP_NAME)));
             sceneState->gameObjects[id] = new GameObject(id, nameVal.getValue());
         }
 
         {
-            auto &transform = (LETable &) goTbl->getValue(LETKey("transform"));
+            auto &transform = (LETable &) goTbl->getValue(LETKey(CMP_PROP_TR));
 
-            auto &position = (LETable &) transform.getValue(LETKey("position"));
+            auto &position = (LETable &) transform.getValue(LETKey(CMP_PROP_TR_POS));
             auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
             auto &localScale = (LETable &) transform.getValue(LETKey("localScale"));
 
@@ -151,8 +151,8 @@ void AmE::Lua53::update(
     for (const auto &cmpState: mComponentsTbl.getValues()) {
         auto *cmpTbl = (LETable *) cmpState.second.get();
 
-        LETable &goVal = (LETable &) cmpTbl->getValue(LETKey("gameObject"));
-        const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(LETKey("__instanceID"))).getValue();
+        LETable &goVal = (LETable &) cmpTbl->getValue(LETKey(CMP_PROP_GO));
+        const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(LETKey(GO_PROP_INSTANCE_ID))).getValue();
 
         const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 
@@ -168,9 +168,9 @@ void AmE::Lua53::update(
 
             if (luaAttrName == "__name")
                 continue;
-            if (luaAttrName == "gameObject")
+            if (luaAttrName == CMP_PROP_GO)
                 continue;
-            if (luaAttrName == "transform")
+            if (luaAttrName == CMP_PROP_TR)
                 continue;
 
             // skip private fields of component

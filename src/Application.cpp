@@ -46,23 +46,36 @@ void AmE::Application::loadScene(const std::string &filepath) {
         auto *pGO = new GameObject(nextID, goVal["name"].asString());
 
         auto &posVal = goVal["transform"]["position"];
-        pGO->getTransform()->mPosition.Set(
-                posVal["x"].asDouble(),
-                posVal["y"].asDouble(),
-                posVal["z"].asDouble());
+        if (posVal["x"].isDouble() && posVal["y"].isDouble() && posVal["z"].isDouble()) {
+            pGO->getTransform()->mPosition.Set(
+                    posVal["x"].asDouble(),
+                    posVal["y"].asDouble(),
+                    posVal["z"].asDouble()
+            );
+        } else {
+            Logger::Error("Object #" + std::to_string(nextID) + " " + pGO->getName() + " has invalid position");
+        }
 
         auto &rotVal = goVal["transform"]["rotation"];
-        auto euler = Quaternion::Euler(rotVal["x"].asDouble(),
-                                       rotVal["y"].asDouble(),
-                                       rotVal["z"].asDouble());
-        pGO->getTransform()->mRotation = euler;
+        if (rotVal["x"].isDouble() && rotVal["y"].isDouble() && rotVal["z"].isDouble()) {
+            auto euler = Quaternion::Euler(rotVal["x"].asDouble(),
+                                           rotVal["y"].asDouble(),
+                                           rotVal["z"].asDouble());
+            pGO->getTransform()->mRotation = euler;
+        } else {
+            Logger::Error("Object #" + std::to_string(nextID) + " " + pGO->getName() + " has invalid rotation");
+        }
 
         auto &scaleVal = goVal["transform"]["localScale"];
-        pGO->getTransform()->mLocalScale.Set(
-                scaleVal["x"].asDouble(),
-                scaleVal["y"].asDouble(),
-                scaleVal["z"].asDouble()
-        );
+        if (scaleVal["x"].isDouble() && scaleVal["y"].isDouble() && scaleVal["z"].isDouble()) {
+            pGO->getTransform()->mLocalScale.Set(
+                    scaleVal["x"].asDouble(),
+                    scaleVal["y"].asDouble(),
+                    scaleVal["z"].asDouble()
+            );
+        } else {
+            Logger::Error("Object #" + std::to_string(nextID) + " " + pGO->getName() + " has invalid scale");
+        }
 
         const Json::Value &componentsVals = goVal["components"];
         for (const auto &cmpVal: componentsVals) {
@@ -96,15 +109,15 @@ void AmE::Application::runMainLoop() {
     mGraphicsEngine->initialize(mGameObjects);
     mCalculationEngine->initialize(mGameObjects);
 
-    auto *preUpdateFrameData = new PreUpdateFrameData();
-    auto *sceneState = new SceneState(mGameObjects);
+    auto *pInputsState = new InputsState();
+    auto *pSceneState = new SceneState(mGameObjects);
 
-    auto *inputReader = new InputReader(mGraphicsEngine->getWindowHnd(), preUpdateFrameData);
+    auto *pInputReader = new InputReader(mGraphicsEngine->getWindowHnd(), pInputsState);
 
-    while (!sceneState->appQuit) {
-        inputReader->collectCodes();
+    while (!pSceneState->appQuit) {
+        pInputReader->collectCodes();
 
-        mCalculationEngine->update(preUpdateFrameData, sceneState);
+        mCalculationEngine->update(pInputsState, pSceneState);
 
         if (!mGraphicsEngine->update(mGameObjects))
             break;
@@ -112,9 +125,9 @@ void AmE::Application::runMainLoop() {
 
     mGraphicsEngine->stop();
 
-    delete inputReader;
-    delete sceneState;
-    delete preUpdateFrameData;
+    delete pInputReader;
+    delete pSceneState;
+    delete pInputsState;
 }
 
 

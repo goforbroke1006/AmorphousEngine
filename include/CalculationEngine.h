@@ -7,7 +7,7 @@
 
 #include <map>
 
-#include "PreUpdateFrameData.h"
+#include "InputsState.h"
 #include "SceneState.h"
 
 namespace AmE {
@@ -20,7 +20,7 @@ namespace AmE {
         virtual void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) = 0;
 
         virtual void update(
-                const PreUpdateFrameData *preUpdateFrameData,
+                const InputsState *preUpdateFrameData,
                 SceneState *sceneState
         ) = 0;
     };

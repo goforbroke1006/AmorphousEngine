@@ -9,20 +9,20 @@
 
 #include <ois/OIS.h>
 
-#include "PreUpdateFrameData.h"
+#include "InputsState.h"
 #include "Core/KeyCode.h"
 
 namespace AmE {
     class InputReader : public OIS::KeyListener, OIS::MouseListener {
     public:
-        explicit InputReader(size_t windowHnd, PreUpdateFrameData *const preUpdateFrameData);
+        explicit InputReader(size_t windowHnd, InputsState *const preUpdateFrameData);
 
         ~InputReader() override;
 
         void collectCodes();
 
     private:
-        PreUpdateFrameData * mPreUpdateFrameData;
+        InputsState * mPreUpdateFrameData;
 
         OIS::InputManager *mInputManager;
         OIS::Keyboard *mKeyboard;

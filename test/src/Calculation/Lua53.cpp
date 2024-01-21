@@ -267,7 +267,7 @@ namespace AmE {
         Lua53 target("./");
         target.initialize(goList);
 
-        auto *preUpdateFrameData = new PreUpdateFrameData();
+        auto *preUpdateFrameData = new InputsState();
         auto *sceneState = new SceneState(goList);
 
         target.update(preUpdateFrameData, sceneState);
@@ -324,11 +324,11 @@ namespace AmE {
         Lua53 target("./");
         target.initialize(goList);
 
-        auto *preUpdateFrameData = new PreUpdateFrameData();
+        auto *preUpdateFrameData = new InputsState();
         auto *sceneState = new SceneState(goList);
 
-        preUpdateFrameData->keysPressed[KeyCode_Mouse0] = true;
-        preUpdateFrameData->keysReleased[KeyCode_Mouse0] = false;
+        preUpdateFrameData->pressed[KeyCode_Mouse0] = true;
+        preUpdateFrameData->released[KeyCode_Mouse0] = false;
 
         testing::internal::CaptureStdout();
         target.update(preUpdateFrameData, sceneState);
@@ -378,12 +378,12 @@ namespace AmE {
         Lua53 target("./");
         target.initialize(goList);
 
-        auto *preUpdateFrameData = new PreUpdateFrameData();
+        auto *preUpdateFrameData = new InputsState();
         auto *sceneState = new SceneState(goList);
 
         {
-            preUpdateFrameData->keysPressed[KeyCode_Mouse0] = true;
-            preUpdateFrameData->keysReleased[KeyCode_Mouse0] = false;
+            preUpdateFrameData->pressed[KeyCode_Mouse0] = true;
+            preUpdateFrameData->released[KeyCode_Mouse0] = false;
 
             testing::internal::CaptureStdout();
             target.update(preUpdateFrameData, sceneState);
@@ -393,8 +393,8 @@ namespace AmE {
         }
 
         {
-            preUpdateFrameData->keysPressed[KeyCode_Mouse0] = true;
-            preUpdateFrameData->keysReleased[KeyCode_Mouse0] = false;
+            preUpdateFrameData->pressed[KeyCode_Mouse0] = true;
+            preUpdateFrameData->released[KeyCode_Mouse0] = false;
 
             testing::internal::CaptureStdout();
             target.update(preUpdateFrameData, sceneState);
@@ -403,8 +403,8 @@ namespace AmE {
         }
 
         {
-            preUpdateFrameData->keysPressed[KeyCode_Mouse0] = true;
-            preUpdateFrameData->keysReleased[KeyCode_Mouse0] = false;
+            preUpdateFrameData->pressed[KeyCode_Mouse0] = true;
+            preUpdateFrameData->released[KeyCode_Mouse0] = false;
 
             testing::internal::CaptureStdout();
             target.update(preUpdateFrameData, sceneState);
@@ -413,8 +413,8 @@ namespace AmE {
         }
 
         {
-            preUpdateFrameData->keysPressed[KeyCode_Mouse0] = false;
-            preUpdateFrameData->keysReleased[KeyCode_Mouse0] = true;
+            preUpdateFrameData->pressed[KeyCode_Mouse0] = false;
+            preUpdateFrameData->released[KeyCode_Mouse0] = true;
 
             testing::internal::CaptureStdout();
             target.update(preUpdateFrameData, sceneState);

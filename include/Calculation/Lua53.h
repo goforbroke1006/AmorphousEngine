@@ -22,6 +22,13 @@
 #define LUA53_G_VAR_BTN_R_T "__global_buttons_released"
 #define LUA53_G_VAR_APP_QUIT "__application_quit"
 
+#define GO_PROP_INSTANCE_ID "__instanceID"
+#define GO_PROP_NAME "name"
+
+#define CMP_PROP_GO "gameObject"
+#define CMP_PROP_TR "transform"
+#define CMP_PROP_TR_POS "position"
+
 namespace AmE {
     class Lua53 : public CalculationEngine {
     public:
@@ -32,7 +39,7 @@ namespace AmE {
         void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) override;
 
         void update(
-                const PreUpdateFrameData *preUpdateFrameData,
+                const InputsState *preUpdateFrameData,
                 SceneState *sceneState
         ) override;
 
