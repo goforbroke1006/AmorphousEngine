@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include <LuaCpp.hpp>
+#include <LuaCpp/LuaContext.hpp>
 
 TEST(TestVector3, file_compilation) {
     LuaCpp::LuaContext ctx;

@@ -17,13 +17,7 @@ endif ()
 
 # Locate LuaCpp
 find_package(LuaCpp REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE
-        ${LUA_INCLUDE_DIR}
-        ${LUACPP_INCLUDE_DIR}
-)
-target_link_libraries(${PROJECT_NAME}
-        ${LUA_LIBRARIES}
-        ${LUACPP_LIBRARIES}
-)
+target_include_directories(${PROJECT_NAME} PRIVATE ${LUA_INCLUDE_DIR} ${LUACPP_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${LUA_LIBRARIES} ${LUACPP_LIBRARIES})
 
 file(COPY ../../Core DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

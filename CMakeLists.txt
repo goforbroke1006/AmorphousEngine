@@ -67,11 +67,9 @@ file(COPY ./third_party/ogre-next/Samples/Media/Hlms DESTINATION ${CMAKE_CURRENT
 
 IF (CMAKE_BUILD_TYPE MATCHES Debug)
     file(COPY ./third_party/ogre-next/build/Debug/bin/plugins_d.cfg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    #    file(COPY ./third_party/ogre-next/build/Debug/bin/resources2.cfg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 ENDIF (CMAKE_BUILD_TYPE MATCHES Debug)
 IF (CMAKE_BUILD_TYPE MATCHES Release)
     file(COPY ./third_party/ogre-next/build/Release/bin/plugins.cfg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    #    file(COPY ./third_party/ogre-next/build/Release/bin/resources2.cfg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 ENDIF (CMAKE_BUILD_TYPE MATCHES Release)
 
 #
