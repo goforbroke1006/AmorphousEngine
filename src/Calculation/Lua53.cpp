@@ -216,30 +216,30 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<GameObjectInstanceID, Ga
                     "')\n";
         initCode += std::string()
                     + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.position:Set("
-                    + std::to_string(pos.mX)
+                    + std::to_string(pos.getX())
                     + ", "
-                    + std::to_string(pos.mY)
+                    + std::to_string(pos.getY())
                     + ", "
-                    + std::to_string(pos.mZ)
+                    + std::to_string(pos.getZ())
                     + ")\n";
         initCode += std::string()
                     + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.rotation:Set("
-                    + std::to_string(rot.mX)
+                    + std::to_string(rot.getX())
                     + ", "
-                    + std::to_string(rot.mY)
+                    + std::to_string(rot.getY())
                     + ", "
-                    + std::to_string(rot.mZ)
+                    + std::to_string(rot.getZ())
                     + ", "
-                    + std::to_string(rot.mW)
+                    + std::to_string(rot.getW())
                     + ")\n";
         if (!goPtr->isCamera()) {
             initCode += std::string()
                         + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.localScale:Set("
-                        + std::to_string(scale.mX)
+                        + std::to_string(scale.getX())
                         + ", "
-                        + std::to_string(scale.mY)
+                        + std::to_string(scale.getY())
                         + ", "
-                        + std::to_string(scale.mZ)
+                        + std::to_string(scale.getZ())
                         + ")\n";
         }
         initCode += "\n";
@@ -326,11 +326,11 @@ std::string AmE::Lua53::propValToLuaCode(const Property &prop) {
         case PropType::PropTypeVector3: {
             auto vecVal = std::any_cast<Vector3>(prop.mValue);
             return "Vector:new("
-                   + std::to_string(vecVal.mX)
+                   + std::to_string(vecVal.getX())
                    + ", "
-                   + std::to_string(vecVal.mY)
+                   + std::to_string(vecVal.getY())
                    + ", "
-                   + std::to_string(vecVal.mZ)
+                   + std::to_string(vecVal.getZ())
                    + ")";
         }
         case PropType::PropTypeGameObject: {

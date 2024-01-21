@@ -148,17 +148,17 @@ void AmE::OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
 
     mCameraNodes[gameObjectPtr->getID()]->setPosition(
             Ogre::Vector3(
-                    (Ogre::Real) pos.mX,
-                    (Ogre::Real) pos.mY,
-                    (Ogre::Real) pos.mZ
+                    (Ogre::Real) pos.getX(),
+                    (Ogre::Real) pos.getY(),
+                    (Ogre::Real) pos.getZ()
             )
     );
     mCameraNodes[gameObjectPtr->getID()]->setOrientation(
             Ogre::Quaternion(
-                    (Ogre::Real) rot.mW,
-                    (Ogre::Real) rot.mX,
-                    (Ogre::Real) rot.mY,
-                    (Ogre::Real) rot.mZ
+                    (Ogre::Real) rot.getW(),
+                    (Ogre::Real) rot.getX(),
+                    (Ogre::Real) rot.getY(),
+                    (Ogre::Real) rot.getZ()
             )
     );
 
@@ -240,24 +240,24 @@ void AmE::OgreNext::updateSceneNode(const GameObject *const gameObjectPtr) {
 
     mSceneNodes[gameObjectPtr->getID()]->setPosition(
             Ogre::Vector3(
-                    (Ogre::Real) pos.mX,
-                    (Ogre::Real) pos.mY,
-                    (Ogre::Real) pos.mZ
+                    (Ogre::Real) pos.getX(),
+                    (Ogre::Real) pos.getY(),
+                    (Ogre::Real) pos.getZ()
             )
     );
     mSceneNodes[gameObjectPtr->getID()]->setOrientation(
             Ogre::Quaternion(
-                    (Ogre::Real) rot.mW,
-                    (Ogre::Real) rot.mX,
-                    (Ogre::Real) rot.mY,
-                    (Ogre::Real) rot.mZ
+                    (Ogre::Real) rot.getW(),
+                    (Ogre::Real) rot.getX(),
+                    (Ogre::Real) rot.getY(),
+                    (Ogre::Real) rot.getZ()
             )
     );
     mSceneNodes[gameObjectPtr->getID()]->setScale(
             Ogre::Vector3(
-                    (Ogre::Real) scale.mX,
-                    (Ogre::Real) scale.mY,
-                    (Ogre::Real) scale.mZ
+                    (Ogre::Real) scale.getX(),
+                    (Ogre::Real) scale.getY(),
+                    (Ogre::Real) scale.getZ()
             )
     );
 }

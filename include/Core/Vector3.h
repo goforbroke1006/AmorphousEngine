@@ -10,11 +10,21 @@
 namespace AmE {
     class Vector3 {
     public:
-        double mX, mY, mZ;
+        Vector3() : mX(0.0), mY(0.0), mZ(0.0) {}
 
-        Vector3(): mX(0.0), mY(0.0), mZ(0.0) {}
+        Vector3(double x, double y, double z) : mX(x), mY(y), mZ(z) {}
 
-        Vector3(double mX, double mY, double mZ) : mX(mX), mY(mY), mZ(mZ) {}
+        [[nodiscard]] double getX() const {
+            return mX;
+        }
+
+        [[nodiscard]] double getY() const {
+            return mY;
+        }
+
+        [[nodiscard]] double getZ() const {
+            return mZ;
+        }
 
         void Set(double x, double y, double z) {
             if (std::isnan(x) || std::isnan(y) || std::isnan(z)) {
@@ -25,6 +35,9 @@ namespace AmE {
             mY = y;
             mZ = z;
         }
+
+    private:
+        double mX, mY, mZ;
     };
 }
 

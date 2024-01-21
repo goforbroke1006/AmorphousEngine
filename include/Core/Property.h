@@ -101,21 +101,23 @@ namespace AmE {
                     return color;
                 }
                 case PropType::PropTypeVector3: {
-                    std::string data;
-                    std::stringstream ss(raw);
+                    double x, y, z;
 
-                    auto vector = Vector3{};
+                    {
+                        std::string data;
+                        std::stringstream ss(raw);
 
-                    getline(ss, data, ' ');
-                    vector.mX = std::stod(data);
+                        getline(ss, data, ' ');
+                        x = std::stod(data);
 
-                    getline(ss, data, ' ');
-                    vector.mY = std::stod(data);
+                        getline(ss, data, ' ');
+                        y = std::stod(data);
 
-                    getline(ss, data, ' ');
-                    vector.mZ = std::stod(data);
+                        getline(ss, data, ' ');
+                        z = std::stod(data);
+                    }
 
-                    return vector;
+                    return Vector3(x, y, z);
                 }
                 case PropType::PropTypeGameObject:
                 case PropType::PropTypeGameObjectTransform:

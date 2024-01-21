@@ -56,7 +56,7 @@ void AmE::Irrlicht::initialize(const std::map<GameObjectInstanceID, GameObject *
 
             mSceneManager->addCameraSceneNode(
                     nullptr,
-                    irr::core::vector3df(pos.mX, pos.mY, pos.mZ),
+                    irr::core::vector3df(pos.getX(), pos.getY(), pos.getZ()),
                     irr::core::vector3df(0, 5, 0) // TODO:
             );
 

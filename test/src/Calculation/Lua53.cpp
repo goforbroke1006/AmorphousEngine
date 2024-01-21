@@ -39,13 +39,13 @@ namespace AmE {
                   "\n"
                   "__all_game_objects[0] = GameObject:new(0, 'Player')\n"
                   "__all_game_objects[0].transform.position:Set(10.000000, 20.000000, 30.000000)\n"
-                  "__all_game_objects[0].transform.rotation:Set(0.000000, 0.000000, 0.000000, 0.000000)\n"
-                  "__all_game_objects[0].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+                  "__all_game_objects[0].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.000000)\n"
+                  "__all_game_objects[0].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
                   "\n"
                   "__all_game_objects[1] = GameObject:new(1, 'Bot 1')\n"
                   "__all_game_objects[1].transform.position:Set(40.000000, 50.000000, 60.000000)\n"
                   "__all_game_objects[1].transform.rotation:Set(0.000000, 0.382683, 0.000000, 0.923880)\n"
-                  "__all_game_objects[1].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+                  "__all_game_objects[1].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
                   "\n"
                   "require 'Core/LuaBehaviour'\n"
                   "\n"
@@ -100,17 +100,17 @@ namespace AmE {
                   "\n"
                   "__all_game_objects[0] = GameObject:new(0, 'Main Camera')\n"
                   "__all_game_objects[0].transform.position:Set(100.000000, 100.000000, 100.000000)\n"
-                  "__all_game_objects[0].transform.rotation:Set(0.000000, 0.000000, 0.000000, 0.000000)\n"
+                  "__all_game_objects[0].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.000000)\n"
                   "\n"
                   "__all_game_objects[1] = GameObject:new(1, 'Player')\n"
                   "__all_game_objects[1].transform.position:Set(1.000000, 2.000000, 3.000000)\n"
-                  "__all_game_objects[1].transform.rotation:Set(0.000000, 0.000000, 0.000000, 0.000000)\n"
-                  "__all_game_objects[1].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+                  "__all_game_objects[1].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.000000)\n"
+                  "__all_game_objects[1].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
                   "\n"
                   "__all_game_objects[2] = GameObject:new(2, 'Bot 1')\n"
                   "__all_game_objects[2].transform.position:Set(4.000000, 5.000000, 6.000000)\n"
                   "__all_game_objects[2].transform.rotation:Set(0.000000, 0.707107, 0.000000, 0.707107)\n"
-                  "__all_game_objects[2].transform.localScale:Set(0.000000, 0.000000, 0.000000)\n"
+                  "__all_game_objects[2].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
                   "\n"
                   "require 'Core/LuaBehaviour'\n"
                   "\n"
@@ -256,13 +256,13 @@ namespace AmE {
                 {drone1GO->getID(),     drone1GO},
         };
 
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.mX);
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.mY);
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.mZ);
+        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getX());
+        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getY());
+        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getZ());
 
-        EXPECT_EQ(4.0, drone1GO->getTransform()->mPosition.mX);
-        EXPECT_EQ(5.0, drone1GO->getTransform()->mPosition.mY);
-        EXPECT_EQ(6.0, drone1GO->getTransform()->mPosition.mZ);
+        EXPECT_EQ(4.0, drone1GO->getTransform()->mPosition.getX());
+        EXPECT_EQ(5.0, drone1GO->getTransform()->mPosition.getY());
+        EXPECT_EQ(6.0, drone1GO->getTransform()->mPosition.getZ());
 
         Lua53 target("./");
         target.initialize(goList);
@@ -274,11 +274,11 @@ namespace AmE {
         target.update(preUpdateFrameData, sceneState);
         target.update(preUpdateFrameData, sceneState);
 
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.mX);
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.mY);
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.mZ);
+        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getX());
+        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getY());
+        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getZ());
 
-        EXPECT_NE(4.0, drone1GO->getTransform()->mPosition.mX);
+        EXPECT_NE(4.0, drone1GO->getTransform()->mPosition.getX());
 //    EXPECT_NE(5.0, drone1GO->mTransform->mPosition.mY); // TODO:
 //    EXPECT_NE(6.0, drone1GO->mTransform->mPosition.mZ); // TODO:
     }

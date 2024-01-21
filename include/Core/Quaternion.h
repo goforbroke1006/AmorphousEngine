@@ -10,9 +10,23 @@
 namespace AmE {
     class Quaternion {
     public:
-        double mX, mY, mZ, mW;
+        Quaternion() : mX(0.0), mY(0.0), mZ(0.0), mW(1.0) {}
 
-         Quaternion(): mX(0.0), mY(0.0), mZ(0.0), mW(1.0) {}
+        [[nodiscard]] double getX() const {
+            return mX;
+        }
+
+        [[nodiscard]] double getY() const {
+            return mY;
+        }
+
+        [[nodiscard]] double getZ() const {
+            return mZ;
+        }
+
+        [[nodiscard]] double getW() const {
+            return mW;
+        }
 
         /**
          * https://docs.unity3d.com/ScriptReference/Quaternion.Set.html
@@ -32,6 +46,10 @@ namespace AmE {
             mW = w;
         }
 
+    private:
+        double mX, mY, mZ, mW;
+
+    public:
         static Quaternion Euler(double roll, double pitch, double yaw) {
             roll = roll * (M_PI / 180);
             pitch = pitch * (M_PI / 180);

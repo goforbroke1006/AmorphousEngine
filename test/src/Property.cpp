@@ -37,9 +37,9 @@ namespace AmE {
 
         auto expected = AmE::Vector3(0.15, 0.25, 0.35);
 
-        EXPECT_EQ(expected.mX, actual.mX);
-        EXPECT_EQ(expected.mY, actual.mY);
-        EXPECT_EQ(expected.mZ, actual.mZ);
+        EXPECT_EQ(expected.getX(), actual.getX());
+        EXPECT_EQ(expected.getY(), actual.getY());
+        EXPECT_EQ(expected.getZ(), actual.getZ());
     }
 
     TEST(TestProperty_parseValue, _GameObject) {

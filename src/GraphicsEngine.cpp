@@ -5,12 +5,11 @@
 #include "../include/GraphicsEngine.h"
 
 AmE::Vector3 AmE::GraphicsEngine::convertPositionLeftToRightHand(Vector3 position) {
-    position.mZ *= -1;
+    position.Set(position.getX(), position.getY(), position.getZ() * -1);
     return position;
 }
 
 AmE::Quaternion AmE::GraphicsEngine::convertRotationLeftToRightHand(Quaternion rotation) {
-    if (rotation.mY != 0.0)
-        rotation.mY *= -1;
+    rotation.Set(rotation.getX(), rotation.getY() * -1, rotation.getZ(), rotation.getW());
     return rotation;
 }
