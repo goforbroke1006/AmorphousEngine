@@ -9,7 +9,14 @@
 #include "Quaternion.h"
 
 namespace AmE {
-    struct Transform {
+    class Transform {
+    public:
+        Transform() {
+            mPosition = Vector3();
+            mRotation = Quaternion::Euler(0.0, 0.0, 0.0);
+            mLocalScale = Vector3(1.0, 1.0, 1.0);
+        }
+
         Vector3 mPosition;
         Quaternion mRotation;
         Vector3 mLocalScale;

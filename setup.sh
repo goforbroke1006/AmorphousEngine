@@ -35,3 +35,4 @@ sudo apt install -y libsdl2-dev
 bash ./bin/install-lua53.sh
 bash ./bin/install-ogre-next.sh
 bash ./bin/install-irrlicht1.8.sh
+bash ./bin/install-OIS.sh

@@ -10,6 +10,7 @@ AmE::Vector3 AmE::GraphicsEngine::convertPositionLeftToRightHand(Vector3 positio
 }
 
 AmE::Quaternion AmE::GraphicsEngine::convertRotationLeftToRightHand(Quaternion rotation) {
-    rotation.mY *= -1;
+    if (rotation.mY != 0.0)
+        rotation.mY *= -1;
     return rotation;
 }

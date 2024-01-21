@@ -1,7 +1,6 @@
 {
   "gameObjects": [
     {
-      "id": "go 0 :: Application System",
       "name": "Application System",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -19,7 +18,6 @@
       ]
     },
     {
-      "id": "go 0 :: Main Camera",
       "name": "Main Camera",
       "transform": {
         "position": {"x": 0.0, "y": 100.0, "z": -100.0},
@@ -40,7 +38,6 @@
       ]
     },
     {
-      "id": "go 1 :: Light 1",
       "name": "Light 1",
       "transform": {
         "position": {"x": 0.0, "y": 500.0, "z": 0.0},
@@ -59,7 +56,6 @@
       ]
     },
     {
-      "id": "go 2 :: Barrel center",
       "name": "Barrel center",
       "mesh": "./Barrel.mesh",
       "transform": {
@@ -79,7 +75,6 @@
       ]
     },
     {
-      "id": "go 3 :: Barrel front",
       "name": "Barrel front",
       "mesh": "./Barrel.mesh",
       "transform": {
@@ -99,7 +94,6 @@
       ]
     },
     {
-      "id": "go 4 :: Barrel back",
       "name": "Barrel back",
       "mesh": "./Barrel.mesh",
       "transform": {
@@ -119,7 +113,6 @@
       ]
     },
     {
-      "id": "go 5 :: Barrel right",
       "name": "Barrel right",
       "mesh": "./Barrel.mesh",
       "transform": {
@@ -139,7 +132,6 @@
       ]
     },
     {
-      "id": "go 6 :: Barrel left",
       "name": "Barrel left",
       "mesh": "./Barrel.mesh",
       "transform": {
@@ -159,7 +151,6 @@
       ]
     },
     {
-      "id": "go 7 :: Drone 1",
       "name": "Drone 1",
       "mesh": "./ogrehead.mesh",
       "transform": {

@@ -12,7 +12,7 @@ namespace AmE {
     public:
         double mX, mY, mZ;
 
-        Vector3() = default;
+        Vector3(): mX(0.0), mY(0.0), mZ(0.0) {}
 
         Vector3(double mX, double mY, double mZ) : mX(mX), mY(mY), mZ(mZ) {}
 

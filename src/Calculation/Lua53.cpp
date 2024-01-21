@@ -110,10 +110,10 @@ void AmE::Lua53::update(
     // extract scene state
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);
-    for (const auto &[gameObjID, gameObjPtr]: mGameObjectsTbl.getValues()) {
+    for (const auto &[_, gameObjPtr]: mGameObjectsTbl.getValues()) {
         auto *goTbl = (LETable *) gameObjPtr.get();
 
-        auto &idVal = goTbl->getValue(LETKey("id"));
+        auto &idVal = goTbl->getValue(LETKey("__instanceID"));
         auto id = (GameObjectInstanceID) ((LENum &) idVal).getValue();
 
         // register new GO, that was created with user scripts
@@ -152,7 +152,7 @@ void AmE::Lua53::update(
         auto *cmpTbl = (LETable *) cmpState.second.get();
 
         LETable &goVal = (LETable &) cmpTbl->getValue(LETKey("gameObject"));
-        const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(LETKey("id"))).getValue();
+        const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(LETKey("__instanceID"))).getValue();
 
         const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 

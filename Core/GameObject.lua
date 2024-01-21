@@ -9,7 +9,7 @@ require 'Core/Transform'
 
 GameObject = Object:new(0)
 GameObject = {
-    __instanceID = "",
+    __instanceID = 0,
     name = "",
     transform = Transform:new(),
 }

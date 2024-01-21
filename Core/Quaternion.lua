@@ -42,7 +42,7 @@ function Quaternion:IsA(className --[[string]])
     return className == "Quaternion"
 end
 
-Quaternion.identity = Quaternion:new(0.0, 0.0, 0.0, 0.0)
+
 
 function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]])
     -- https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
@@ -71,6 +71,8 @@ function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]
 
     return q;
 end
+
+Quaternion.identity = Quaternion:new(0.0, 0.0, 0.0, 1.0)
 
 function Quaternion:Set(newX --[[number]], newY --[[number]], newZ --[[number]], newW --[[number]])
     -- https://docs.unity3d.com/ScriptReference/Quaternion.Set.html

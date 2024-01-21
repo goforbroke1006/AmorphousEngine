@@ -52,12 +52,10 @@ void AmE::Application::loadScene(const std::string &filepath) {
                 posVal["z"].asDouble());
 
         auto &rotVal = goVal["transform"]["rotation"];
-        pGO->getTransform()->mRotation.Set(
-                rotVal["x"].asDouble(),
-                rotVal["y"].asDouble(),
-                rotVal["z"].asDouble(),
-                rotVal["w"].asDouble()
-        );
+        auto euler = Quaternion::Euler(rotVal["x"].asDouble(),
+                                       rotVal["y"].asDouble(),
+                                       rotVal["z"].asDouble());
+        pGO->getTransform()->mRotation = euler;
 
         auto &scaleVal = goVal["transform"]["localScale"];
         pGO->getTransform()->mLocalScale.Set(
@@ -89,6 +87,8 @@ void AmE::Application::loadScene(const std::string &filepath) {
         }
 
         mGameObjects[nextID] = pGO;
+
+        ++nextID;
     }
 }
 

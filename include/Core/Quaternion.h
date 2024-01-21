@@ -12,6 +12,8 @@ namespace AmE {
     public:
         double mX, mY, mZ, mW;
 
+         Quaternion(): mX(0.0), mY(0.0), mZ(0.0), mW(1.0) {}
+
         /**
          * https://docs.unity3d.com/ScriptReference/Quaternion.Set.html
          * @param x
