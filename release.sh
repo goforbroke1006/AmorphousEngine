@@ -48,6 +48,8 @@ cp ./third_party/ogre-next/build/Release/bin/OgreMeshTool ./release/
 cp -r ./Component/ ./release/Component/
 cp -r ./Core/ ./release/Core/
 
+sudo cp /usr/local/lib/libOIS.so.1.5.1 ./release/
+
 cat <<EOT > ./release/plugins.cfg
 # Defines plugins to load
 

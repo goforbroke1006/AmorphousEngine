@@ -26,7 +26,7 @@ fi
 echo "CMAKE_C_COMPILER   = /usr/bin/clang-17"
 echo "CMAKE_CXX_COMPILER = /usr/bin/clang++-17"
 
-sudo apt install -y libsdl2-dev
+#sudo apt install -y libsdl2-dev
 
 #
 #

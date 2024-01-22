@@ -52,11 +52,6 @@ target_link_libraries(${PROJECT_NAME} jsoncpp)
 target_include_directories(${PROJECT_NAME} PRIVATE "/usr/include/irrlicht")
 target_link_libraries(${PROJECT_NAME} "/usr/lib/x86_64-linux-gnu/libIrrlicht.so")
 
-# SDL2
-find_package(SDL2 REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY} ${SDL2MAIN_LIBRARY})
-
 # OIS
 target_link_libraries(${PROJECT_NAME} OIS)
 
