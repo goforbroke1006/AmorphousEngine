@@ -1,0 +1,160 @@
+{
+  "gameObjects": [
+    {
+      "name": "Application System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "name": "ApplicationSystem",
+          "pathname": "Scripts/ApplicationSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Main Camera",
+      "transform": {
+        "position": {"x": 0.0, "y": 200.0, "z": -200.0},
+        "rotation": {"x": -45.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "Camera",
+          "pathname": "Component/Camera",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "backgroundColor", "type": "Color", "value": "0.0 0.25 1.0 1.0"},
+            {"name": "nearClipPlane", "type": "double", "value": "0.1"},
+            {"name": "farClipPlane", "type": "double", "value": "1000.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Terrain",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [],
+      "mesh": "./Models/Terrain.mesh"
+    },
+    {
+      "name": "Base Banner",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": -70.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "BaseBanner",
+          "pathname": "Scripts/BaseBanner",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "isDestroyed", "type": "boolean", "value": "false"}
+          ]
+        }
+      ],
+      "mesh": "./Models/BaseBanner.mesh"
+    },
+    {
+      "name": "Enemy Respawn System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "EnemyRespawnSystem",
+          "pathname": "Scripts/EnemyRespawnSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Respawn Point Left",
+      "transform": {
+        "position": {"x": -70.0, "y": 0.0, "z": 70.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "EnemyRespawnPoint",
+          "pathname": "Scripts/EnemyRespawnPoint",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "tank1Prefab", "type": "prefab", "value": "./Prefabs/Enemy-Tank1.json"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Respawn Point Center",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 70.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "EnemyRespawnPoint",
+          "pathname": "Scripts/EnemyRespawnPoint",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "tank1Prefab", "type": "prefab", "value": "./Prefabs/Enemy-Tank1.json"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Respawn Point Right",
+      "transform": {
+        "position": {"x": 70.0, "y": 0.0, "z": 70.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "EnemyRespawnPoint",
+          "pathname": "Scripts/EnemyRespawnPoint",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "tank1Prefab", "type": "prefab", "value": "./Prefabs/Enemy-Tank1.json"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player 1",
+      "transform": {
+        "position": {"x": -20.0, "y": 0.0, "z": -70.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "PlayerController",
+          "pathname": "Scripts/PlayerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "10.0"}
+          ]
+        }
+      ],
+      "mesh": "./Models/Tank1.mesh"
+    }
+  ]
+}

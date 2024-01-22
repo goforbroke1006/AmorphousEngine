@@ -1,0 +1,24 @@
+{
+  "axis": [
+    {
+      "axisName": "Vertical",
+      "triggers": {
+        "positive": ["w", "ARROW ^"],
+        "negative": ["s", "ARROW v"]
+      }
+    },
+    {
+      "axisName": "Horizontal",
+      "triggers": {
+        "positive": ["d", "ARROW >"],
+        "negative": ["a", "ARROW <"]
+      }
+    }
+  ],
+  "button": [
+    {
+      "buttonName": "Fire1",
+      "triggers": ["MSL"]
+    }
+  ]
+}

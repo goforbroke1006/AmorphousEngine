@@ -4,6 +4,7 @@
 --- DateTime: 12/30/23 10:29 AM
 ---
 
+require "Core/__lib"
 require "Core/__external"
 
 require "Core/Debug"

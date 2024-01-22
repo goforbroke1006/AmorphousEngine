@@ -23,6 +23,10 @@ function Object:new(instanceID --[[integer]], name --[[string]])
     return obj
 end
 
+function Object:IsA(className --[[string]])
+    return className == "Object"
+end
+
 --- https://docs.unity3d.com/ScriptReference/Object.GetInstanceID.html
 --- int Returns the instance ID of the object.
 function Object:GetInstanceID()
@@ -51,35 +55,96 @@ Object.Destroy = function(obj --[[Object]], t)
 end
 
 --- https://docs.unity3d.com/ScriptReference/Object.Instantiate.html
-Object.Instantiate = function(original --[[Object]], arg1, arg2, arg3)
+Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     if original == nil then
         Debug.LogError("'original' should not be nil")
         return
     end
 
+    if not original:IsA("GameObject") then
+        Debug.LogError("'original' should be GameObject")
+        return
+    end
+
+    local instance = GameObject:new(
+            #__all_game_objects,
+            original.name .. " (Clone)"
+    )
+    __all_game_objects[instance.__instanceID] = instance;
+
     -- public static Object Instantiate(Object original);
     if arg1 == nil and arg2 == nil and arg3 == nil then
-        -- TODO: implement me
+        instance.transform.position:Set(
+                original.transform.position.x,
+                original.transform.position.y,
+                original.transform.position.z
+        )
+        instance.transform.rotation:Set(
+                original.transform.rotation.x,
+                original.transform.rotation.y,
+                original.transform.rotation.z,
+                original.transform.rotation.w
+        )
+        instance.transform.localScale:Set(
+                original.transform.localScale.x,
+                original.transform.localScale.y,
+                original.transform.localScale.z
+        )
+        return instance
     end
 
     -- public static Object Instantiate(Object original, Transform parent);
     if arg1:IsA("Transform") and arg2 == nil and arg3 == nil then
-        -- TODO: implement me
+        instance.transform.position:Set(
+                arg1.position.x,
+                arg1.position.y,
+                arg1.position.z
+        )
+        instance.transform.rotation:Set(
+                arg1.rotation.x,
+                arg1.rotation.y,
+                arg1.rotation.z,
+                arg1.rotation.w
+        )
+        instance.transform.localScale:Set(
+                arg1.localScale.x,
+                arg1.localScale.y,
+                arg1.localScale.z
+        )
+        return instance
     end
 
     -- public static Object Instantiate(Object original, Transform parent, bool instantiateInWorldSpace);
     if arg1:IsA("Transform") and type(arg2) == "bool" and arg3 == nil then
         -- TODO: implement me
+        error("implement me")
     end
 
     -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation);
     if arg1:IsA("Vector3") and arg2:IsA("Quaternion") and arg3 == nil then
-        -- TODO: implement me
+        instance.transform.position:Set(
+                arg1.x,
+                arg1.y,
+                arg1.z
+        )
+        instance.transform.rotation:Set(
+                arg2.x,
+                arg2.y,
+                arg2.z,
+                arg2.w
+        )
+        instance.transform.localScale:Set(
+                original.transform.localScale.x,
+                original.transform.localScale.y,
+                original.transform.localScale.z
+        )
+        return instance
     end
 
     -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent);
     if arg1:IsA("Vector3") and arg2:IsA("Quaternion") and arg3:IsA("Transform") then
         -- TODO: implement me
+        error("implement me")
     end
 
     Debug.LogError("Unexpected signature")
