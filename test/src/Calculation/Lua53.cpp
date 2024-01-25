@@ -220,70 +220,39 @@ namespace AmE {
             ASSERT_TRUE(std::filesystem::is_regular_file("Scripts/DroneController.lua"));
         }
 
-        auto *mainCameraGO = new GameObject(0, "Main Camera");
-        mainCameraGO->getTransform()->mPosition.Set(100.0, 100.0, 100.0);
-        mainCameraGO->getComponents()["Camera"] =
-                new Component(
-                        "Camera",
-                        "Component/Camera",
-                        {
-                                {"backgroundColor",
-                                 Property{"backgroundColor", PropType::PropTypeColor, Color{0.25, 0.75, 0.25, 1.0}}},
-                        }
-                );
+//        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getX());
+//        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getY());
+//        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getZ());
+//
+//        EXPECT_EQ(4.0, drone1GO->getTransform()->mPosition.getX());
+//        EXPECT_EQ(5.0, drone1GO->getTransform()->mPosition.getY());
+//        EXPECT_EQ(6.0, drone1GO->getTransform()->mPosition.getZ());
 
-        auto *box1GO = new GameObject(1, "Box 1");
-        box1GO->getTransform()->mPosition.Set(0.0, 0.0, 0.0);
-
-        auto *drone1GO = new GameObject(2, "Drone 1");
-        drone1GO->getTransform()->mPosition.Set(4.0, 5.0, 6.0);
-        drone1GO->getTransform()->mRotation = Quaternion::Euler(45.0, 45.0, 45.0);
-        drone1GO->getComponents()["DroneController"] =
-                new Component(
-                        "DroneController",
-                        "Scripts/DroneController",
-                        {
-                                {"motionSpeed",
-                                        Property{"motionSpeed", PropType::PropTypeDouble, 2.0}},
-                                {"targetTr",
-                                        Property{"targetTr", PropType::PropTypeGameObjectTransform, 1}},
-                        }
-                );
-
-        std::map<GameObjectInstanceID, GameObject *> goList = {
-                {mainCameraGO->getID(), mainCameraGO},
-                {box1GO->getID(),       box1GO},
-                {drone1GO->getID(),     drone1GO},
-        };
-
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getX());
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getY());
-        EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getZ());
-
-        EXPECT_EQ(4.0, drone1GO->getTransform()->mPosition.getX());
-        EXPECT_EQ(5.0, drone1GO->getTransform()->mPosition.getY());
-        EXPECT_EQ(6.0, drone1GO->getTransform()->mPosition.getZ());
+        auto *sceneState = SceneState::loadFromFile(
+                "",
+                "testdata/Scenes/TestLua53_update--_00_update_frame.json");
 
         Lua53 target("./");
-        target.initialize(goList, {});
+        target.initialize(sceneState);
 
         auto *preUpdateFrameData = new InputsState();
-        auto *sceneState = new SceneState(goList);
 
         target.update(preUpdateFrameData, sceneState);
         target.update(preUpdateFrameData, sceneState);
         target.update(preUpdateFrameData, sceneState);
 
+        auto *box1GO = sceneState->getSceneGameObject(1);
         EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getX());
         EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getY());
         EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getZ());
 
+        auto *drone1GO = sceneState->getSceneGameObject(2);
         EXPECT_NE(4.0, drone1GO->getTransform()->mPosition.getX());
 //    EXPECT_NE(5.0, drone1GO->mTransform->mPosition.mY); // TODO:
 //    EXPECT_NE(6.0, drone1GO->mTransform->mPosition.mZ); // TODO:
     }
 
-    TEST(TestLua53_update, _01_update_frame_with_input_press_Fire1) {
+    TEST(TestLua53_update, _01_input_Fire1) {
         // create Scripts/PlayerInput.lua
         if (!std::filesystem::is_directory("Scripts"))
             std::filesystem::create_directory("Scripts");
@@ -314,72 +283,14 @@ namespace AmE {
             ASSERT_TRUE(std::filesystem::is_regular_file("Scripts/PlayerInput.lua"));
         }
 
-        auto *playerGO = new GameObject(0, "Player");
-        playerGO->getComponents()["PlayerInput"] = new Component("PlayerInput", "Scripts/PlayerInput", {});
-
-        std::map<GameObjectInstanceID, GameObject *> goList = {
-                {playerGO->getID(), playerGO},
-        };
+        auto *sceneState = SceneState::loadFromFile(
+                "",
+                "testdata/Scenes/TestLua53_update--_01_input_Fire1.json");
 
         Lua53 target("./");
-        target.initialize(goList, {});
+        target.initialize(sceneState);
 
         auto *preUpdateFrameData = new InputsState();
-        auto *sceneState = new SceneState(goList);
-
-        preUpdateFrameData->pressed[KeyCode_Mouse0] = true;
-        preUpdateFrameData->released[KeyCode_Mouse0] = false;
-
-        testing::internal::CaptureStdout();
-        target.update(preUpdateFrameData, sceneState);
-        std::string output = testing::internal::GetCapturedStdout();
-        EXPECT_EQ("DEBUG: PlayerInput :: Fire1 pressed\n"
-                  "DEBUG: PlayerInput :: Fire1 hold\n", output);
-    }
-
-    TEST(TestLua53_update, _01_update_frame_with_input_full_Fire1) {
-        // create Scripts/PlayerInput.lua
-        if (!std::filesystem::is_directory("Scripts"))
-            std::filesystem::create_directory("Scripts");
-        ASSERT_TRUE(std::filesystem::is_directory("Scripts"));
-
-        {
-            std::ofstream of("Scripts/PlayerInput.lua", std::ofstream::out | std::ofstream::trunc);
-            of << "require 'Core'"
-                  ""
-                  "PlayerInput = LuaBehaviour:new()\n"
-                  "\n"
-                  "function PlayerInput:Start()\n"
-                  "    -- do nothing\n"
-                  "end\n"
-                  "\n"
-                  "function PlayerInput:Update()\n"
-                  "    if Input.GetButtonDown('Fire1') then\n"
-                  "        Debug.Log(\"PlayerInput :: Fire1 pressed\");\n"
-                  "    end\n"
-                  "    if Input.GetButton('Fire1') then\n"
-                  "        Debug.Log(\"PlayerInput :: Fire1 hold\");\n"
-                  "    end\n"
-                  "    if Input.GetButtonUp('Fire1') then\n"
-                  "        Debug.Log(\"PlayerInput :: Fire1 released\");\n"
-                  "    end\n"
-                  "end\n";
-            of.close();
-            ASSERT_TRUE(std::filesystem::is_regular_file("Scripts/PlayerInput.lua"));
-        }
-
-        auto *playerGO = new GameObject(0, "Player");
-        playerGO->getComponents()["PlayerInput"] = new Component("PlayerInput", "Scripts/PlayerInput", {});
-
-        std::map<GameObjectInstanceID, GameObject *> goList = {
-                {playerGO->getID(), playerGO},
-        };
-
-        Lua53 target("./");
-        target.initialize(goList, {});
-
-        auto *preUpdateFrameData = new InputsState();
-        auto *sceneState = new SceneState(goList);
 
         {
             preUpdateFrameData->pressed[KeyCode_Mouse0] = true;

@@ -5,9 +5,6 @@
 #ifndef AMORPHOUS_ENGINE_CALCULATION_ENGINE_H
 #define AMORPHOUS_ENGINE_CALCULATION_ENGINE_H
 
-#include <map>
-#include <string>
-
 #include "InputsState.h"
 #include "SceneState.h"
 
@@ -23,10 +20,7 @@ namespace AmE {
          * - Attach components to each game object
          * @param gameObjects
          */
-        virtual void initialize(
-                const std::map<GameObjectInstanceID, GameObject *> &sceneGameObjects,
-                const std::map<std::string, GameObject *> &prefabGameObjects
-        ) = 0;
+        virtual void initialize(const SceneState *const sceneState) = 0;
 
         /**
          * Calculation lifecycle:

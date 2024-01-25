@@ -43,14 +43,12 @@ AmE::OgreNext::~OgreNext() {
     delete mRoot;
 }
 
-void AmE::OgreNext::initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
-    for (const auto &goPair: gameObjects) {
-        GameObject *pGO = goPair.second;
-
-        if (pGO->isCamera()) {
-            createCameraNode(pGO);
-        } else if (pGO->isLight()) {
-            auto color = pGO->getComponent("Light")->mProperties["color"].asColor();
+void AmE::OgreNext::initialize(const SceneState * const sceneState) {
+    for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
+        if (pGameObj->isCamera()) {
+            createCameraNode(pGameObj);
+        } else if (pGameObj->isLight()) {
+            auto color = pGameObj->getComponent("Light")->mProperties["color"].asColor();
 
             auto *light = mSceneManager->createLight();
             light->setType(Ogre::Light::LT_POINT);
@@ -62,38 +60,36 @@ void AmE::OgreNext::initialize(const std::map<GameObjectInstanceID, GameObject *
             spotLightNode->setDirection(-1, -1, 0);
             spotLightNode->setPosition(Ogre::Vector3(200, 200, 0));
 
-            mSceneNodes[pGO->getID()] = spotLightNode;
+            mSceneNodes[pGameObj->getID()] = spotLightNode;
         } else {
-            createSceneNode(pGO);
+            createSceneNode(pGameObj);
         }
     }
 }
 
-bool AmE::OgreNext::update(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
+bool AmE::OgreNext::update(const SceneState * const sceneState) {
     Ogre::WindowEventUtilities::messagePump();
 
     mQuit |= mWinListener->shouldQuit();
 
     if (mWindow->isVisible() && !mQuit) {
-        for (const auto &goPair: gameObjects) {
-            GameObject *pGO = goPair.second;
-
-            if (pGO->isCamera()) {
-                bool isNewObj = mCameraNodes.find(pGO->getID()) == mCameraNodes.end();
+        for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
+            if (pGameObj->isCamera()) {
+                bool isNewObj = mCameraNodes.find(pGameObj->getID()) == mCameraNodes.end();
 
                 if (isNewObj)
-                    createCameraNode(pGO);
+                    createCameraNode(pGameObj);
                 else
-                    updateCameraNode(pGO);
-            } else if (pGO->isLight()) {
+                    updateCameraNode(pGameObj);
+            } else if (pGameObj->isLight()) {
                 // TODO: ???
             } else {
-                bool isNewObj = mSceneNodes.find(pGO->getID()) == mSceneNodes.end();
+                bool isNewObj = mSceneNodes.find(pGameObj->getID()) == mSceneNodes.end();
 
                 if (isNewObj)
-                    createSceneNode(pGO);
+                    createSceneNode(pGameObj);
                 else
-                    updateSceneNode(pGO);
+                    updateSceneNode(pGameObj);
             }
         }
 

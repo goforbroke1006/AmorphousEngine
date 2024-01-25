@@ -4,10 +4,10 @@
 
 #include <gtest/gtest.h>
 
+#include "../../include/PrefabManager.h"
+
 #include <filesystem>
 #include <fstream>
-
-#include "../../include/PrefabManager.h"
 
 namespace AmE {
     TEST(TestPrefabManager_loadFromFile, positive) {

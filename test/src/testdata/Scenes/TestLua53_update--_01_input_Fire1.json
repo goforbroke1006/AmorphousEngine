@@ -1,0 +1,14 @@
+{
+  "gameObjects": [
+    {
+      "name": "Player",
+      "components": [
+        {
+          "name": "PlayerInput",
+          "pathname": "Scripts/PlayerInput",
+          "properties": []
+        }
+      ]
+    }
+  ]
+}

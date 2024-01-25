@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
         ../../src/Core/GameObject.cpp
         ../../src/Calculation/Lua53.cpp
         ../../src/PrefabManager.cpp
+        ../../src/SceneState.cpp
         ${test_source_files})
 add_test(AllTests-${PROJECT_NAME} ${PROJECT_NAME})
 

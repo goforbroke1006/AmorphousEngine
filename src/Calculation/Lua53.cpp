@@ -49,17 +49,14 @@ AmE::Lua53::~Lua53() {
 //    lua_close(*L);
 }
 
-void AmE::Lua53::initialize(
-        const std::map<GameObjectInstanceID, GameObject *> &sceneGameObjects,
-        const std::map<std::string, GameObject *> &prefabGameObjects
-) {
+void AmE::Lua53::initialize(const SceneState *const sceneState) {
     // 1) Include LUA modules from 'Core'
     // 2) Create all game objects (set name, set transform)
     // 3) Create all components (set gameObject, set transform)
     // 4) Set each component with args (static values, references to gameObject or transforms)
     // 5) Run 'Start()' method for each component
 
-    const std::string &initCode = buildInitLuaCode(sceneGameObjects);
+    const std::string &initCode = buildInitLuaCode(sceneState->getSceneGameObjects());
     luaL_loadstring(*L, initCode.c_str());
 //    Logger::Trace("\n" + initCode);
 
@@ -76,7 +73,7 @@ void AmE::Lua53::initialize(
     {
         std::string prefabsLoadingCode;
 
-        for (const auto &[path, pGO]: prefabGameObjects) {
+        for (const auto &[path, pGO]: sceneState->getPrefabGameObjects()) {
             prefabsLoadingCode +=
                     "__global_prefab_game_objects['" + path + "'] = GameObject:new(-1, '" + pGO->getName() + "')\n"
                     + "__global_prefab_game_objects['" + path + "'].transform.position";
@@ -130,16 +127,19 @@ void AmE::Lua53::update(
     // extract scene state
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);
-    for (const auto &[_, gameObjPtr]: mGameObjectsTbl.getValues()) {
-        auto *goTbl = (LETable *) gameObjPtr.get();
+    for (const auto &[_, luaGameObjTbl]: mGameObjectsTbl.getValues()) {
+        auto *goTbl = (LETable *) luaGameObjTbl.get();
 
         auto &idVal = goTbl->getValue(LETKey(GO_PROP_INSTANCE_ID));
         auto id = (GameObjectInstanceID) ((LENum &) idVal).getValue();
 
+        GameObject *pGameObj = sceneState->getSceneGameObject(id);
+
         // register new GO, that was created with user scripts
-        if (sceneState->gameObjects.find(id) == sceneState->gameObjects.end()) {
+        if (nullptr == pGameObj) {
             auto &nameVal = ((LEString &) goTbl->getValue(LETKey(GO_PROP_NAME)));
-            sceneState->gameObjects[id] = new GameObject(id, nameVal.getValue());
+            pGameObj = new GameObject(id, nameVal.getValue());
+            sceneState->addSceneGameObject(pGameObj);
         }
 
         {
@@ -149,18 +149,18 @@ void AmE::Lua53::update(
             auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
             auto &localScale = (LETable &) transform.getValue(LETKey("localScale"));
 
-            sceneState->gameObjects[id]->getTransform()->mPosition.Set(
+            pGameObj->getTransform()->mPosition.Set(
                     ((LENum &) position.getValue(LETKey("x"))).getValue(),
                     ((LENum &) position.getValue(LETKey("y"))).getValue(),
                     ((LENum &) position.getValue(LETKey("z"))).getValue()
             );
-            sceneState->gameObjects[id]->getTransform()->mRotation.Set(
+            pGameObj->getTransform()->mRotation.Set(
                     ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
                     ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
                     ((LENum &) rotation.getValue(LETKey("z"))).getValue(),
                     ((LENum &) rotation.getValue(LETKey("w"))).getValue()
             );
-            sceneState->gameObjects[id]->getTransform()->mLocalScale.Set(
+            pGameObj->getTransform()->mLocalScale.Set(
                     ((LENum &) localScale.getValue(LETKey("x"))).getValue(),
                     ((LENum &) localScale.getValue(LETKey("y"))).getValue(),
                     ((LENum &) localScale.getValue(LETKey("z"))).getValue()
@@ -176,7 +176,7 @@ void AmE::Lua53::update(
 
         const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 
-        auto *pCmp = sceneState->gameObjects[goID]->getComponents()[cmpName];
+        auto *pCmp = sceneState->getSceneGameObject(goID)->getComponents()[cmpName];
 
         for (const auto &luaAttrState: cmpTbl->getValues()) {
             std::string luaAttrName = luaAttrState.first.ToString();
@@ -208,7 +208,7 @@ void AmE::Lua53::update(
     }
 
     mAppQuit->PopGlobal(*L);
-    sceneState->appQuit = mAppQuit->getValue();
+    sceneState->setAppQuit(mAppQuit->getValue());
 }
 
 std::string AmE::Lua53::buildInitLuaCode(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
@@ -368,7 +368,7 @@ std::string AmE::Lua53::propValToLuaCode(const Property &prop) {
                 return std::string()
                        + LUA53_G_VAR_GO_T + "[" + std::to_string(goID) + "].transform";
             } catch (const std::bad_any_cast &e) {
-                //Logger::Error(e.what());
+                Logger::Error(e.what());
             }
 
         }
@@ -408,12 +408,10 @@ std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Eng
             return vec;
         }
         case PropType::PropTypeGameObject:
-            // TODO:
-            break;
+            return nullptr;
         case PropType::PropTypeGameObjectTransform:
-            // TODO:
-            break;
+            return nullptr;
     }
 
-    throw std::runtime_error("unexpected type " + PropType::asString(kind));
+    throw std::runtime_error("AmE::Lua53::parsePropValFromLua: unexpected property type " + PropType::asString(kind));
 }

@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../../include/Core/GameObject.h"
+#include "../../include/Core/Property.h"
 
 namespace AmE {
     TEST(TestProperty_parseValue, _double) {
@@ -43,10 +43,10 @@ namespace AmE {
     }
 
     TEST(TestProperty_parseValue, _GameObject) {
-        auto actual = std::any_cast<std::string>(
-                Property::parseValue(PropType::PropTypeGameObject, "go 1 :: Box 1"));
+        auto actual = std::any_cast<int>(
+                Property::parseValue(PropType::PropTypeGameObject, "1"));
 
-        auto expected = "go 1 :: Box 1";
+        auto expected = 1;
 
         EXPECT_EQ(expected, actual);
     }

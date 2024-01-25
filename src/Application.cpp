@@ -2,15 +2,15 @@
 // Created by goforbroke on 1/1/24.
 //
 
+#include "../include/Application.h"
+
 #include <utility>
 #include <filesystem>
-#include <fstream>
-#include <jsoncpp/json/json.h>
 
-#include "../include/Application.h"
-#include "../include/Core/Property.h"
 
 #include "../include/Logger.h"
+#include "../include/PrefabManager.h"
+#include "../include/Core/Property.h"
 
 AmE::Application::Application(
         std::string mEngineRoot,
@@ -25,121 +25,36 @@ AmE::Application::Application(
 }
 
 AmE::Application::~Application() {
-    for (const auto &go: mSceneGameObjects)
-        delete go.second;
-    Logger::Debug("Clear " + std::to_string(mSceneGameObjects.size()) + " game objects");
+    delete mSceneState;
 }
 
 void AmE::Application::loadScene(const std::string &filepath) {
-    const std::string path = mProjectRoot + std::filesystem::path::preferred_separator + filepath;
-    std::ifstream ifs(path);
-    Json::Reader reader;
-    Json::Value obj;
-
-    reader.parse(ifs, obj);
-
-    const Json::Value &gameObjectsVals = obj["gameObjects"];
-
-    GameObjectInstanceID nextID = 0;
-
-    for (const auto &goVal: gameObjectsVals) {
-        auto *pGO = new GameObject(nextID, goVal["name"].asString());
-
-        auto &posVal = goVal["transform"]["position"];
-        if (posVal["x"].isDouble() && posVal["y"].isDouble() && posVal["z"].isDouble()) {
-            pGO->getTransform()->mPosition.Set(
-                    posVal["x"].asDouble(),
-                    posVal["y"].asDouble(),
-                    posVal["z"].asDouble()
-            );
-        } else {
-            Logger::Error("Object #" + std::to_string(nextID) + " " + pGO->getName() + " has invalid position");
-        }
-
-        auto &rotVal = goVal["transform"]["rotation"];
-        if (rotVal["x"].isDouble() && rotVal["y"].isDouble() && rotVal["z"].isDouble()) {
-            auto euler = Quaternion::Euler(rotVal["x"].asDouble(),
-                                           rotVal["y"].asDouble(),
-                                           rotVal["z"].asDouble());
-            pGO->getTransform()->mRotation = euler;
-        } else {
-            Logger::Error("Object #" + std::to_string(nextID) + " " + pGO->getName() + " has invalid rotation");
-        }
-
-        auto &scaleVal = goVal["transform"]["localScale"];
-        if (scaleVal["x"].isDouble() && scaleVal["y"].isDouble() && scaleVal["z"].isDouble()) {
-            pGO->getTransform()->mLocalScale.Set(
-                    scaleVal["x"].asDouble(),
-                    scaleVal["y"].asDouble(),
-                    scaleVal["z"].asDouble()
-            );
-        } else {
-            Logger::Error("Object #" + std::to_string(nextID) + " " + pGO->getName() + " has invalid scale");
-        }
-
-        const Json::Value &componentsVals = goVal["components"];
-        for (const auto &cmpVal: componentsVals) {
-            auto *pCmp = new Component();
-            pCmp->mName = cmpVal["name"].asString();
-            pCmp->mPathname = cmpVal["pathname"].asString();
-
-            const Json::Value &argumentsVals = cmpVal["properties"];
-            for (const auto &argVal: argumentsVals) {
-                const std::string &rawValue = argVal["value"].asString();
-
-                Property prop;
-                prop.mName = argVal["name"].asString();
-                prop.mType = PropType::parseKind(argVal["type"].asString());
-                prop.mValue = Property::parseValue(prop.mType, rawValue);
-                pCmp->mProperties[prop.mName] = prop;
-
-                if (prop.mType == PropType::PropTypePrefabPath) {
-                    mPrefabGameObjects[rawValue] = nullptr;
-                }
-            }
-
-            pGO->getComponents()[pCmp->mName] = pCmp;
-        }
-
-        if (!goVal["mesh"].empty() && goVal["mesh"].isString()) {
-            pGO->setMeshPathname(goVal["mesh"].asString());
-        }
-
-        mSceneGameObjects[nextID] = pGO;
-
-        ++nextID;
-    }
-
-    for (auto &[prefabPath, _]: mPrefabGameObjects) {
-        const std::string prefabFullPath = mProjectRoot + std::filesystem::path::preferred_separator + prefabPath;
-
-
-        Logger::Trace("Load prefab " + prefabPath);
-    }
+    mSceneState = SceneState::loadFromFile(mProjectRoot, filepath);
 }
 
 void AmE::Application::runMainLoop() {
-    mGraphicsEngine->initialize(mSceneGameObjects);
-    mCalculationEngine->initialize(mSceneGameObjects, mPrefabGameObjects);
+    if (nullptr == mSceneState)
+        throw std::runtime_error("scene is not loaded");
+
+    mGraphicsEngine->initialize(mSceneState);
+    mCalculationEngine->initialize(mSceneState);
 
     auto *pInputsState = new InputsState();
-    auto *pSceneState = new SceneState(mSceneGameObjects);
 
     auto *pInputReader = new InputReader(mGraphicsEngine->getWindowHnd(), pInputsState);
 
-    while (!pSceneState->appQuit) {
+    while (!mSceneState->isAppQuit()) {
         pInputReader->collectCodes();
 
-        mCalculationEngine->update(pInputsState, pSceneState);
+        mCalculationEngine->update(pInputsState, mSceneState);
 
-        if (!mGraphicsEngine->update(mSceneGameObjects))
+        if (!mGraphicsEngine->update(mSceneState))
             break;
     }
 
     mGraphicsEngine->stop();
 
     delete pInputReader;
-    delete pSceneState;
     delete pInputsState;
 }
 

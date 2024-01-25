@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 #include <utility>
+
 #include "Core/GameObject.h"
 #include "Core/KeyCode.h"
 
@@ -17,13 +18,38 @@ namespace AmE {
      */
     class SceneState {
     public:
-        explicit SceneState(std::map<GameObjectInstanceID, GameObject *> gameObjects) {
-            this->gameObjects = std::move(gameObjects);
-            this->appQuit = false;
-        }
+        explicit SceneState();
 
-        std::map<GameObjectInstanceID, GameObject *> gameObjects;
-        bool appQuit;
+        virtual ~SceneState();
+
+        [[nodiscard]]
+        const std::map<GameObjectInstanceID, GameObject *> &
+        getSceneGameObjects() const;
+
+        [[nodiscard]]
+        GameObject *
+        getSceneGameObject(GameObjectInstanceID id) const;
+
+        void addSceneGameObject(GameObject *const pGameObj);
+
+        [[nodiscard]]
+        const std::map<std::string, GameObject *> &
+        getPrefabGameObjects() const;
+
+        [[nodiscard]]
+        bool isAppQuit() const;
+
+        void setAppQuit(bool appQuit);
+
+        static SceneState *loadFromFile(
+                std::string projectRoot,
+                const std::string &jsonFilepath
+        );
+
+    private:
+        std::map<GameObjectInstanceID, GameObject *> mSceneGameObjects;
+        std::map<std::string, GameObject *> mPrefabGameObjects;
+        bool mAppQuit;
     };
 }
 

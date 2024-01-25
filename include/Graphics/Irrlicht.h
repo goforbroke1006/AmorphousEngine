@@ -20,9 +20,9 @@ namespace AmE {
 
         [[nodiscard]] size_t getWindowHnd() const override;
 
-        void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) override;
+        void initialize(const SceneState * const sceneState) override;
 
-        bool update(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) override;
+        bool update(const SceneState * const sceneState) override;
 
         void stop() override;
 

@@ -1,0 +1,47 @@
+{
+  "gameObjects": [
+    {
+      "name": "Main Camera",
+      "transform": {
+        "position": {"x": 100.0, "y": 100.0, "z": 100.0}
+      },
+      "components": [
+        {
+          "name": "Camera",
+          "pathname": "Component/Camera",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "backgroundColor", "type": "Color", "value": "0.25 0.75 0.25 1.0"},
+            {"name": "nearClipPlane", "type": "double", "value": "0.1"},
+            {"name": "farClipPlane", "type": "double", "value": "1000.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Box 1",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0}
+      }
+    },
+    {
+      "name": "Drone 1",
+      "mesh": "./ogrehead.mesh",
+      "transform": {
+        "position": {"x": 4.0, "y": 5.0, "z": 6.0},
+        "rotation": {"x": 45.0, "y": 45.0, "z": 45.0}
+      },
+      "components": [
+        {
+          "name": "DroneController",
+          "pathname": "Scripts/DroneController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "2.0"},
+            {"name": "targetTr", "type": "GameObjectTransform", "value": "1"}
+          ]
+        }
+      ]
+    }
+  ]
+}

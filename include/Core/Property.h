@@ -6,10 +6,14 @@
 #define AMORPHOUS_ENGINE_PROPERTY_H
 
 #include <any>
+#include <string>
 #include <sstream>
 #include <exception>
 
 #include "Color.h"
+#include "Vector3.h"
+
+#define GameObjectTransform_STR "GameObjectTransform"
 
 namespace AmE {
     class PropType {
@@ -32,7 +36,7 @@ namespace AmE {
             if (str == "Color") return PropTypeColor;
             if (str == "Vector3") return PropTypeVector3;
             if (str == "GameObject") return PropTypeGameObject;
-            if (str == "GameObjectTransform") return PropTypeGameObjectTransform;
+            if (str == GameObjectTransform_STR) return PropTypeGameObjectTransform;
             if (str == "PrefabPath") return PropTypePrefabPath;
 
             throw std::runtime_error("parsing prop kind failed: " + str);
@@ -53,7 +57,7 @@ namespace AmE {
                 case PropTypeGameObject:
                     return "GameObject";
                 case PropTypeGameObjectTransform:
-                    return "GameObjectTransform";
+                    return GameObjectTransform_STR;
                 case PropTypePrefabPath:
                     return "PrefabPath";
                 default:
@@ -125,7 +129,7 @@ namespace AmE {
                 }
                 case PropType::PropTypeGameObject:
                 case PropType::PropTypeGameObjectTransform:
-                    return raw;
+                    return std::stoi(raw);
             }
         }
     };
