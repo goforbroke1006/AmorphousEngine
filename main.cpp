@@ -18,6 +18,7 @@ int main(int argc, char **argv) {
     std::string graphicsMode = "OgreNext"; // OgreNext | Irrlicht
     std::string engineRoot = cwd.string() + std::filesystem::path::preferred_separator + "";
     std::string projectRoot = "./projects/01-HelloWorld/";
+//    std::string projectRoot = "./projects/02-BattleCity-Clone/";
     std::string sceneFilename = "./Scenes/level-0.json";
 
     // TODO: parse arguments
