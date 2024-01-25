@@ -64,7 +64,7 @@ AmE::GameObject *AmE::PrefabManager::loadFromFile(const std::string &jsonFilepat
                 properties
         );
 
-        pGameObj->getComponents()[pComponent->mName] = pComponent;
+        pGameObj->addComponent(pComponent);
     }
 
     return pGameObj;

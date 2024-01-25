@@ -132,7 +132,7 @@ AmE::SceneState *AmE::SceneState::loadFromFile(
 
             }
 
-            pGameObject->getComponents()[pCmp->mName] = pCmp;
+            pGameObject->addComponent(pCmp);
         }
 
         if (!goVal["mesh"].empty() && goVal["mesh"].isString()) {

@@ -21,6 +21,7 @@
 #define LUA53_G_VAR_BTN_P_T "__global_buttons_pressed"
 #define LUA53_G_VAR_BTN_R_T "__global_buttons_released"
 #define LUA53_G_VAR_APP_QUIT "__application_quit"
+#define LUA53_G_VAR_PREFABS "__global_prefab_game_objects"
 
 #define GO_PROP_INSTANCE_ID "__instanceID"
 #define GO_PROP_NAME "name"
@@ -43,11 +44,8 @@ namespace AmE {
                 SceneState *sceneState
         ) override;
 
-        static std::string buildInitLuaCode(const std::map<GameObjectInstanceID, GameObject *> &gameObjects);
-
-        static std::string propValToLuaCode(const Property &prop);
-
         static std::any parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal);
+
 
     private:
         std::unique_ptr<LuaCpp::Engine::LuaState> L;

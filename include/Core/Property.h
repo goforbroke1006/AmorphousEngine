@@ -71,6 +71,10 @@ namespace AmE {
         PropType::Kind mType;
         std::any mValue;
 
+        std::string asString() const {
+            return std::any_cast<std::string>(mValue);
+        }
+
         int asInt() const {
             return std::any_cast<int>(mValue);
         }
@@ -130,6 +134,8 @@ namespace AmE {
                 case PropType::PropTypeGameObject:
                 case PropType::PropTypeGameObjectTransform:
                     return std::stoi(raw);
+                case PropType::PropTypePrefabPath:
+                    return raw;
             }
         }
     };

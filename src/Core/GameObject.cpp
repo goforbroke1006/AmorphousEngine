@@ -32,12 +32,16 @@ AmE::Transform *const AmE::GameObject::getTransform() const {
     return mTransform;
 }
 
-std::map<std::string, AmE::Component *> &AmE::GameObject::getComponents() {
+const std::map<std::string, AmE::Component *> &AmE::GameObject::getComponents() const {
     return mComponents;
 }
 
 AmE::Component *AmE::GameObject::getComponent(const std::string &name) const {
     return mComponents.at(name);
+}
+
+void AmE::GameObject::addComponent(AmE::Component *const component) {
+    mComponents[component->mName] = component;
 }
 
 const std::string &AmE::GameObject::getMeshPathname() const {
@@ -55,3 +59,5 @@ bool AmE::GameObject::isCamera() const {
 bool AmE::GameObject::isLight() const {
     return mComponents.find("Light") != mComponents.end();
 }
+
+

@@ -11,7 +11,7 @@
 #include "Transform.h"
 #include "Component.h"
 
-#define GameObjectInstanceID unsigned long long
+#define GameObjectInstanceID long long
 
 namespace AmE {
     struct GameObject {
@@ -26,9 +26,11 @@ namespace AmE {
 
         [[nodiscard]] Transform *const getTransform() const;
 
-        std::map<std::string, Component*> &getComponents();
+        const std::map<std::string, Component *> &getComponents() const;
 
-        [[nodiscard]] Component* getComponent(const std::string &name) const;
+        [[nodiscard]] Component *getComponent(const std::string &name) const;
+
+        void addComponent(Component *const component);
 
         const std::string &getMeshPathname() const;
 
@@ -42,7 +44,7 @@ namespace AmE {
         GameObjectInstanceID mID;
         std::string mName;
         Transform *mTransform;
-        std::map<std::string, Component*> mComponents;
+        std::map<std::string, Component *> mComponents;
 
         std::string mMeshPathname;
     };

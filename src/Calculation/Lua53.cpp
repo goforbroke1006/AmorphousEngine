@@ -12,6 +12,8 @@
 #include <LuaCpp/Engine/LuaTString.hpp>
 #include <LuaCpp/Engine/LuaTBoolean.hpp>
 
+#include "../../include/Calculation/Lua53Generator.h"
+
 using LETKey = LuaCpp::Engine::Table::Key;
 using LENum = LuaCpp::Engine::LuaTNumber;
 using LEString = LuaCpp::Engine::LuaTString;
@@ -56,7 +58,7 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
     // 4) Set each component with args (static values, references to gameObject or transforms)
     // 5) Run 'Start()' method for each component
 
-    const std::string &initCode = buildInitLuaCode(sceneState->getSceneGameObjects());
+    const std::string &initCode = Lua53Generator::buildInitLuaCode(sceneState);
     luaL_loadstring(*L, initCode.c_str());
 //    Logger::Trace("\n" + initCode);
 
@@ -176,7 +178,7 @@ void AmE::Lua53::update(
 
         const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 
-        auto *pCmp = sceneState->getSceneGameObject(goID)->getComponents()[cmpName];
+        auto *pCmp = sceneState->getSceneGameObject(goID)->getComponent(cmpName);
 
         for (const auto &luaAttrState: cmpTbl->getValues()) {
             std::string luaAttrName = luaAttrState.first.ToString();
@@ -211,171 +213,8 @@ void AmE::Lua53::update(
     sceneState->setAppQuit(mAppQuit->getValue());
 }
 
-std::string AmE::Lua53::buildInitLuaCode(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
-    if (gameObjects.empty())
-        return "";
 
-    std::string initCode;
-    initCode += "require 'Core'\n"
-                "\n";
 
-//    initCode += std::string()
-//                + LUA53_G_VAR_GO_T + " = {}\n"
-//                + LUA53_G_VAR_CMP_T + " = {}\n"
-//                                      "\n";
-
-    for (const auto &[goID, goPtr]: gameObjects) {
-        auto idStr = std::to_string(goID);
-
-        auto pos = goPtr->getTransform()->mPosition;
-        auto rot = goPtr->getTransform()->mRotation;
-        auto scale = goPtr->getTransform()->mLocalScale;
-
-        initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "[" + idStr + "] = GameObject:new(" + idStr + ", '" + goPtr->getName() +
-                    "')\n";
-        initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.position:Set("
-                    + std::to_string(pos.getX())
-                    + ", "
-                    + std::to_string(pos.getY())
-                    + ", "
-                    + std::to_string(pos.getZ())
-                    + ")\n";
-        initCode += std::string()
-                    + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.rotation:Set("
-                    + std::to_string(rot.getX())
-                    + ", "
-                    + std::to_string(rot.getY())
-                    + ", "
-                    + std::to_string(rot.getZ())
-                    + ", "
-                    + std::to_string(rot.getW())
-                    + ")\n";
-        if (!goPtr->isCamera()) {
-            initCode += std::string()
-                        + LUA53_G_VAR_GO_T + "[" + idStr + "].transform.localScale:Set("
-                        + std::to_string(scale.getX())
-                        + ", "
-                        + std::to_string(scale.getY())
-                        + ", "
-                        + std::to_string(scale.getZ())
-                        + ")\n";
-        }
-        initCode += "\n";
-    }
-
-    // TODO:
-    std::map<std::string, std::string> cmpNameToPath;
-    for (const auto &goPair: gameObjects) {
-        for (const auto &cmpPair: goPair.second->getComponents()) {
-            cmpNameToPath[cmpPair.second->mName] = cmpPair.second->mPathname;
-        }
-    }
-    initCode += "require 'Core/LuaBehaviour'\n\n";
-    for (const auto &cmpPair: cmpNameToPath) {
-        initCode += "require '" + cmpPair.second + "'\n";
-        initCode += "\n";
-
-        initCode += std::string()
-                    + "function " + cmpPair.first + ":new()\n"
-                    + "    local instance = LuaBehaviour:new()\n"
-                    + "    setmetatable(instance, self)\n"
-                    + "    self.__index = self\n"
-                    + "    return instance\n"
-                    + "end\n\n";
-    }
-
-    for (const auto &goPair: gameObjects) {
-        auto *go = goPair.second;
-        const auto &idStr = std::to_string(go->getID());
-
-        for (const auto &[_, pCmp]: go->getComponents()) {
-            std::string cmpID = idStr + " :: " + pCmp->mName;
-
-            initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + pCmp->mName + ":new()\n";
-            initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + pCmp->mName + "'\n";
-            initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = "
-                        + LUA53_G_VAR_GO_T + "[" + idStr + "]\n";
-            initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform = "
-                        + LUA53_G_VAR_GO_T + "[" + idStr + "].transform\n";
-            initCode += "\n";
-
-            for (const auto &[_, prop]: pCmp->mProperties) {
-                initCode += std::string()
-                            + LUA53_G_VAR_CMP_T + "['" + cmpID + "']." + prop.mName + " = " +
-                            propValToLuaCode(prop) + "\n";
-            }
-
-            initCode += "\n";
-        }
-    }
-
-    initCode += std::string()
-                + "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do\n"
-                + "    cmpInstance:Start()\n"
-                + "end\n";
-
-    return initCode;
-}
-
-std::string AmE::Lua53::propValToLuaCode(const Property &prop) {
-    switch (prop.mType) {
-        case PropType::PropTypeBoolean:
-            return std::any_cast<bool>(prop.mValue) ? "true" : "false";
-        case PropType::PropTypeDouble:
-            return std::to_string(std::any_cast<double>(prop.mValue));
-        case PropType::PropTypeString:
-            return "'" + std::any_cast<std::string>(prop.mValue) + "'";
-        case PropType::PropTypeColor: {
-            auto colorVal = std::any_cast<Color>(prop.mValue);
-            return "Color:new("
-                   + std::to_string(colorVal.mR)
-                   + ", "
-                   + std::to_string(colorVal.mG)
-                   + ", "
-                   + std::to_string(colorVal.mB)
-                   + ", "
-                   + std::to_string(colorVal.mA)
-                   + ")";
-        }
-        case PropType::PropTypeVector3: {
-            auto vecVal = std::any_cast<Vector3>(prop.mValue);
-            return "Vector:new("
-                   + std::to_string(vecVal.getX())
-                   + ", "
-                   + std::to_string(vecVal.getY())
-                   + ", "
-                   + std::to_string(vecVal.getZ())
-                   + ")";
-        }
-        case PropType::PropTypeGameObject: {
-            try {
-                auto goID = prop.asInt();
-                return std::string()
-                       + LUA53_G_VAR_GO_T + "[" + std::to_string(goID) + "]";
-            } catch (const std::bad_any_cast &e) {
-                //Logger::Error(e.what());
-            }
-        }
-        case PropType::PropTypeGameObjectTransform: {
-            try {
-                auto goID = prop.asInt();
-                return std::string()
-                       + LUA53_G_VAR_GO_T + "[" + std::to_string(goID) + "].transform";
-            } catch (const std::bad_any_cast &e) {
-                Logger::Error(e.what());
-            }
-
-        }
-    }
-
-    throw std::runtime_error("unexpected type " + PropType::asString(prop.mType));
-}
 
 std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal) {
     switch (kind) {
@@ -411,7 +250,11 @@ std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Eng
             return nullptr;
         case PropType::PropTypeGameObjectTransform:
             return nullptr;
+        case PropType::PropTypePrefabPath:
+            return nullptr;
     }
 
     throw std::runtime_error("AmE::Lua53::parsePropValFromLua: unexpected property type " + PropType::asString(kind));
 }
+
+

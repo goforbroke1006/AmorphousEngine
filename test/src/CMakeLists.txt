@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME}
         ../../src/Core/KeyCode.cpp
         ../../src/Core/GameObject.cpp
         ../../src/Calculation/Lua53.cpp
+        ../../src/Calculation/Lua53Generator.cpp
         ../../src/PrefabManager.cpp
         ../../src/SceneState.cpp
         ${test_source_files})
