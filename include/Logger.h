@@ -23,6 +23,11 @@ namespace AmE {
         }
 
         inline
+        static void Warn(const std::string &message) {
+            std::cerr << "WARN: " << message << std::endl;
+        }
+
+        inline
         static void Error(const std::string &message) {
             std::cerr << "ERROR: " << message << std::endl;
         }

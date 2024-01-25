@@ -48,7 +48,8 @@ namespace AmE {
         GraphicsEngine *mGraphicsEngine;
         CalculationEngine *mCalculationEngine;
 
-        std::map<GameObjectInstanceID, GameObject *> mGameObjects;
+        std::map<GameObjectInstanceID, GameObject *> mSceneGameObjects;
+        std::map<std::string, GameObject *> mPrefabGameObjects;
     };
 }
 

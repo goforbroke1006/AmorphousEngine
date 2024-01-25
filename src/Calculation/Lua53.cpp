@@ -49,14 +49,17 @@ AmE::Lua53::~Lua53() {
 //    lua_close(*L);
 }
 
-void AmE::Lua53::initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) {
+void AmE::Lua53::initialize(
+        const std::map<GameObjectInstanceID, GameObject *> &sceneGameObjects,
+        const std::map<std::string, GameObject *> &prefabGameObjects
+) {
     // 1) Include LUA modules from 'Core'
     // 2) Create all game objects (set name, set transform)
     // 3) Create all components (set gameObject, set transform)
     // 4) Set each component with args (static values, references to gameObject or transforms)
     // 5) Run 'Start()' method for each component
 
-    const std::string &initCode = buildInitLuaCode(gameObjects);
+    const std::string &initCode = buildInitLuaCode(sceneGameObjects);
     luaL_loadstring(*L, initCode.c_str());
 //    Logger::Trace("\n" + initCode);
 
@@ -68,6 +71,23 @@ void AmE::Lua53::initialize(const std::map<GameObjectInstanceID, GameObject *> &
         L->PrintStack(std::cerr); // TODO:
 
         throw std::runtime_error(lua_tostring(*L, 1));
+    }
+
+    {
+        std::string prefabsLoadingCode;
+
+        for (const auto &[path, pGO]: prefabGameObjects) {
+            prefabsLoadingCode +=
+                    "__global_prefab_game_objects['" + path + "'] = GameObject:new(-1, '" + pGO->getName() + "')\n"
+                    + "__global_prefab_game_objects['" + path + "'].transform.position";
+        }
+
+        luaL_loadstring(*L, prefabsLoadingCode.c_str());
+        int res = lua_pcall(*L, 0, 0, 0);
+        if (res != LUA_OK) {
+            L->PrintStack(std::cerr);
+            throw std::runtime_error(lua_tostring(*L, 1));
+        }
     }
 
     mGameObjectsTbl.PopGlobal(*L);
@@ -156,7 +176,7 @@ void AmE::Lua53::update(
 
         const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 
-        Component &cmp = sceneState->gameObjects[goID]->getComponents()[cmpName];
+        auto *pCmp = sceneState->gameObjects[goID]->getComponents()[cmpName];
 
         for (const auto &luaAttrState: cmpTbl->getValues()) {
             std::string luaAttrName = luaAttrState.first.ToString();
@@ -174,16 +194,16 @@ void AmE::Lua53::update(
                 continue;
 
             // skip private fields of component
-            if (cmp.mProperties.find(luaAttrName) == cmp.mProperties.end())
+            if (pCmp->mProperties.find(luaAttrName) == pCmp->mProperties.end())
                 continue;
 
-            PropType::Kind kind = cmp.mProperties[luaAttrName].mType;
+            PropType::Kind kind = pCmp->mProperties[luaAttrName].mType;
             if (kind == PropType::PropTypeGameObject)
                 continue;
             if (kind == PropType::PropTypeGameObjectTransform)
                 continue;
 
-            cmp.mProperties[luaAttrName].mValue = parsePropValFromLua(kind, luaAttrState.second.get());
+            pCmp->mProperties[luaAttrName].mValue = parsePropValFromLua(kind, luaAttrState.second.get());
         }
     }
 
@@ -249,7 +269,7 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<GameObjectInstanceID, Ga
     std::map<std::string, std::string> cmpNameToPath;
     for (const auto &goPair: gameObjects) {
         for (const auto &cmpPair: goPair.second->getComponents()) {
-            cmpNameToPath[cmpPair.second.mName] = cmpPair.second.mPathname;
+            cmpNameToPath[cmpPair.second->mName] = cmpPair.second->mPathname;
         }
     }
     initCode += "require 'Core/LuaBehaviour'\n\n";
@@ -270,25 +290,25 @@ std::string AmE::Lua53::buildInitLuaCode(const std::map<GameObjectInstanceID, Ga
         auto *go = goPair.second;
         const auto &idStr = std::to_string(go->getID());
 
-        for (const auto &cmpPair: go->getComponents()) {
-            std::string cmpID = idStr + " :: " + cmpPair.second.mName;
+        for (const auto &[_, pCmp]: go->getComponents()) {
+            std::string cmpID = idStr + " :: " + pCmp->mName;
 
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + cmpPair.second.mName + ":new()\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + pCmp->mName + ":new()\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + cmpPair.second.mName + "'\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + pCmp->mName + "'\n";
             initCode += std::string()
                         + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = "
                         + LUA53_G_VAR_GO_T + "[" + idStr + "]\n";
             initCode += std::string()
                         + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform = "
-                        + LUA53_G_VAR_GO_T + "[" + idStr +"].transform\n";
+                        + LUA53_G_VAR_GO_T + "[" + idStr + "].transform\n";
             initCode += "\n";
 
-            for (const auto &propPair: cmpPair.second.mProperties) {
+            for (const auto &[_, prop]: pCmp->mProperties) {
                 initCode += std::string()
-                            + LUA53_G_VAR_CMP_T + "['" + cmpID + "']." + propPair.second.mName + " = " +
-                            propValToLuaCode(propPair.second) + "\n";
+                            + LUA53_G_VAR_CMP_T + "['" + cmpID + "']." + prop.mName + " = " +
+                            propValToLuaCode(prop) + "\n";
             }
 
             initCode += "\n";

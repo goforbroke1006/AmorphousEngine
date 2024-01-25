@@ -50,7 +50,7 @@ void AmE::OgreNext::initialize(const std::map<GameObjectInstanceID, GameObject *
         if (pGO->isCamera()) {
             createCameraNode(pGO);
         } else if (pGO->isLight()) {
-            auto color = pGO->getComponents()["Light"].mProperties["color"].asColor();
+            auto color = pGO->getComponent("Light")->mProperties["color"].asColor();
 
             auto *light = mSceneManager->createLight();
             light->setType(Ogre::Light::LT_POINT);
@@ -116,9 +116,9 @@ void AmE::OgreNext::stop() {
 void AmE::OgreNext::createCameraNode(const GameObject *const gameObjectPtr) {
     mCameraNodes[gameObjectPtr->getID()] = mSceneManager->createCamera(gameObjectPtr->getName());
 
-    if (gameObjectPtr->getComponent("Camera").isEnabled()) {
+    if (gameObjectPtr->getComponent("Camera")->isEnabled()) {
         auto backgroundColor = std::any_cast<Color>(
-                gameObjectPtr->getComponent("Camera").mProperties.at("backgroundColor").mValue);
+                gameObjectPtr->getComponent("Camera")->mProperties.at("backgroundColor").mValue);
 
         mCompositorManager = mRoot->getCompositorManager2();
         const Ogre::String workspaceName("Demo Workspace");
@@ -162,7 +162,7 @@ void AmE::OgreNext::updateCameraNode(const GameObject *const gameObjectPtr) {
             )
     );
 
-    auto camProps = gameObjectPtr->getComponent("Camera").mProperties;
+    auto camProps = gameObjectPtr->getComponent("Camera")->mProperties;
 
     auto nearClipPlane = std::any_cast<double>(camProps.at("nearClipPlane").mValue);
     auto farClipPlane = std::any_cast<double>(camProps.at("farClipPlane").mValue);

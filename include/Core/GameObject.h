@@ -26,9 +26,9 @@ namespace AmE {
 
         [[nodiscard]] Transform *const getTransform() const;
 
-        std::map<std::string, Component> &getComponents();
+        std::map<std::string, Component*> &getComponents();
 
-        [[nodiscard]] Component getComponent(const std::string &name) const;
+        [[nodiscard]] Component* getComponent(const std::string &name) const;
 
         const std::string &getMeshPathname() const;
 
@@ -42,7 +42,7 @@ namespace AmE {
         GameObjectInstanceID mID;
         std::string mName;
         Transform *mTransform;
-        std::map<std::string, Component> mComponents;
+        std::map<std::string, Component*> mComponents;
 
         std::string mMeshPathname;
     };

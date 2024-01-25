@@ -22,6 +22,7 @@ namespace AmE {
             PropTypeVector3,
             PropTypeGameObject,
             PropTypeGameObjectTransform,
+            PropTypePrefabPath,
         };
 
         static PropType::Kind parseKind(const std::string &str) {
@@ -32,6 +33,7 @@ namespace AmE {
             if (str == "Vector3") return PropTypeVector3;
             if (str == "GameObject") return PropTypeGameObject;
             if (str == "GameObjectTransform") return PropTypeGameObjectTransform;
+            if (str == "PrefabPath") return PropTypePrefabPath;
 
             throw std::runtime_error("parsing prop kind failed: " + str);
         }
@@ -52,6 +54,8 @@ namespace AmE {
                     return "GameObject";
                 case PropTypeGameObjectTransform:
                     return "GameObjectTransform";
+                case PropTypePrefabPath:
+                    return "PrefabPath";
                 default:
                     throw std::runtime_error("unexpected prop kind");
             }

@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME} main.cpp
         src/Calculation/Lua53.cpp
         src/GraphicsEngine.cpp
         src/InputReader.cpp
+        src/PrefabManager.cpp
 )
 
 if (NOT MSVC)
@@ -41,10 +42,12 @@ target_link_libraries(${PROJECT_NAME}
         ${OGRE_HlmsPbs_LIBRARIES}
         ${OGRE_HlmsUnlit_LIBRARIES})
 
+# Locate LuaCpp
 find_package(LuaCpp REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${LUA_INCLUDE_DIR} ${LUACPP_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} ${LUA_LIBRARIES} ${LUACPP_LIBRARIES})
 
+# Locate JsonCpp
 find_package(jsoncpp REQUIRED)
 target_link_libraries(${PROJECT_NAME} jsoncpp)
 

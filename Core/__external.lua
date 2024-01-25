@@ -67,14 +67,10 @@ __input_mapping = {
         },
     }
 }
---__input_mapping.axes["Vertical"] = {}
---__input_mapping.axes["Vertical"]["positive"] = { KeyCode.W, KeyCode.UpArrow }
---__input_mapping.axes["Vertical"]["negative"] = { KeyCode.S, KeyCode.DownArrow }
---__input_mapping.axes["Horizontal"] = {}
---__input_mapping.axes["Horizontal"]["positive"] = { KeyCode.D, KeyCode.RightArrow }
---__input_mapping.axes["Horizontal"]["negative"] = { KeyCode.A, KeyCode.LeftArrow }
 
 __application_quit = false
+
+__global_prefab_game_objects = {}
 
 function __before_update_frame()
     if __application_quit then

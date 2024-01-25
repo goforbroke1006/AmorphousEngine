@@ -25,9 +25,9 @@ AmE::Application::Application(
 }
 
 AmE::Application::~Application() {
-    for (const auto &go: mGameObjects)
+    for (const auto &go: mSceneGameObjects)
         delete go.second;
-    Logger::Debug("Clear " + std::to_string(mGameObjects.size()) + " game objects");
+    Logger::Debug("Clear " + std::to_string(mSceneGameObjects.size()) + " game objects");
 }
 
 void AmE::Application::loadScene(const std::string &filepath) {
@@ -79,38 +79,51 @@ void AmE::Application::loadScene(const std::string &filepath) {
 
         const Json::Value &componentsVals = goVal["components"];
         for (const auto &cmpVal: componentsVals) {
-            Component cmp;
-            cmp.mName = cmpVal["name"].asString();
-            cmp.mPathname = cmpVal["pathname"].asString();
+            auto *pCmp = new Component();
+            pCmp->mName = cmpVal["name"].asString();
+            pCmp->mPathname = cmpVal["pathname"].asString();
 
             const Json::Value &argumentsVals = cmpVal["properties"];
             for (const auto &argVal: argumentsVals) {
+                const std::string &rawValue = argVal["value"].asString();
+
                 Property prop;
                 prop.mName = argVal["name"].asString();
                 prop.mType = PropType::parseKind(argVal["type"].asString());
-                prop.mValue = Property::parseValue(prop.mType, argVal["value"].asString());
-                cmp.mProperties[prop.mName] = prop;
+                prop.mValue = Property::parseValue(prop.mType, rawValue);
+                pCmp->mProperties[prop.mName] = prop;
+
+                if (prop.mType == PropType::PropTypePrefabPath) {
+                    mPrefabGameObjects[rawValue] = nullptr;
+                }
             }
 
-            pGO->getComponents()[cmp.mName] = cmp;
+            pGO->getComponents()[pCmp->mName] = pCmp;
         }
 
         if (!goVal["mesh"].empty() && goVal["mesh"].isString()) {
             pGO->setMeshPathname(goVal["mesh"].asString());
         }
 
-        mGameObjects[nextID] = pGO;
+        mSceneGameObjects[nextID] = pGO;
 
         ++nextID;
+    }
+
+    for (auto &[prefabPath, _]: mPrefabGameObjects) {
+        const std::string prefabFullPath = mProjectRoot + std::filesystem::path::preferred_separator + prefabPath;
+
+
+        Logger::Trace("Load prefab " + prefabPath);
     }
 }
 
 void AmE::Application::runMainLoop() {
-    mGraphicsEngine->initialize(mGameObjects);
-    mCalculationEngine->initialize(mGameObjects);
+    mGraphicsEngine->initialize(mSceneGameObjects);
+    mCalculationEngine->initialize(mSceneGameObjects, mPrefabGameObjects);
 
     auto *pInputsState = new InputsState();
-    auto *pSceneState = new SceneState(mGameObjects);
+    auto *pSceneState = new SceneState(mSceneGameObjects);
 
     auto *pInputReader = new InputReader(mGraphicsEngine->getWindowHnd(), pInputsState);
 
@@ -119,7 +132,7 @@ void AmE::Application::runMainLoop() {
 
         mCalculationEngine->update(pInputsState, pSceneState);
 
-        if (!mGraphicsEngine->update(mGameObjects))
+        if (!mGraphicsEngine->update(mSceneGameObjects))
             break;
     }
 

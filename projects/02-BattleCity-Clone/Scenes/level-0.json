@@ -96,7 +96,7 @@
           "pathname": "Scripts/EnemyRespawnPoint",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "tank1Prefab", "type": "prefab", "value": "./Prefabs/Enemy-Tank1.json"}
+            {"name": "tank1Prefab", "type": "PrefabPath", "value": "./Prefabs/Enemy-Tank1.json"}
           ]
         }
       ]
@@ -114,7 +114,7 @@
           "pathname": "Scripts/EnemyRespawnPoint",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "tank1Prefab", "type": "prefab", "value": "./Prefabs/Enemy-Tank1.json"}
+            {"name": "tank1Prefab", "type": "PrefabPath", "value": "./Prefabs/Enemy-Tank1.json"}
           ]
         }
       ]
@@ -132,7 +132,7 @@
           "pathname": "Scripts/EnemyRespawnPoint",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "tank1Prefab", "type": "prefab", "value": "./Prefabs/Enemy-Tank1.json"}
+            {"name": "tank1Prefab", "type": "PrefabPath", "value": "./Prefabs/Enemy-Tank1.json"}
           ]
         }
       ]

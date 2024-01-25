@@ -36,7 +36,10 @@ namespace AmE {
 
         virtual ~Lua53();
 
-        void initialize(const std::map<GameObjectInstanceID, GameObject *> &gameObjects) override;
+        void initialize(
+                const std::map<GameObjectInstanceID, GameObject *> &sceneGameObjects,
+                const std::map<std::string, GameObject *> &prefabGameObjects
+        ) override;
 
         void update(
                 const InputsState *preUpdateFrameData,

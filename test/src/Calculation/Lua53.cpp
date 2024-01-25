@@ -60,7 +60,7 @@ namespace AmE {
         auto *mainCameraGO = new GameObject(0, "Main Camera");
         mainCameraGO->getTransform()->mPosition.Set(100.0, 100.0, 100.0);
         mainCameraGO->getComponents()["Camera"] =
-                Component(
+                new Component(
                         "Camera",
                         "Component/Camera",
                         {
@@ -72,7 +72,7 @@ namespace AmE {
         auto *playerGO = new GameObject(1, "Player");
         playerGO->getTransform()->mPosition.Set(1.0, 2.0, 3.0);
         playerGO->getComponents()["CharacterController"] =
-                Component(
+                new Component(
                         "CharacterController",
                         "Scripts/CharacterController",
                         {
@@ -223,7 +223,7 @@ namespace AmE {
         auto *mainCameraGO = new GameObject(0, "Main Camera");
         mainCameraGO->getTransform()->mPosition.Set(100.0, 100.0, 100.0);
         mainCameraGO->getComponents()["Camera"] =
-                Component(
+                new Component(
                         "Camera",
                         "Component/Camera",
                         {
@@ -239,7 +239,7 @@ namespace AmE {
         drone1GO->getTransform()->mPosition.Set(4.0, 5.0, 6.0);
         drone1GO->getTransform()->mRotation = Quaternion::Euler(45.0, 45.0, 45.0);
         drone1GO->getComponents()["DroneController"] =
-                Component(
+                new Component(
                         "DroneController",
                         "Scripts/DroneController",
                         {
@@ -265,7 +265,7 @@ namespace AmE {
         EXPECT_EQ(6.0, drone1GO->getTransform()->mPosition.getZ());
 
         Lua53 target("./");
-        target.initialize(goList);
+        target.initialize(goList, {});
 
         auto *preUpdateFrameData = new InputsState();
         auto *sceneState = new SceneState(goList);
@@ -315,14 +315,14 @@ namespace AmE {
         }
 
         auto *playerGO = new GameObject(0, "Player");
-        playerGO->getComponents()["PlayerInput"] = Component("PlayerInput", "Scripts/PlayerInput", {});
+        playerGO->getComponents()["PlayerInput"] = new Component("PlayerInput", "Scripts/PlayerInput", {});
 
         std::map<GameObjectInstanceID, GameObject *> goList = {
                 {playerGO->getID(), playerGO},
         };
 
         Lua53 target("./");
-        target.initialize(goList);
+        target.initialize(goList, {});
 
         auto *preUpdateFrameData = new InputsState();
         auto *sceneState = new SceneState(goList);
@@ -369,14 +369,14 @@ namespace AmE {
         }
 
         auto *playerGO = new GameObject(0, "Player");
-        playerGO->getComponents()["PlayerInput"] = Component("PlayerInput", "Scripts/PlayerInput", {});
+        playerGO->getComponents()["PlayerInput"] = new Component("PlayerInput", "Scripts/PlayerInput", {});
 
         std::map<GameObjectInstanceID, GameObject *> goList = {
                 {playerGO->getID(), playerGO},
         };
 
         Lua53 target("./");
-        target.initialize(goList);
+        target.initialize(goList, {});
 
         auto *preUpdateFrameData = new InputsState();
         auto *sceneState = new SceneState(goList);

@@ -14,6 +14,10 @@ AmE::GameObject::GameObject(GameObjectInstanceID key, std::string name)
 
 AmE::GameObject::~GameObject() {
     delete mTransform;
+
+    for (const auto &[_, pCmp]: mComponents)
+        delete pCmp;
+    mComponents.clear();
 }
 
 GameObjectInstanceID AmE::GameObject::getID() const {
@@ -28,11 +32,11 @@ AmE::Transform *const AmE::GameObject::getTransform() const {
     return mTransform;
 }
 
-std::map<std::string, AmE::Component> &AmE::GameObject::getComponents() {
+std::map<std::string, AmE::Component *> &AmE::GameObject::getComponents() {
     return mComponents;
 }
 
-AmE::Component AmE::GameObject::getComponent(const std::string &name) const {
+AmE::Component *AmE::GameObject::getComponent(const std::string &name) const {
     return mComponents.at(name);
 }
 
