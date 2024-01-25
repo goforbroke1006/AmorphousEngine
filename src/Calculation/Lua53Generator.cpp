@@ -17,6 +17,20 @@ AmE::Lua53Generator::buildInitLuaCode(
                 "require 'Component'\n"
                 "\n";
 
+    // inject info about loaded prefabs
+    for (const auto &[prefabPath, pGameObj]: sceneState->getPrefabGameObjects()) {
+        if (nullptr == pGameObj) {
+            Logger::Error("prefab should be loaded: " + prefabPath);
+            continue;
+        }
+
+        initCode += generateInitCode(
+                std::string() + LUA53_G_VAR_PREFABS + "['" + prefabPath + "']",
+                pGameObj,
+                false
+        );
+    }
+
     for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
         initCode += generateInitCode(
                 std::string() + LUA53_G_VAR_GO_T + "[" + std::to_string(pGameObj->getID()) + "]",
@@ -181,7 +195,7 @@ AmE::Lua53Generator::simplePropValToLuaCode(const Property &prop) {
                    + std::to_string(vecVal.getZ())
                    + ")";
         }
-                case PropType::PropTypeGameObject: {
+        case PropType::PropTypeGameObject: {
             try {
                 auto goID = prop.asInt();
                 return std::string()

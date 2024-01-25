@@ -119,6 +119,112 @@ namespace AmE {
 
         EXPECT_EQ(expected, actual);
     }
+
+    TEST(TestLua53Generator_buildInitLuaCode, _03_scene_prefabs) {
+        auto pSceneState = SceneState::loadFromFile(
+                "./testdata/",
+                "./Scenes/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs.json");
+
+        const auto &actual = Lua53Generator::buildInitLuaCode(pSceneState);
+
+        delete pSceneState;
+
+        std::string expected =
+                "require 'Core'\n"
+                "require 'Component'\n"
+                "\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'] = GameObject:new(-1, 'Bot')\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].transform.position:Set(0.000000, 0.000000, 0.000000)\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.000000)\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
+                "\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].__components['EnemyController'] = EnemyController\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].__components['EnemyController'].__name = 'EnemyController'\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].__components['EnemyController'].gameObject = nil\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].__components['EnemyController'].transform = nil\n"
+                "__global_prefab_game_objects['./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json'].__components['EnemyController'].enabled = true\n"
+                "\n"
+                "__all_game_objects[0] = GameObject:new(0, 'Main Camera')\n"
+                "__all_game_objects[0].transform.position:Set(100.000000, 100.000000, 100.000000)\n"
+                "__all_game_objects[0].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.000000)\n"
+                "\n"
+                "__all_game_objects[1] = GameObject:new(1, 'Player')\n"
+                "__all_game_objects[1].transform.position:Set(40.000000, 50.000000, 60.000000)\n"
+                "__all_game_objects[1].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.000000)\n"
+                "__all_game_objects[1].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
+                "\n"
+                "__all_game_objects[2] = GameObject:new(2, 'Bot 1')\n"
+                "__all_game_objects[2].transform.position:Set(4.000000, 5.000000, 6.000000)\n"
+                "__all_game_objects[2].transform.rotation:Set(0.000000, 0.707107, 0.000000, 0.707107)\n"
+                "__all_game_objects[2].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
+                "\n"
+                "__all_game_objects[3] = GameObject:new(3, 'Bots Respawn')\n"
+                "__all_game_objects[3].transform.position:Set(10.000000, 0.000000, 0.000000)\n"
+                "__all_game_objects[3].transform.rotation:Set(0.000000, 0.000000, 0.000000, 1.000000)\n"
+                "__all_game_objects[3].transform.localScale:Set(1.000000, 1.000000, 1.000000)\n"
+                "\n"
+                "require 'Core/LuaBehaviour'\n"
+                "\n"
+                "require 'Scripts/BotsRespawnPoint'\n"
+                "\n"
+                "function BotsRespawnPoint:new()\n"
+                "    local instance = LuaBehaviour:new()\n"
+                "    setmetatable(instance, self)\n"
+                "    self.__index = self\n"
+                "    return instance\n"
+                "end\n"
+                "\n"
+                "require 'Component/Camera'\n"
+                "\n"
+                "function Camera:new()\n"
+                "    local instance = LuaBehaviour:new()\n"
+                "    setmetatable(instance, self)\n"
+                "    self.__index = self\n"
+                "    return instance\n"
+                "end\n"
+                "\n"
+                "require 'Scripts/ThirdCameraController'\n"
+                "\n"
+                "function ThirdCameraController:new()\n"
+                "    local instance = LuaBehaviour:new()\n"
+                "    setmetatable(instance, self)\n"
+                "    self.__index = self\n"
+                "    return instance\n"
+                "end\n"
+                "\n"
+                "__all_components['0 :: Camera'] = Camera:new()\n"
+                "__all_components['0 :: Camera'].__name = 'Camera'\n"
+                "__all_components['0 :: Camera'].gameObject = __all_game_objects[0]\n"
+                "__all_components['0 :: Camera'].transform = __all_game_objects[0].transform\n"
+                "\n"
+                "__all_components['0 :: Camera'].backgroundColor = Color:new(0.250000, 0.750000, 0.250000, 1.000000)\n"
+                "__all_components['0 :: Camera'].enabled = true\n"
+                "__all_components['0 :: Camera'].farClipPlane = 1000.000000\n"
+                "__all_components['0 :: Camera'].nearClipPlane = 0.100000\n"
+                "\n"
+                "__all_components['1 :: ThirdCameraController'] = ThirdCameraController:new()\n"
+                "__all_components['1 :: ThirdCameraController'].__name = 'ThirdCameraController'\n"
+                "__all_components['1 :: ThirdCameraController'].gameObject = __all_game_objects[1]\n"
+                "__all_components['1 :: ThirdCameraController'].transform = __all_game_objects[1].transform\n"
+                "\n"
+                "__all_components['1 :: ThirdCameraController'].camera = __all_game_objects[0].transform\n"
+                "__all_components['1 :: ThirdCameraController'].enabled = true\n"
+                "__all_components['1 :: ThirdCameraController'].runningSpeed = 2.000000\n"
+                "\n"
+                "__all_components['3 :: BotsRespawnPoint'] = BotsRespawnPoint:new()\n"
+                "__all_components['3 :: BotsRespawnPoint'].__name = 'BotsRespawnPoint'\n"
+                "__all_components['3 :: BotsRespawnPoint'].gameObject = __all_game_objects[3]\n"
+                "__all_components['3 :: BotsRespawnPoint'].transform = __all_game_objects[3].transform\n"
+                "\n"
+                "__all_components['3 :: BotsRespawnPoint'].bot = __global_prefab_game_objects[./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json]\n"
+                "__all_components['3 :: BotsRespawnPoint'].enabled = true\n"
+                "\n"
+                "for _, cmpInstance in pairs(__all_components) do\n"
+                "    cmpInstance:Start()\n"
+                "end\n";
+
+        EXPECT_EQ(expected, actual);
+    }
 }
 
 namespace AmE {

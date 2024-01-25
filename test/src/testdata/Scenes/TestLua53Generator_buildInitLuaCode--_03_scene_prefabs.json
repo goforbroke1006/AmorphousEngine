@@ -1,0 +1,63 @@
+{
+  "gameObjects": [
+    {
+      "name": "Main Camera",
+      "transform": {
+        "position": {"x": 100.0, "y": 100.0, "z": 100.0}
+      },
+      "components": [
+        {
+          "name": "Camera",
+          "pathname": "Component/Camera",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "backgroundColor", "type": "Color", "value": "0.25 0.75 0.25 1.0"},
+            {"name": "nearClipPlane", "type": "double", "value": "0.1"},
+            {"name": "farClipPlane", "type": "double", "value": "1000.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player",
+      "transform": {
+        "position": {"x": 40.0, "y": 50.0, "z": 60.0}
+      },
+      "components": [
+        {
+          "name": "ThirdCameraController",
+          "pathname": "Scripts/ThirdCameraController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "camera", "type": "GameObjectTransform", "value": "0"},
+            {"name": "runningSpeed", "type": "double", "value": "2.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bot 1",
+      "transform": {
+        "position": {"x": 4.0, "y": 5.0, "z": 6.0},
+        "rotation": {"x": 0.0, "y": 90.0, "z": 0.0}
+      }
+    },
+    {
+      "name": "Bots Respawn",
+      "transform": {
+        "position": {"x": 10.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "name": "BotsRespawnPoint",
+          "pathname": "Scripts/BotsRespawnPoint",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "bot", "type": "PrefabPath", "value": "./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json"}
+          ]
+        }
+      ]
+    }
+  ]
+}

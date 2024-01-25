@@ -5,6 +5,7 @@
 #include "../include/PrefabManager.h"
 
 #include <fstream>
+#include <filesystem>
 #include <stdexcept>
 
 #include <jsoncpp/json/json.h>
@@ -12,6 +13,9 @@
 #include "../include/Logger.h"
 
 AmE::GameObject *AmE::PrefabManager::loadFromFile(const std::string &jsonFilepath) {
+    if (!std::filesystem::is_regular_file(jsonFilepath))
+        throw std::runtime_error("prefab file not found: " + jsonFilepath);
+
     std::ifstream fileStream(jsonFilepath);
     Json::Reader prefabReader;
     Json::Value prefabObj;

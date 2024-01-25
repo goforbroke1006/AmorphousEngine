@@ -1,0 +1,18 @@
+{
+  "name": "Bot",
+  "transform": {
+    "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+  },
+  "components": [
+    {
+      "name": "EnemyController",
+      "pathname": "Scripts/EnemyController",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"}
+      ]
+    }
+  ],
+  "mesh": "./Models/Tank1.mesh"
+}
