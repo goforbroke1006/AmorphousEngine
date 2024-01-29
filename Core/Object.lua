@@ -6,15 +6,14 @@
 
 --- https://docs.unity3d.com/ScriptReference/Object.html
 Object = {
-    --__instanceID = 0,
-    --name = ""
+    __instanceID = -1,
 }
 
-function Object:new(instanceID --[[integer]], name --[[string]])
-    name = name or ""
+function Object:new(__instanceID --[[integer]])
+    __instanceID = __instanceID or -1
+
     obj = {
-        --__instanceID = instanceID,
-        --name = name
+        __instanceID = __instanceID,
     }
 
     self.__index = self

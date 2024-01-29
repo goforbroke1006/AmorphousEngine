@@ -7,7 +7,7 @@
 require 'Core/Object'
 require 'Core/Transform'
 
-GameObject = Object:new(0)
+GameObject = {} -- ToObject:new(0)
 
 GameObject.__instanceID = 0
 GameObject.name = ""
@@ -18,11 +18,9 @@ function GameObject:new(__instanceID --[[integer]], name --[[string]])
     __instanceID = __instanceID or -1
     name = name or ""
 
-    gameObj = {
-        __instanceID = __instanceID,
-        name = name,
-        transform = Transform:new(),
-    }
+    gameObj = Object:new(__instanceID)
+    gameObj.name = name
+    gameObj.transform = Transform:new()
 
     self.__index = self
     setmetatable(gameObj, self)
@@ -31,7 +29,7 @@ function GameObject:new(__instanceID --[[integer]], name --[[string]])
 end
 
 function GameObject:IsA(className --[[string]])
-    return className == "GameObject"
+    return className == "GameObject" or className == "Object"
 end
 
 function GameObject:AddComponent(name --[[string]])
