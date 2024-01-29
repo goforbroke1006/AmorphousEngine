@@ -20,17 +20,17 @@ namespace AmE {
          * - Attach components to each game object
          * @param gameObjects
          */
-        virtual void initialize(const SceneState *const sceneState) = 0;
+        virtual void initialize(const SceneState *sceneState) = 0;
 
         /**
          * Calculation lifecycle:
          * - Execute each component
          * - For each game object pull position, rotation and scale
-         * @param preUpdateFrameData
+         * @param inputsState
          * @param sceneState
          */
         virtual void update(
-                const InputsState *preUpdateFrameData,
+                const InputsState *inputsState,
                 SceneState *sceneState
         ) = 0;
     };

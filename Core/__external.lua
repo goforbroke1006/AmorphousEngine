@@ -6,6 +6,11 @@
 
 require "Core/KeyCode"
 
+__scene_next_game_object_instance_id = nil
+
+--- Table with all game objects, placed on scene.
+--- Key is instance ID.
+--- Value is table that inherited from GameObject.
 __all_game_objects = {}
 __all_components = {}
 

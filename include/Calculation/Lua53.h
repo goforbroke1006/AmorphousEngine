@@ -37,15 +37,14 @@ namespace AmE {
 
         virtual ~Lua53();
 
-        void initialize(const SceneState *const sceneState) override;
+        void initialize(const SceneState *sceneState) override;
 
         void update(
-                const InputsState *preUpdateFrameData,
+                const InputsState *inputsState,
                 SceneState *sceneState
         ) override;
 
         static std::any parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal);
-
 
     private:
         std::unique_ptr<LuaCpp::Engine::LuaState> L;

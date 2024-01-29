@@ -8,11 +8,11 @@ require 'Core/Object'
 require 'Core/Transform'
 
 GameObject = Object:new(0)
-GameObject = {
-    __instanceID = 0,
-    name = "",
-    transform = Transform:new(),
-}
+
+GameObject.__instanceID = 0
+GameObject.name = ""
+GameObject.transform = Transform:new()
+GameObject.__components = {}
 
 function GameObject:new(__instanceID --[[integer]], name --[[string]])
     __instanceID = __instanceID or -1

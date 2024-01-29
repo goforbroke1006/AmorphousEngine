@@ -11,6 +11,8 @@ require 'Core/Debug'
 require 'Core/Time'
 require 'Core/Space'
 
+
+
 LuaBehaviour = {
     --__name = "",
     --enabled = true,
@@ -41,4 +43,14 @@ end
 function LuaBehaviour:GetComponents()
     --
     return nil
+end
+
+function LuaBehaviour.__make_clone(origin --[[LuaBehaviour]])
+    local component = LuaBehaviour:new()
+
+    for k, v in pairs(origin) do
+        component[k] = v
+    end
+
+    return component
 end

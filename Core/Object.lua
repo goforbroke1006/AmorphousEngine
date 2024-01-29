@@ -6,15 +6,15 @@
 
 --- https://docs.unity3d.com/ScriptReference/Object.html
 Object = {
-    __instanceID = 0,
-    name = ""
+    --__instanceID = 0,
+    --name = ""
 }
 
 function Object:new(instanceID --[[integer]], name --[[string]])
     name = name or ""
     obj = {
-        __instanceID = instanceID,
-        name = name
+        --__instanceID = instanceID,
+        --name = name
     }
 
     self.__index = self
@@ -52,6 +52,11 @@ Object.Destroy = function(obj --[[Object]], t)
     end
 
     -- TODO: implement me
+
+    -- TODO: find in __all_game_objects and disable forever
+    -- TODO: find in __all_components and disable forever
+
+    error("Object.Destroy: implement me")
 end
 
 --- https://docs.unity3d.com/ScriptReference/Object.Instantiate.html
@@ -66,14 +71,22 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
         return
     end
 
-    local instance = GameObject:new(
-            #__all_game_objects,
-            original.name .. " (Clone)"
-    )
-    __all_game_objects[instance.__instanceID] = instance;
+    if __scene_next_game_object_instance_id == nil then
+        __scene_next_game_object_instance_id = table_length(__all_game_objects)
+    end
 
-    -- public static Object Instantiate(Object original);
+    local instance = nil
+
     if arg1 == nil and arg2 == nil and arg3 == nil then
+        -- public static Object Instantiate(Object original);
+
+        instance = GameObject:new(
+                __scene_next_game_object_instance_id,
+                original.name .. " (Clone)"
+        )
+        __scene_next_game_object_instance_id = __scene_next_game_object_instance_id + 1
+        __all_game_objects[instance.__instanceID] = instance;
+
         instance.transform.position:Set(
                 original.transform.position.x,
                 original.transform.position.y,
@@ -90,11 +103,15 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
                 original.transform.localScale.y,
                 original.transform.localScale.z
         )
-        return instance
-    end
+    elseif arg1 ~= nil and arg1:IsA("Transform") and arg2 == nil and arg3 == nil then
+        -- public static Object Instantiate(Object original, Transform parent);
 
-    -- public static Object Instantiate(Object original, Transform parent);
-    if arg1:IsA("Transform") and arg2 == nil and arg3 == nil then
+        instance = GameObject:new(
+                #__all_game_objects,
+                original.name .. " (Clone)"
+        )
+        __all_game_objects[instance.__instanceID] = instance;
+
         instance.transform.position:Set(
                 arg1.position.x,
                 arg1.position.y,
@@ -111,17 +128,20 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
                 arg1.localScale.y,
                 arg1.localScale.z
         )
-        return instance
-    end
+    elseif arg1 ~= nil and arg1:IsA("Transform") and type(arg2) == "bool" and arg3 == nil then
+        -- public static Object Instantiate(Object original, Transform parent, bool instantiateInWorldSpace);
 
-    -- public static Object Instantiate(Object original, Transform parent, bool instantiateInWorldSpace);
-    if arg1:IsA("Transform") and type(arg2) == "bool" and arg3 == nil then
         -- TODO: implement me
         error("implement me")
-    end
+    elseif arg1 ~= nil and arg1:IsA("Vector3") and arg2 ~= nil and arg2:IsA("Quaternion") and arg3 == nil then
+        -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation);
 
-    -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation);
-    if arg1:IsA("Vector3") and arg2:IsA("Quaternion") and arg3 == nil then
+        instance = GameObject:new(
+                #__all_game_objects,
+                original.name .. " (Clone)"
+        )
+        __all_game_objects[instance.__instanceID] = instance;
+
         instance.transform.position:Set(
                 arg1.x,
                 arg1.y,
@@ -138,14 +158,28 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
                 original.transform.localScale.y,
                 original.transform.localScale.z
         )
-        return instance
-    end
+    elseif arg1 ~= nil and arg1:IsA("Vector3") and arg2 ~= nil and arg2:IsA("Quaternion") and arg3 ~= nil and arg3:IsA("Transform") then
+        -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent);
 
-    -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent);
-    if arg1:IsA("Vector3") and arg2:IsA("Quaternion") and arg3:IsA("Transform") then
         -- TODO: implement me
         error("implement me")
+    else
+        Debug.LogError("Unexpected signature")
+        return nil
     end
 
-    Debug.LogError("Unexpected signature")
+    -- create components for new instance
+    --if instance ~= nil then
+    for _, cmp in pairs(original.__components) do
+        local cmpKey = '' .. instance.__instanceID .. ' :: ' .. cmp.__name
+        __all_components[cmpKey] = LuaBehaviour.__make_clone(cmp)
+        __all_components[cmpKey].enabled = true
+        __all_components[cmpKey].gameObject = instance
+        __all_components[cmpKey].transform = instance.transform
+    end
+    --end
+
+    -- Debug.Log("Create new object: " .. instance.__instanceID)
+
+    return instance
 end

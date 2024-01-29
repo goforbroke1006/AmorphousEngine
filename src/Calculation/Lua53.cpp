@@ -100,15 +100,15 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
 }
 
 void AmE::Lua53::update(
-        const InputsState *const preUpdateFrameData,
+        const InputsState *const inputsState,
         SceneState *const sceneState
 ) {
     // push info about keyboard and mouse state
-    for (const auto &kp: preUpdateFrameData->pressed) {
+    for (const auto &kp: inputsState->pressed) {
         auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
-    for (const auto &kp: preUpdateFrameData->released) {
+    for (const auto &kp: inputsState->released) {
         auto &val = (LEBoolean &) mBtnReleasedTbl.getValue(LETKey(kp.first.toString()));
         val.setValue(kp.second);
     }
