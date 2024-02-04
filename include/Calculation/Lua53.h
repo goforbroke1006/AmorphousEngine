@@ -11,6 +11,7 @@
 #include <LuaCpp/Engine/LuaState.hpp>
 #include <LuaCpp/Engine/LuaTTable.hpp>
 #include <LuaCpp/Engine/LuaTBoolean.hpp>
+#include <LuaCpp/Engine/LuaTNumber.hpp>
 
 #include "../Core/GameObject.h"
 #include "../Core/KeyCode.h"
@@ -41,7 +42,8 @@ namespace AmE {
 
         void update(
                 const InputsState *inputsState,
-                SceneState *sceneState
+                SceneState *sceneState,
+                double timeDelta
         ) override;
 
         static std::any parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal);
@@ -54,6 +56,7 @@ namespace AmE {
         LuaCpp::Engine::LuaTTable mBtnPressedTbl;
         LuaCpp::Engine::LuaTTable mBtnReleasedTbl;
         LuaCpp::Engine::LuaTBoolean *mAppQuit;
+        LuaCpp::Engine::LuaTNumber *mTimeDelta;
     };
 }
 

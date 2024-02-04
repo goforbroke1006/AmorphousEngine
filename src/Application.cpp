@@ -6,11 +6,12 @@
 
 #include <utility>
 #include <filesystem>
-
+#include <chrono>
 
 #include "../include/Logger.h"
 #include "../include/PrefabManager.h"
 #include "../include/Core/Property.h"
+
 
 AmE::Application::Application(
         std::string mEngineRoot,
@@ -21,11 +22,12 @@ AmE::Application::Application(
         : mEngineRoot(std::move(mEngineRoot)),
           mProjectRoot(std::move(mProjectRoot)),
           mGraphicsEngine(mGraphicsEngine),
-          mCalculationEngine(mCalculationEngine) {
-}
+          mCalculationEngine(mCalculationEngine),
+          mTimeDelta(new TimeDelta(25000)) {}
 
 AmE::Application::~Application() {
     delete mSceneState;
+    delete mTimeDelta;
 }
 
 void AmE::Application::loadScene(const std::string &filepath) {
@@ -36,8 +38,16 @@ void AmE::Application::runMainLoop() {
     if (nullptr == mSceneState)
         throw std::runtime_error("scene is not loaded");
 
+    double timeDiff = 0;
+    auto timeLast = std::chrono::high_resolution_clock::now();
+
     mGraphicsEngine->initialize(mSceneState);
     mCalculationEngine->initialize(mSceneState);
+
+    timeDiff = std::chrono::duration<double, std::ratio<1>>(
+            std::chrono::high_resolution_clock::now() - timeLast).count();
+    mTimeDelta->insert(timeDiff);
+    timeLast = std::chrono::high_resolution_clock::now();
 
     auto *pInputsState = new InputsState();
 
@@ -46,10 +56,17 @@ void AmE::Application::runMainLoop() {
     while (!mSceneState->isAppQuit()) {
         pInputReader->collectCodes();
 
-        mCalculationEngine->update(pInputsState, mSceneState);
+        mCalculationEngine->update(pInputsState, mSceneState, mTimeDelta->getAvg());
 
         if (!mGraphicsEngine->update(mSceneState))
             break;
+
+        timeDiff = std::chrono::duration<double, std::ratio<1>>(
+                std::chrono::high_resolution_clock::now() - timeLast).count();
+        mTimeDelta->insert(timeDiff);
+        timeLast = std::chrono::high_resolution_clock::now();
+
+        //std::cout << (1.0 / mTimeDelta->getAvg()) << "\t" << mTimeDelta->getAvg() << std::endl;
     }
 
     mGraphicsEngine->stop();

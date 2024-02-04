@@ -90,9 +90,9 @@ namespace AmE {
 
         auto *preUpdateFrameData = new InputsState();
 
-        target.update(preUpdateFrameData, sceneState);
-        target.update(preUpdateFrameData, sceneState);
-        target.update(preUpdateFrameData, sceneState);
+        target.update(preUpdateFrameData, sceneState, 0.0);
+        target.update(preUpdateFrameData, sceneState, 0.0);
+        target.update(preUpdateFrameData, sceneState, 0.0);
 
         auto *box1GO = sceneState->getSceneGameObject(1);
         EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getX());
@@ -150,7 +150,7 @@ namespace AmE {
             preUpdateFrameData->released[KeyCode_Mouse0] = false;
 
             testing::internal::CaptureStdout();
-            target.update(preUpdateFrameData, sceneState);
+            target.update(preUpdateFrameData, sceneState, 0.0);
             std::string output = testing::internal::GetCapturedStdout();
             EXPECT_EQ("DEBUG: PlayerInput :: Fire1 pressed\n"
                       "DEBUG: PlayerInput :: Fire1 hold\n", output);
@@ -161,7 +161,7 @@ namespace AmE {
             preUpdateFrameData->released[KeyCode_Mouse0] = false;
 
             testing::internal::CaptureStdout();
-            target.update(preUpdateFrameData, sceneState);
+            target.update(preUpdateFrameData, sceneState, 0.0);
             std::string output = testing::internal::GetCapturedStdout();
             EXPECT_EQ("DEBUG: PlayerInput :: Fire1 hold\n", output);
         }
@@ -171,7 +171,7 @@ namespace AmE {
             preUpdateFrameData->released[KeyCode_Mouse0] = false;
 
             testing::internal::CaptureStdout();
-            target.update(preUpdateFrameData, sceneState);
+            target.update(preUpdateFrameData, sceneState, 0.0);
             std::string output = testing::internal::GetCapturedStdout();
             EXPECT_EQ("DEBUG: PlayerInput :: Fire1 hold\n", output);
         }
@@ -181,7 +181,7 @@ namespace AmE {
             preUpdateFrameData->released[KeyCode_Mouse0] = true;
 
             testing::internal::CaptureStdout();
-            target.update(preUpdateFrameData, sceneState);
+            target.update(preUpdateFrameData, sceneState, 0.0);
             std::string output = testing::internal::GetCapturedStdout();
             EXPECT_EQ("DEBUG: PlayerInput :: Fire1 released\n", output);
         }

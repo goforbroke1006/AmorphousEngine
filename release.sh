@@ -19,7 +19,8 @@ mkdir -p cmake-build-release
 #
 #
 
-mkdir -p release
+rm -rf ./release
+mkdir -p ./release
 
 cat <<EOT > ./release/launcher
 #!/usr/bin/env bash
@@ -62,6 +63,7 @@ Plugin=Plugin_ParticleFX
 
 EOT
 
+rm -rf ./release/Media/
 mkdir -p ./release/Media/
 cp -r ./third_party/ogre-next/Samples/Media/Hlms ./release/Media/Hlms
 
@@ -83,3 +85,28 @@ Video Mode= 800 x  600
 sRGB Gamma Conversion=Yes
 
 EOT
+
+OS_NAME='unknown'
+OS_ARCH='unknown'
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  OS_NAME='linux'
+  OS_ARCH=$(dpkg --print-architecture)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  OS_NAME='darwin'
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+  OS_NAME='windows'
+elif [[ "$OSTYPE" == "msys" ]]; then
+  OS_NAME='windows'
+elif [[ "$OSTYPE" == "win32" ]]; then
+  OS_NAME='windows'
+  OS_ARCH='386'
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+  OS_NAME='freebsd'
+else
+  OS_NAME='unknown'
+  OS_ARCH='unknown'
+fi
+
+rm -f "./release-${OS_NAME}-${OS_ARCH}.zip"
+zip -r "./release-${OS_NAME}-${OS_ARCH}" ./release

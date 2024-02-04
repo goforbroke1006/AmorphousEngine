@@ -5,6 +5,9 @@
 ---
 
 require "Core/KeyCode"
+require "Core/Time"
+
+__time_delta = 0.0
 
 __scene_next_game_object_instance_id = nil
 
@@ -81,6 +84,8 @@ function __before_update_frame()
     if __application_quit then
         return
     end
+
+    Time.deltaTime = __time_delta
 
     for keyCode, keyState in pairs(__global_buttons_pressed) do
         if keyState == true then

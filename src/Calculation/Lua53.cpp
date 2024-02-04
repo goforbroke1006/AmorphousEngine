@@ -25,6 +25,7 @@ AmE::Lua53::Lua53(const std::string &projectRoot) {
     L = ctx.newState();
 
     mAppQuit = new LEBoolean(false);
+    mTimeDelta = new LENum(0.0);
 
     mGameObjectsTbl.PushGlobal(*L, LUA53_G_VAR_GO_T);
     mComponentsTbl.PushGlobal(*L, LUA53_G_VAR_CMP_T);
@@ -101,8 +102,12 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
 
 void AmE::Lua53::update(
         const InputsState *const inputsState,
-        SceneState *const sceneState
+        SceneState *const sceneState,
+        double timeDelta
 ) {
+    mTimeDelta->setValue(timeDelta);
+    mTimeDelta->PushValue(*L);
+
     // push info about keyboard and mouse state
     for (const auto &kp: inputsState->pressed) {
         auto &val = (LEBoolean &) mBtnPressedTbl.getValue(LETKey(kp.first.toString()));
@@ -212,8 +217,6 @@ void AmE::Lua53::update(
     mAppQuit->PopGlobal(*L);
     sceneState->setAppQuit(mAppQuit->getValue());
 }
-
-
 
 
 std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Engine::LuaType *rawLuaVal) {

@@ -12,6 +12,7 @@
 #include "GraphicsEngine.h"
 #include "CalculationEngine.h"
 #include "InputReader.h"
+#include "TimeDelta.h"
 
 namespace AmE {
     class Application {
@@ -49,6 +50,7 @@ namespace AmE {
         CalculationEngine *mCalculationEngine;
 
         SceneState *mSceneState;
+        TimeDelta *mTimeDelta;
     };
 }
 

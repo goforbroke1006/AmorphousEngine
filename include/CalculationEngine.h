@@ -31,7 +31,8 @@ namespace AmE {
          */
         virtual void update(
                 const InputsState *inputsState,
-                SceneState *sceneState
+                SceneState *sceneState,
+                double timeDelta
         ) = 0;
     };
 }
