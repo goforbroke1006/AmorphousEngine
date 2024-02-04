@@ -85,14 +85,14 @@ namespace AmE {
                 "",
                 "testdata/Scenes/TestLua53_update--_00_update_frame.json");
 
-        Lua53 target("./");
+        Lua53 target("./", "./");
         target.initialize(sceneState);
 
         auto *preUpdateFrameData = new InputsState();
 
-        target.update(preUpdateFrameData, sceneState, 0.0);
-        target.update(preUpdateFrameData, sceneState, 0.0);
-        target.update(preUpdateFrameData, sceneState, 0.0);
+        target.update(preUpdateFrameData, sceneState, 0.1);
+        target.update(preUpdateFrameData, sceneState, 0.1);
+        target.update(preUpdateFrameData, sceneState, 0.1);
 
         auto *box1GO = sceneState->getSceneGameObject(1);
         EXPECT_EQ(0.0, box1GO->getTransform()->mPosition.getX());
@@ -140,7 +140,7 @@ namespace AmE {
                 "",
                 "testdata/Scenes/TestLua53_update--_01_input_Fire1.json");
 
-        Lua53 target("./");
+        Lua53 target("./", "./");
         target.initialize(sceneState);
 
         auto *preUpdateFrameData = new InputsState();

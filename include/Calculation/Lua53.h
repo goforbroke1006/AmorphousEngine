@@ -17,6 +17,7 @@
 #include "../Core/KeyCode.h"
 #include "../CalculationEngine.h"
 
+#define LUA53_G_VAR_TIME_DELTA "__time_delta"
 #define LUA53_G_VAR_GO_T "__all_game_objects"
 #define LUA53_G_VAR_CMP_T "__all_components"
 #define LUA53_G_VAR_BTN_P_T "__global_buttons_pressed"
@@ -34,7 +35,7 @@
 namespace AmE {
     class Lua53 : public CalculationEngine {
     public:
-        explicit Lua53(const std::string &projectRoot);
+        explicit Lua53(const std::string &engineRoot, const std::string &projectRoot);
 
         virtual ~Lua53();
 

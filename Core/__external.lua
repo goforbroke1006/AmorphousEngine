@@ -81,9 +81,9 @@ __application_quit = false
 __global_prefab_game_objects = {}
 
 function __before_update_frame()
-    if __application_quit then
-        return
-    end
+    --if __application_quit then
+    --    return
+    --end
 
     Time.deltaTime = __time_delta
 
@@ -105,9 +105,9 @@ function __before_update_frame()
 end
 
 function __on_update_frame()
-    if __application_quit then
-        return
-    end
+    --if __application_quit then
+    --    return
+    --end
 
     for _, cmpInstance in pairs(__all_components) do
         if (cmpInstance.enabled) then
@@ -117,9 +117,9 @@ function __on_update_frame()
 end
 
 function __after_update_frame()
-    if __application_quit then
-        return
-    end
+    --if __application_quit then
+    --    return
+    --end
 
     for keyCode, _ in pairs(__global_buttons_pressed) do
         __global_buttons_pressed[keyCode] = false

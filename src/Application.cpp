@@ -23,7 +23,7 @@ AmE::Application::Application(
           mProjectRoot(std::move(mProjectRoot)),
           mGraphicsEngine(mGraphicsEngine),
           mCalculationEngine(mCalculationEngine),
-          mTimeDelta(new TimeDelta(25000)) {}
+          mTimeDelta(new TimeDelta(100)) {}
 
 AmE::Application::~Application() {
     delete mSceneState;
@@ -66,7 +66,7 @@ void AmE::Application::runMainLoop() {
         mTimeDelta->insert(timeDiff);
         timeLast = std::chrono::high_resolution_clock::now();
 
-        //std::cout << (1.0 / mTimeDelta->getAvg()) << "\t" << mTimeDelta->getAvg() << std::endl;
+        std::cout << (1.0 / mTimeDelta->getAvg()) << "\t" << mTimeDelta->getAvg() << std::endl;
     }
 
     mGraphicsEngine->stop();

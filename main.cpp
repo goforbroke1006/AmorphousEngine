@@ -13,6 +13,9 @@
 #include "include/Calculation/Lua53.h"
 
 int main(int argc, char **argv) {
+    // Usage:
+    //     AmorphousEngine OgreNext /engine/binaries/path /project/path ./Scenes/level-0.json
+
     std::filesystem::path cwd = std::filesystem::current_path();
 
     std::string graphicsMode = "OgreNext"; // OgreNext | Irrlicht
@@ -21,9 +24,14 @@ int main(int argc, char **argv) {
 //    std::string projectRoot = "./projects/02-BattleCity-Clone/";
     std::string sceneFilename = "./Scenes/level-0.json";
 
-    // TODO: parse arguments
     if (argc > 1)
         graphicsMode = argv[1];
+    if (argc > 2)
+        engineRoot = argv[2];
+    if (argc > 3)
+        projectRoot = argv[3];
+    if (argc > 4)
+        sceneFilename = argv[4];
 
     std::cout << "Engine root:    " << engineRoot << std::endl;
     std::cout << "Project root:   " << projectRoot << std::endl;
@@ -47,7 +55,7 @@ int main(int argc, char **argv) {
         pGraphicsEngine = new AmE::Irrlicht();
     }
 
-    auto *pCalculationEngine = new AmE::Lua53(projectRoot);
+    auto *pCalculationEngine = new AmE::Lua53(engineRoot, projectRoot);
     auto *pApplication = new AmE::Application(engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine);
     pApplication->loadScene(sceneFilename);
     pApplication->runMainLoop();

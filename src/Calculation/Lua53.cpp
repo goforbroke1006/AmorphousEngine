@@ -20,7 +20,7 @@ using LEString = LuaCpp::Engine::LuaTString;
 using LEBoolean = LuaCpp::Engine::LuaTBoolean;
 using LETable = LuaCpp::Engine::LuaTTable;
 
-AmE::Lua53::Lua53(const std::string &projectRoot) {
+AmE::Lua53::Lua53(const std::string &engineRoot, const std::string &projectRoot) {
     LuaCpp::LuaContext ctx;
     L = ctx.newState();
 
@@ -32,9 +32,11 @@ AmE::Lua53::Lua53(const std::string &projectRoot) {
     mBtnPressedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_P_T);
     mBtnReleasedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_R_T);
     mAppQuit->PushGlobal(*L, LUA53_G_VAR_APP_QUIT);
+    mTimeDelta->PushGlobal(*L, LUA53_G_VAR_TIME_DELTA);
 
     std::string setLuaPathCode;
-    setLuaPathCode += "package.path = package.path .. ';" + projectRoot + "?.lua'\n";
+    setLuaPathCode += "package.path = package.path .. ';" + engineRoot + "/?.lua;" + projectRoot + "/?.lua'\n";
+//    setLuaPathCode += "package.path = package.path .. ';" + projectRoot + "?.lua'\n";
     setLuaPathCode += "print(package.path)\n";
 
     luaL_loadstring(*L, setLuaPathCode.c_str());
@@ -106,7 +108,7 @@ void AmE::Lua53::update(
         double timeDelta
 ) {
     mTimeDelta->setValue(timeDelta);
-    mTimeDelta->PushValue(*L);
+    mTimeDelta->PushGlobal(*L, LUA53_G_VAR_TIME_DELTA);
 
     // push info about keyboard and mouse state
     for (const auto &kp: inputsState->pressed) {

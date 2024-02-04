@@ -63,7 +63,12 @@ AmE::SceneState *AmE::SceneState::loadFromFile(
     if (projectRoot.empty())
         projectRoot = ".";
 
-    const std::string &sceneFilepath = projectRoot + std::filesystem::path::preferred_separator + jsonFilepath;
+    std::string sceneFilepath;
+    if (jsonFilepath[0] == std::filesystem::path::preferred_separator)
+        sceneFilepath = jsonFilepath;
+    else
+        sceneFilepath = projectRoot + std::filesystem::path::preferred_separator + jsonFilepath;
+
     if (!std::filesystem::is_regular_file(sceneFilepath))
         throw std::runtime_error("scene file not found: " + sceneFilepath);
 

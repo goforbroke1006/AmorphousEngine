@@ -19,17 +19,17 @@ mkdir -p cmake-build-release
 #
 #
 
-rm -rf ./release
+#rm -rf ./release
 mkdir -p ./release
 
 cat <<EOT > ./release/launcher
 #!/usr/bin/env bash
 
 SCRIPT_DIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-
+PROJECT_DIR="\$(pwd)"
 cd "\${SCRIPT_DIR}"
 
-LD_LIBRARY_PATH=. ./AmorphousEngine
+LD_LIBRARY_PATH=. ./AmorphousEngine OgreNext "\${SCRIPT_DIR}" "\${PROJECT_DIR}" "\${PROJECT_DIR}/Scenes/level-0.json"
 
 EOT
 
@@ -46,8 +46,11 @@ cp ./third_party/ogre-next/build/Release/lib/Plugin_ParticleFX.so.2.3.3 ./releas
 
 cp ./third_party/ogre-next/build/Release/bin/OgreMeshTool ./release/
 
-cp -r ./Component/ ./release/Component/
-cp -r ./Core/ ./release/Core/
+rm -rf release/Component
+cp -r ./Component/ ./release/
+
+rm -rf release/Core
+cp -r ./Core/ ./release/
 
 sudo cp /usr/local/lib/libOIS.so.1.5.1 ./release/
 
@@ -69,7 +72,8 @@ cp -r ./third_party/ogre-next/Samples/Media/Hlms ./release/Media/Hlms
 
 cp ./cmake-build-release/AmorphousEngine ./release/
 
-cp -r ./projects/ ./release/projects/
+rm -rf ./release/projects/
+cp -r ./projects/ ./release/
 
 cat <<EOT > ./release/ogre.cfg
 Render System=OpenGL 3+ Rendering Subsystem
