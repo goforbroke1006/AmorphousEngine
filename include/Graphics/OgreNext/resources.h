@@ -10,6 +10,8 @@
 #include <OGRE/OgreConfigFile.h>
 #include <OGRE/OgreResourceManager.h>
 
+#include "../../Logger.h"
+
 void loadResources(const std::string &filepath) {
     // Loading resources
     Ogre::ConfigFile cf;
@@ -45,6 +47,9 @@ void loadResourcesForProject(const std::string &projectRoot) {
                     projectRoot + "/Models",
                     "FileSystem",
                     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    AmE::Logger::Debug("Load resources from " + projectRoot);
+    AmE::Logger::Debug("Load resources from " + projectRoot + "/Models");
 
     // Initialise resources groups
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups(true);

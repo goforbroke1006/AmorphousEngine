@@ -79,6 +79,10 @@ namespace AmE {
             return std::any_cast<int>(mValue);
         }
 
+        double asDouble() const {
+            return std::any_cast<double>(mValue);
+        }
+
         Color asColor() const {
             return std::any_cast<Color>(mValue);
         }

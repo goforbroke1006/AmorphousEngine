@@ -43,7 +43,7 @@ AmE::OgreNext::~OgreNext() {
     delete mRoot;
 }
 
-void AmE::OgreNext::initialize(const SceneState * const sceneState) {
+void AmE::OgreNext::initialize(const SceneState *const sceneState) {
     for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
         if (pGameObj->isCamera()) {
             createCameraNode(pGameObj);
@@ -67,7 +67,7 @@ void AmE::OgreNext::initialize(const SceneState * const sceneState) {
     }
 }
 
-bool AmE::OgreNext::update(const SceneState * const sceneState) {
+bool AmE::OgreNext::update(const SceneState *const sceneState) {
     Ogre::WindowEventUtilities::messagePump();
 
     mQuit |= mWinListener->shouldQuit();
@@ -200,20 +200,49 @@ void AmE::OgreNext::createSceneNode(const GameObject *const gameObjectPtr) {
     mSceneNodes[gameObjectPtr->getID()] = sceneNode;
 
     if (!gameObjectPtr->getMeshPathname().empty()) {
-        std::string meshV2Pathname = gameObjectPtr->getMeshPathname() + " Imported";
+        std::string meshV2Pathname;
 
-        if (mMeshes.find(meshV2Pathname) == mMeshes.end()) {
-            Ogre::v1::MeshPtr v1Mesh = Ogre::v1::MeshManager::getSingleton().load(
-                    gameObjectPtr->getMeshPathname(), Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
-                    Ogre::v1::HardwareBuffer::HBU_STATIC, Ogre::v1::HardwareBuffer::HBU_STATIC);
-            //Create a v2 mesh to import to, with a different name.
-            Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().createByImportingV1(
-                    meshV2Pathname, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                    v1Mesh.get(), true, true, true);
-            v2Mesh->load();
-            v1Mesh->unload();
+        if (mMeshes.find(gameObjectPtr->getMeshPathname()) == mMeshes.end()) {
+            try {
+                Ogre::v1::MeshPtr v1Mesh = Ogre::v1::MeshManager::getSingleton().load(
+                        gameObjectPtr->getMeshPathname(), Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+                        Ogre::v1::HardwareBuffer::HBU_STATIC, Ogre::v1::HardwareBuffer::HBU_STATIC);
 
-            mMeshes.insert(meshV2Pathname);
+                //Create a v2 mesh to import to, with a different name.
+                Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton().createByImportingV1(
+                        meshV2Pathname, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                        v1Mesh.get(), true, true, true);
+                v2Mesh->load();
+                v1Mesh->unload();
+
+                mMeshes.insert(gameObjectPtr->getMeshPathname());
+
+                meshV2Pathname = gameObjectPtr->getMeshPathname() + " Imported";
+            } catch (Ogre::InternalErrorException &exc) {
+                //
+            }
+
+            /*try {
+                //Create a v2 mesh to import to, with a different name.
+                Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton()
+                        .prepare(
+                                gameObjectPtr->getMeshPathname(),
+                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
+                        );
+                //Create a v2 mesh to import to, with a different name.
+//                Ogre::MeshPtr v2Mesh = Ogre::MeshManager::getSingleton()
+//                        .getByName(
+//                                gameObjectPtr->getMeshPathname(),
+//                                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
+//                        );
+                v2Mesh->load();
+
+                mMeshes.insert(gameObjectPtr->getMeshPathname());
+
+                meshV2Pathname = gameObjectPtr->getMeshPathname();
+            } catch (Ogre::InternalErrorException &exc) {
+                throw exc;
+            }*/
         }
 
         Ogre::Item *item = mSceneManager->createItem(

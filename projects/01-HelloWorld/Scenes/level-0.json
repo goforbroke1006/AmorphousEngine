@@ -57,7 +57,7 @@
     },
     {
       "name": "Barrel center",
-      "mesh": "./Barrel.mesh",
+      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -76,7 +76,7 @@
     },
     {
       "name": "Barrel front",
-      "mesh": "./Barrel.mesh",
+      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -95,7 +95,7 @@
     },
     {
       "name": "Barrel back",
-      "mesh": "./Barrel.mesh",
+      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": -50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -114,7 +114,7 @@
     },
     {
       "name": "Barrel right",
-      "mesh": "./Barrel.mesh",
+      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 50.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -133,7 +133,7 @@
     },
     {
       "name": "Barrel left",
-      "mesh": "./Barrel.mesh",
+      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": -50.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -152,7 +152,7 @@
     },
     {
       "name": "Drone 1",
-      "mesh": "./ogrehead.mesh",
+      "mesh": "ogrehead.mesh",
       "transform": {
         "position": {"x": 1.0, "y": 0.0, "z": 50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},

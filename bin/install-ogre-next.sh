@@ -93,10 +93,10 @@ fi
   )
 )
 
-if [[ ! -d ./third_party/ColladaOgreImporter ]]; then
-  git clone --depth 1 --single-branch --branch master https://github.com/OGRECave/ColladaOgreImporter.git \
-    ./third_party/ColladaOgreImporter
-fi
+#if [[ ! -d ./third_party/ColladaOgreImporter ]]; then
+#  git clone --depth 1 --single-branch --branch master https://github.com/OGRECave/ColladaOgreImporter.git \
+#    ./third_party/ColladaOgreImporter
+#fi
 
 #(
 #  sudo apt install libxml2-dev libpcre3-dev libboost-filesystem-dev

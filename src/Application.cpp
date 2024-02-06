@@ -66,7 +66,7 @@ void AmE::Application::runMainLoop() {
         mTimeDelta->insert(timeDiff);
         timeLast = std::chrono::high_resolution_clock::now();
 
-        std::cout << (1.0 / mTimeDelta->getAvg()) << "\t" << mTimeDelta->getAvg() << std::endl;
+        //std::cout << (1.0 / mTimeDelta->getAvg()) << "\t" << mTimeDelta->getAvg() << std::endl;
     }
 
     mGraphicsEngine->stop();

@@ -33,6 +33,7 @@ echo "CMAKE_CXX_COMPILER = /usr/bin/clang++-17"
 #
 
 bash ./bin/install-lua53.sh
-bash ./bin/install-ogre-next.sh
+bash ./bin/install-ogre.sh
+#bash ./bin/install-ogre-next.sh
 bash ./bin/install-irrlicht1.8.sh
-bash ./bin/install-OIS.sh
+#bash ./bin/install-OIS.sh

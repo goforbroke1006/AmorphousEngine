@@ -42,10 +42,10 @@
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
-        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+        "localScale": {"x": 10.0, "y": 1.0, "z": 10.0}
       },
       "components": [],
-      "mesh": "./Models/Terrain.mesh"
+      "mesh": "Terrain.mesh"
     },
     {
       "name": "Base Banner",
@@ -64,7 +64,7 @@
           ]
         }
       ],
-      "mesh": "./Models/BaseBanner.mesh"
+      "mesh": "BaseBanner.mesh"
     },
     {
       "name": "Enemy Respawn System",
@@ -154,7 +154,7 @@
           ]
         }
       ],
-      "mesh": "./Models/Tank1.mesh"
+      "mesh": "Tank001.mesh"
     }
   ]
 }
