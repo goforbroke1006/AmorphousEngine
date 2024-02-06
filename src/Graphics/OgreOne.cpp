@@ -77,7 +77,7 @@ void AmE::OgreOne::initialize(const AmE::SceneState *const sceneState) {
             auto *spotLightNode = mSceneManager->getRootSceneNode()->createChildSceneNode();
             spotLightNode->attachObject(light);
             spotLightNode->setDirection(-1, -1, 0);
-            spotLightNode->setPosition(Ogre::Vector3(200, 200, 0));
+            spotLightNode->setPosition(Ogre::Vector3(0, 0, 0));
 
             mSceneNodes[pGameObj->getID()] = spotLightNode;
         } else {
@@ -150,8 +150,8 @@ void AmE::OgreOne::createCameraNode(const GameObject *const gameObjectPtr) {
 
 void AmE::OgreOne::updateCameraNode(const GameObject *const gameObjectPtr) {
     auto *tr = gameObjectPtr->getTransform();
-    auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
-    auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
+    auto pos = GraphicsEngine::convertPositionXYZ2XZY(tr->mPosition);
+    auto rot = GraphicsEngine::convertRotationXYZ2XZY(tr->mRotation);
 
     mSceneNodes[gameObjectPtr->getID()]->setPosition(
             (Ogre::Real) pos.getX(),
@@ -196,8 +196,8 @@ void AmE::OgreOne::createSceneNode(const GameObject *const gameObjectPtr) {
 void AmE::OgreOne::updateSceneNode(const GameObject *const gameObjectPtr) {
     auto *tr = gameObjectPtr->getTransform();
 
-    auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
-    auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
+    auto pos = GraphicsEngine::convertPositionXYZ2XZY(tr->mPosition);
+    auto rot = GraphicsEngine::convertRotationXYZ2XZY(tr->mRotation);
     auto &scale = tr->mLocalScale;
 
     mSceneNodes[gameObjectPtr->getID()]->setPosition(
