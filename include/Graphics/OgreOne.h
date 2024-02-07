@@ -14,6 +14,7 @@
 #include <OGRE/OgreSceneManager.h>
 #include <OGRE/OgreCamera.h>
 #include <OGRE/OgreSceneNode.h>
+#include <OGRE/RTShaderSystem/OgreShaderGenerator.h>
 
 namespace AmE {
     class OgreOne : public GraphicsEngine {
@@ -32,6 +33,8 @@ namespace AmE {
         void stop() override;
 
     private:
+        void initOrUpdateNode(const AmE::GameObject *const pGameObject);
+
         void createCameraNode(const GameObject *gameObjectPtr);
 
         void updateCameraNode(const GameObject *gameObjectPtr);
@@ -45,6 +48,7 @@ namespace AmE {
         Ogre::RenderWindow *mWindow;
         size_t mWindowHnd;
         Ogre::SceneManager *mSceneManager;
+        Ogre::RTShader::ShaderGenerator *mShaderGenerator;
 
 //        std::map<GameObjectInstanceID, Ogre::Camera *> mCameraNodes;
         std::map<GameObjectInstanceID, Ogre::SceneNode *> mSceneNodes;

@@ -25,18 +25,21 @@ AmE::Lua53Generator::buildInitLuaCode(
                 cmpNameToPath[cmpPair.second->mName] = cmpPair.second->mPathname;
             }
         }
-        initCode += "require 'Core/LuaBehaviour'\n\n";
-        for (const auto &cmpPair: cmpNameToPath) {
-            initCode += "require '" + cmpPair.second + "'\n";
-            initCode += "\n";
 
-            initCode += std::string()
-                        + "function " + cmpPair.first + ":new()\n"
-                        + "    local instance = LuaBehaviour:new()\n"
-                        + "    setmetatable(instance, self)\n"
-                        + "    self.__index = self\n"
-                        + "    return instance\n"
-                        + "end\n\n";
+        if (!cmpNameToPath.empty()) {
+            initCode += "require 'Core/LuaBehaviour'\n\n";
+            for (const auto &cmpPair: cmpNameToPath) {
+                initCode += "require '" + cmpPair.second + "'\n";
+                initCode += "\n";
+
+                initCode += std::string()
+                            + "function " + cmpPair.first + ":new()\n"
+                            + "    local instance = LuaBehaviour:new()\n"
+                            + "    setmetatable(instance, self)\n"
+                            + "    self.__index = self\n"
+                            + "    return instance\n"
+                            + "end\n\n";
+            }
         }
     }
 

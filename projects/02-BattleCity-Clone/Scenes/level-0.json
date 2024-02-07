@@ -40,8 +40,8 @@
     {
       "name": "Light 1",
       "transform": {
-        "position": {"x": 0.0, "y": 500.0, "z": 0.0},
-        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "position": {"x": 0.0, "y": 50.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": -180.0, "z": 0.0},
         "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
       },
       "components": [
@@ -50,7 +50,8 @@
           "pathname": "Component/Light",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "color", "type": "Color", "value": "1.0 0.92 0.016 1.0"}
+            {"name": "color", "type": "Color", "value": "1.0 1.0 1.0 1.0"},
+            {"name": "type", "type": "string", "value": "Spot"}
           ]
         }
       ]
@@ -70,7 +71,7 @@
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": -70.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
-        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
       },
       "components": [
         {
@@ -83,6 +84,25 @@
         }
       ],
       "mesh": "BaseBanner.mesh"
+    },
+    {
+      "name": "Player 1",
+      "transform": {
+        "position": {"x": -20.0, "y": 5.0, "z": -70.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "name": "PlayerController",
+          "pathname": "Scripts/PlayerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "10.0"}
+          ]
+        }
+      ],
+      "mesh": "Tank001.mesh"
     },
     {
       "name": "Enemy Respawn System",
@@ -154,25 +174,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "Player 1",
-      "transform": {
-        "position": {"x": -20.0, "y": 0.0, "z": -70.0},
-        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
-        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
-      },
-      "components": [
-        {
-          "name": "PlayerController",
-          "pathname": "Scripts/PlayerController",
-          "properties": [
-            {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "motionSpeed", "type": "double", "value": "10.0"}
-          ]
-        }
-      ],
-      "mesh": "Tank001.mesh"
     }
   ]
 }

@@ -40,10 +40,6 @@ namespace AmE {
         static Vector3 convertPositionLeftToRightHand(Vector3 position);
 
         static Quaternion convertRotationLeftToRightHand(Quaternion rotation);
-
-        static Vector3 convertPositionXYZ2XZY(Vector3 position);
-
-        static Quaternion convertRotationXYZ2XZY(Quaternion rotation);
     };
 }
 
