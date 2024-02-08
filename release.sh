@@ -19,7 +19,7 @@ mkdir -p cmake-build-release
 #
 #
 
-#rm -rf ./release
+rm -rf ./release
 mkdir -p ./release
 
 cat <<EOT > ./release/launcher
@@ -37,14 +37,23 @@ chmod +x ./release/launcher
 
 cp ./third_party/luacpp/build/libluacpp.so ./release/
 
-cp ./third_party/ogre-next/build/Release/lib/libOgreMain.so.2.3.3 ./release/
-cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsPbs.so.2.3.3 ./release/
-cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsUnlit.so.2.3.3 ./release/
+cp ~/ogre/build/Release/lib/libOgreMain.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/libOgreBites.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/libOgreRTShaderSystem.so.14.1 ./release/
+#cp ./third_party/ogre-next/build/Release/lib/libOgreMain.so.2.3.3 ./release/
+#cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsPbs.so.2.3.3 ./release/
+#cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsUnlit.so.2.3.3 ./release/
 
-cp ./third_party/ogre-next/build/Release/lib/RenderSystem_GL3Plus.so.2.3.3 ./release/
-cp ./third_party/ogre-next/build/Release/lib/Plugin_ParticleFX.so.2.3.3 ./release/
+cp ~/ogre/build/Release/lib/RenderSystem_GL.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/RenderSystem_GL3Plus.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/RenderSystem_GLES2.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/Plugin_ParticleFX.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/Plugin_BSPSceneManager.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/Codec_STBI.so.14.1 ./release/
+#cp ./third_party/ogre-next/build/Release/lib/RenderSystem_GL3Plus.so.2.3.3 ./release/
+#cp ./third_party/ogre-next/build/Release/lib/Plugin_ParticleFX.so.2.3.3 ./release/
 
-cp ./third_party/ogre-next/build/Release/bin/OgreMeshTool ./release/
+#cp ./third_party/ogre-next/build/Release/bin/OgreMeshTool ./release/
 
 rm -rf release/Component
 cp -r ./Component/ ./release/
@@ -54,21 +63,7 @@ cp -r ./Core/ ./release/
 
 sudo cp /usr/local/lib/libOIS.so.1.5.1 ./release/
 
-cat <<EOT > ./release/plugins.cfg
-# Defines plugins to load
-
-# Define plugin folder
-PluginFolder=.
-
-# Define plugins
-PluginOptional=RenderSystem_GL3Plus
-Plugin=Plugin_ParticleFX
-
-EOT
-
-rm -rf ./release/Media/
-mkdir -p ./release/Media/
-cp -r ./third_party/ogre-next/Samples/Media/Hlms ./release/Media/Hlms
+cp ./plugins.cfg ./release/
 
 cp ./cmake-build-release/AmorphousEngine ./release/
 
