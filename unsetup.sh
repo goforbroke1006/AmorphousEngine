@@ -1,34 +1,23 @@
 #!/bin/bash
 
-read -p "Do you want to remove local builds? (yes/no) " yn
-case $yn in
-yes)
-  sudo rm -rf ./third_party/luacpp/build/
-  sudo rm -rf ./third_party/ogre-next-deps/build/
-  sudo rm -rf ./third_party/ogre-next/build/
-  ;;
-no)
-  echo Leave local builds
-  ;;
-*)
-  echo invalid response
-  exit 1
-  ;;
-esac
+sudo rm -f \
+  /usr/local/lib/libOgre*         \
+  /usr/local/bin/OgreXMLConverter \
+  /usr/local/bin/VRMLConverter    \
+  /usr/local/bin/OgreMeshUpgrader
+sudo rm -rf \
+  /usr/local/include/OGRE/    \
+  /usr/local/lib/OGRE/        \
+  /usr/local/share/OGRE-14.1/ \
+  /usr/local/share/doc/OGRE/
 
-sudo rm -rf /usr/local/include/OGRE/
-sudo rm -rf /usr/local/lib/OGRE/
-sudo rm -f /usr/local/lib/libOgre*
-sudo rm -f /usr/local/lib/pkgconfig/OGRE*
-sudo rm -rf /usr/local/share/OGRE/
-
-sudo rm -rf /usr/local/include/LuaCpp/
+# Remove LuaCPP
 sudo rm -f /usr/local/lib/libluacpp*
-sudo rm -rf /usr/local/lib/LuaCpp/
+sudo rm -rf /usr/local/include/LuaCpp/ /usr/local/lib/LuaCpp/
 
-sudo apt remove lua5.3 liblua5.3-dev
+sudo apt remove lua5.3 liblua5.3-dev -y
 
-sudo apt-get remove libirrlicht1.8 libirrlicht-dev libirrlicht-doc
+sudo apt-get remove libirrlicht1.8 libirrlicht-dev libirrlicht-doc -y
 
 # Deps for ColladaOgreImporter
 #sudo apt remove -y \

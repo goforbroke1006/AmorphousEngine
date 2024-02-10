@@ -20,7 +20,7 @@
     {
       "name": "Main Camera",
       "transform": {
-        "position": {"x": 0.0, "y": 200.0, "z": -200.0},
+        "position": {"x": 0.0, "y": 150.0, "z": -150.0},
         "rotation": {"x": -45.0, "y": 0.0, "z": 0.0},
         "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
       },
@@ -38,21 +38,78 @@
       ]
     },
     {
+      "name": "Light 1",
+      "transform": {
+        "position": {"x": 0.0, "y": 1000.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "Light",
+          "pathname": "Component/Light",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "type", "type": "string", "value": "Spot"},
+            {"name": "color", "type": "Color", "value": "1.0 0.92 0.016 1.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Light 2",
+      "transform": {
+        "position": {"x": 0.0, "y": 10.0, "z": 0.0},
+        "rotation": {"x": -180.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "Light",
+          "pathname": "Component/Light",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "color", "type": "Color", "value": "1.0 1.0 1.0 1.0"},
+            {"name": "type", "type": "string", "value": "Directional"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Light 3",
+      "transform": {
+        "position": {"x": 0.0, "y": 10.0, "z": 0.0},
+        "rotation": {"x": -180.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "Light",
+          "pathname": "Component/Light",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "color", "type": "Color", "value": "1.0 1.0 1.0 1.0"},
+            {"name": "type", "type": "string", "value": "Spot"}
+          ]
+        }
+      ]
+    },
+    {
       "name": "Terrain",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
-        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
       },
       "components": [],
-      "mesh": "./Models/Terrain.mesh"
+      "mesh": "Terrain.mesh"
     },
     {
       "name": "Base Banner",
       "transform": {
-        "position": {"x": 0.0, "y": 0.0, "z": -70.0},
+        "position": {"x": 0.0, "y": 0.0, "z": -60.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
-        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
       },
       "components": [
         {
@@ -64,7 +121,26 @@
           ]
         }
       ],
-      "mesh": "./Models/BaseBanner.mesh"
+      "mesh": "BaseBanner.mesh"
+    },
+    {
+      "name": "Player 1",
+      "transform": {
+        "position": {"x": -20.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "name": "PlayerController",
+          "pathname": "Scripts/PlayerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "10.0"}
+          ]
+        }
+      ],
+      "mesh": "Tank001.mesh"
     },
     {
       "name": "Enemy Respawn System",
@@ -136,25 +212,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "Player 1",
-      "transform": {
-        "position": {"x": -20.0, "y": 0.0, "z": -70.0},
-        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
-        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
-      },
-      "components": [
-        {
-          "name": "PlayerController",
-          "pathname": "Scripts/PlayerController",
-          "properties": [
-            {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "motionSpeed", "type": "double", "value": "10.0"}
-          ]
-        }
-      ],
-      "mesh": "./Models/Tank1.mesh"
     }
   ]
 }

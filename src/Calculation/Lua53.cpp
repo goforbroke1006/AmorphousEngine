@@ -75,22 +75,22 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
         throw std::runtime_error(lua_tostring(*L, 1));
     }
 
-    {
-        std::string prefabsLoadingCode;
-
-        for (const auto &[path, pGO]: sceneState->getPrefabGameObjects()) {
-            prefabsLoadingCode +=
-                    "__global_prefab_game_objects['" + path + "'] = GameObject:new(-1, '" + pGO->getName() + "')\n"
-                    + "__global_prefab_game_objects['" + path + "'].transform.position";
-        }
-
-        luaL_loadstring(*L, prefabsLoadingCode.c_str());
-        int res = lua_pcall(*L, 0, 0, 0);
-        if (res != LUA_OK) {
-            L->PrintStack(std::cerr);
-            throw std::runtime_error(lua_tostring(*L, 1));
-        }
-    }
+//    {
+//        std::string prefabsLoadingCode;
+//
+//        for (const auto &[path, pGO]: sceneState->getPrefabGameObjects()) {
+//            prefabsLoadingCode +=
+//                    "__global_prefab_game_objects['" + path + "'] = GameObject:new(-1, '" + pGO->getName() + "')\n"
+//                    + "__global_prefab_game_objects['" + path + "'].transform.position";
+//        }
+//
+//        luaL_loadstring(*L, prefabsLoadingCode.c_str());
+//        int res = lua_pcall(*L, 0, 0, 0);
+//        if (res != LUA_OK) {
+//            L->PrintStack(std::cerr);
+//            throw std::runtime_error(lua_tostring(*L, 1));
+//        }
+//    }
 
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);

@@ -1,34 +1,66 @@
-hlms Ogre/Earring pbs
+material Ogre/Earring
 {
-	roughness	1.0
-	fresnel		1.33
+	technique
+	{
+		pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.7 0.7 0
 
-	detail_map0 spheremap.png
+			texture_unit
+			{
+				texture spheremap.png
+				colour_op_ex add src_texture src_current
+				colour_op_multipass_fallback one one
+				env_map spherical
+			}
+		}
+	}
 }
 
-hlms Ogre/Skin pbs
+material Ogre/Skin
 {
-	roughness	1.0
-	fresnel		1.33
+	technique
+	{
+		pass
+		{
+			ambient 0.3 0.8 0.3
 
-	detail_map0 GreenSkin.jpg
+			texture_unit
+			{
+				texture GreenSkin.jpg
+				tex_address_mode mirror
+			}
+		}
+	}
 }
 
-hlms Ogre/Tusks pbs
+material Ogre/Tusks
 {
-	roughness	1.0
-	fresnel		1.33
+	technique
+	{
+		pass
+		{
+			ambient 0.7 0.7 0.6
 
-	detail_map0          tusk.jpg
-	detail_offset_scale0 0.2 0.2
+			texture_unit
+			{
+				texture tusk.jpg
+				scale 0.2 0.2
+			}
+		}
+	}
 }
 
-hlms Ogre/Eyes pbs
+material Ogre/Eyes
 {
-	roughness	1.0
-	fresnel		1.33
-
-	ambient 1 0.4 0.4
-	diffuse 1 0.7 0
-	emissive 0.3 0.1 0
+	technique
+	{
+		pass
+		{
+			ambient 1 0.4 0.4
+			diffuse 1 0.7 0
+			emissive 0.3 0.1 0
+		}
+	}
 }

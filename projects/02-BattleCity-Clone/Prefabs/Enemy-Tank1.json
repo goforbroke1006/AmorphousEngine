@@ -14,5 +14,5 @@
       ]
     }
   ],
-  "mesh": "./Models/Tank1.mesh"
+  "mesh": "Tank001.mesh"
 }

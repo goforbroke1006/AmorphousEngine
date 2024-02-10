@@ -8,7 +8,7 @@
 #include <filesystem>
 
 #include "include/Application.h"
-#include "include/Graphics/OgreNext/OgreNext.h"
+#include "include/Graphics/OgreOne.h"
 #include "include/Graphics/Irrlicht.h"
 #include "include/Calculation/Lua53.h"
 
@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
 
     std::filesystem::path cwd = std::filesystem::current_path();
 
-    std::string graphicsMode = "OgreNext"; // OgreNext | Irrlicht
+    std::string graphicsMode = "Ogre"; // OgreNext | Irrlicht
     std::string engineRoot = cwd.string() + std::filesystem::path::preferred_separator + "";
     std::string projectRoot = "./projects/01-HelloWorld/";
 //    std::string projectRoot = "./projects/02-BattleCity-Clone/";
@@ -39,20 +39,21 @@ int main(int argc, char **argv) {
 
     AmE::GraphicsEngine *pGraphicsEngine = nullptr;
 
-    if (graphicsMode == "OgreNext") {
+    if (graphicsMode == "Ogre") {
 #ifdef DEBUG
         std::string pluginsCfgPathname = "plugins_d.cfg";
 #else
         std::string pluginsCfgPathname = "plugins.cfg";
 #endif
 
-        pGraphicsEngine = new AmE::OgreNext(
+        pGraphicsEngine = new AmE::OgreOne(
                 pluginsCfgPathname,
                 projectRoot
         );
-    }
-    if (graphicsMode == "Irrlicht") {
+    } else if (graphicsMode == "Irrlicht") {
         pGraphicsEngine = new AmE::Irrlicht();
+    } else {
+        throw std::runtime_error("unexpected graphics type: " + graphicsMode);
     }
 
     auto *pCalculationEngine = new AmE::Lua53(engineRoot, projectRoot);

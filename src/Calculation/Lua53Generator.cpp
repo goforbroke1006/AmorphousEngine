@@ -17,6 +17,32 @@ AmE::Lua53Generator::buildInitLuaCode(
                 "require 'Component'\n"
                 "\n";
 
+    // inject components for prefabs
+    {
+        std::map<std::string, std::string> cmpNameToPath;
+        for (const auto &goPair: sceneState->getPrefabGameObjects()) {
+            for (const auto &cmpPair: goPair.second->getComponents()) {
+                cmpNameToPath[cmpPair.second->mName] = cmpPair.second->mPathname;
+            }
+        }
+
+        if (!cmpNameToPath.empty()) {
+            initCode += "require 'Core/LuaBehaviour'\n\n";
+            for (const auto &cmpPair: cmpNameToPath) {
+                initCode += "require '" + cmpPair.second + "'\n";
+                initCode += "\n";
+
+                initCode += std::string()
+                            + "function " + cmpPair.first + ":new()\n"
+                            + "    local instance = LuaBehaviour:new()\n"
+                            + "    setmetatable(instance, self)\n"
+                            + "    self.__index = self\n"
+                            + "    return instance\n"
+                            + "end\n\n";
+            }
+        }
+    }
+
     // inject info about loaded prefabs
     for (const auto &[prefabPath, pGameObj]: sceneState->getPrefabGameObjects()) {
         if (nullptr == pGameObj) {
@@ -216,7 +242,7 @@ AmE::Lua53Generator::simplePropValToLuaCode(const Property &prop) {
         }
         case PropType::PropTypePrefabPath:
             return std::string()
-                   + LUA53_G_VAR_PREFABS + "[" + prop.asString() + "]";
+                   + LUA53_G_VAR_PREFABS + "['" + prop.asString() + "']";
     }
 
     throw std::runtime_error("unexpected type " + PropType::asString(prop.mType));

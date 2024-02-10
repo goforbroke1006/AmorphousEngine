@@ -1,0 +1,8 @@
+# skip blender backup file
+/*.blend1
+
+# skip meshes saved as xml files
+/*.xml
+
+# skip converters logs
+/*.log

@@ -25,11 +25,19 @@ mkdir -p ./release
 cat <<EOT > ./release/launcher
 #!/usr/bin/env bash
 
+set -e
+
 SCRIPT_DIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-PROJECT_DIR="\$(pwd)"
+PROJECT_DIR="\$PWD"
+
+#SCRIPT_DIR=\$(realpath \$(pwd)/\${SCRIPT_DIR})
+#PROJECT_DIR=\$(realpath \$(pwd)/\${PROJECT_DIR})
+
 cd "\${SCRIPT_DIR}"
 
-LD_LIBRARY_PATH=. ./AmorphousEngine OgreNext "\${SCRIPT_DIR}" "\${PROJECT_DIR}" "\${PROJECT_DIR}/Scenes/level-0.json"
+echo "Engine:  \${SCRIPT_DIR}"
+echo "Project: \${PROJECT_DIR}"
+LD_LIBRARY_PATH=. ./AmorphousEngine Ogre "\${SCRIPT_DIR}" "\${PROJECT_DIR}" "\${PROJECT_DIR}/Scenes/level-0.json"
 
 EOT
 
@@ -37,14 +45,11 @@ chmod +x ./release/launcher
 
 cp ./third_party/luacpp/build/libluacpp.so ./release/
 
-cp ./third_party/ogre-next/build/Release/lib/libOgreMain.so.2.3.3 ./release/
-cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsPbs.so.2.3.3 ./release/
-cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsUnlit.so.2.3.3 ./release/
+cp ~/ogre/build/Release/lib/*.so ./release/
+cp ~/ogre/build/Release/lib/*.so.* ./release/
 
-cp ./third_party/ogre-next/build/Release/lib/RenderSystem_GL3Plus.so.2.3.3 ./release/
-cp ./third_party/ogre-next/build/Release/lib/Plugin_ParticleFX.so.2.3.3 ./release/
-
-cp ./third_party/ogre-next/build/Release/bin/OgreMeshTool ./release/
+cp /usr/lib/x86_64-linux-gnu/libIrrlicht.so.1.8.5 ./release/
+cp /usr/lib/x86_64-linux-gnu/libIrrlicht.so.1.8 ./release/
 
 rm -rf release/Component
 cp -r ./Component/ ./release/
@@ -52,23 +57,10 @@ cp -r ./Component/ ./release/
 rm -rf release/Core
 cp -r ./Core/ ./release/
 
+sudo cp /usr/local/lib/libOIS.so.1.5.0 ./release/
 sudo cp /usr/local/lib/libOIS.so.1.5.1 ./release/
 
-cat <<EOT > ./release/plugins.cfg
-# Defines plugins to load
-
-# Define plugin folder
-PluginFolder=.
-
-# Define plugins
-PluginOptional=RenderSystem_GL3Plus
-Plugin=Plugin_ParticleFX
-
-EOT
-
-rm -rf ./release/Media/
-mkdir -p ./release/Media/
-cp -r ./third_party/ogre-next/Samples/Media/Hlms ./release/Media/Hlms
+cp ./plugins.cfg ./release/
 
 cp ./cmake-build-release/AmorphousEngine ./release/
 
@@ -111,6 +103,8 @@ else
   OS_NAME='unknown'
   OS_ARCH='unknown'
 fi
+
+sudo chmod -R 0777 ./release
 
 rm -f "./release-${OS_NAME}-${OS_ARCH}.zip"
 zip -r "./release-${OS_NAME}-${OS_ARCH}" ./release
