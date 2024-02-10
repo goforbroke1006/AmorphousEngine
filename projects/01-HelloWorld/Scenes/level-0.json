@@ -50,6 +50,7 @@
           "pathname": "Component/Light",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "type", "type": "string", "value": "Spot"},
             {"name": "color", "type": "Color", "value": "1.0 0.92 0.016 1.0"}
           ]
         }
