@@ -50,7 +50,7 @@ void AmE::Irrlicht::initialize(const SceneState * const sceneState) {
 
         if (pGameObj->isCamera()) {
             mBackgroundColor = std::any_cast<Color>(
-                    pGameObj->getComponent("Camera")->mProperties["backgroundColor"].mValue);
+                    pGameObj->getComponent("Component/Camera")->mProperties["backgroundColor"].mValue);
 
             mSceneManager->addCameraSceneNode(
                     nullptr,

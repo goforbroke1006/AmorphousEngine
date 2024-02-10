@@ -2,8 +2,8 @@
 // Created by goforbroke on 2/6/24.
 //
 
-#ifndef AMORPHOUSENGINE_OGREONE_H
-#define AMORPHOUSENGINE_OGREONE_H
+#ifndef AMORPHOUS_ENGINE_OGRE_ONE_H
+#define AMORPHOUS_ENGINE_OGRE_ONE_H
 
 #include "../GraphicsEngine.h"
 
@@ -24,24 +24,16 @@ namespace AmE {
 
         virtual ~OgreOne();
 
-        size_t getWindowHnd() const override;
+        [[nodiscard]] size_t getWindowHnd() const override;
 
-        void initialize(const SceneState *const sceneState) override;
+        void initialize(const SceneState *sceneState) override;
 
-        bool update(const SceneState *const sceneState) override;
+        bool update(const SceneState *sceneState) override;
 
         void stop() override;
 
     private:
-        void initOrUpdateNode(const AmE::GameObject *const pGameObject);
-
-        void createCameraNode(const GameObject *gameObjectPtr);
-
-        void updateCameraNode(const GameObject *gameObjectPtr);
-
-        void createSceneNode(const GameObject *gameObjectPtr);
-
-        void updateSceneNode(const GameObject *gameObjectPtr);
+        void initOrUpdateNode(const AmE::GameObject *pGameObject);
 
     private:
         Ogre::Root *mRoot;
@@ -50,11 +42,10 @@ namespace AmE {
         Ogre::SceneManager *mSceneManager;
         Ogre::RTShader::ShaderGenerator *mShaderGenerator;
 
-//        std::map<GameObjectInstanceID, Ogre::Camera *> mCameraNodes;
         std::map<GameObjectInstanceID, Ogre::SceneNode *> mSceneNodes;
 
         bool mQuit;
     };
 }
 
-#endif //AMORPHOUSENGINE_OGREONE_H
+#endif //AMORPHOUS_ENGINE_OGRE_ONE_H

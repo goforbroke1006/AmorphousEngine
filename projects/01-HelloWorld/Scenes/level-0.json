@@ -9,7 +9,6 @@
       },
       "components": [
         {
-          "name": "ApplicationSystem",
           "pathname": "Scripts/ApplicationSystem",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"}
@@ -26,7 +25,6 @@
       },
       "components": [
         {
-          "name": "Camera",
           "pathname": "Component/Camera",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -46,7 +44,6 @@
       },
       "components": [
         {
-          "name": "Light",
           "pathname": "Component/Light",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -58,7 +55,6 @@
     },
     {
       "name": "Barrel center",
-      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -66,7 +62,13 @@
       },
       "components": [
         {
-          "name": "SpinnerController",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Barrel.mesh"}
+          ]
+        },
+        {
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -77,7 +79,6 @@
     },
     {
       "name": "Barrel front",
-      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -85,7 +86,13 @@
       },
       "components": [
         {
-          "name": "SpinnerController",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Barrel.mesh"}
+          ]
+        },
+        {
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -96,7 +103,6 @@
     },
     {
       "name": "Barrel back",
-      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": -50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -104,7 +110,13 @@
       },
       "components": [
         {
-          "name": "SpinnerController",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Barrel.mesh"}
+          ]
+        },
+        {
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -115,7 +127,6 @@
     },
     {
       "name": "Barrel right",
-      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": 50.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -123,7 +134,13 @@
       },
       "components": [
         {
-          "name": "SpinnerController",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Barrel.mesh"}
+          ]
+        },
+        {
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -134,7 +151,6 @@
     },
     {
       "name": "Barrel left",
-      "mesh": "Barrel.mesh",
       "transform": {
         "position": {"x": -50.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -142,7 +158,13 @@
       },
       "components": [
         {
-          "name": "SpinnerController",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Barrel.mesh"}
+          ]
+        },
+        {
           "pathname": "Scripts/SpinnerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -153,7 +175,6 @@
     },
     {
       "name": "Drone 1",
-      "mesh": "ogrehead.mesh",
       "transform": {
         "position": {"x": 1.0, "y": 0.0, "z": 50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -161,7 +182,13 @@
       },
       "components": [
         {
-          "name": "DroneController",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "ogrehead.mesh"}
+          ]
+        },
+        {
           "pathname": "Scripts/DroneController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},

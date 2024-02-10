@@ -12,7 +12,6 @@
 #include "../include/PrefabManager.h"
 #include "../include/Core/Property.h"
 
-
 AmE::Application::Application(
         std::string mEngineRoot,
         std::string mProjectRoot,

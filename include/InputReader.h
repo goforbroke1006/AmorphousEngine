@@ -18,14 +18,14 @@ namespace AmE {
      */
     class InputReader : public OIS::KeyListener, OIS::MouseListener {
     public:
-        explicit InputReader(size_t windowHnd, InputsState *const preUpdateFrameData);
+        explicit InputReader(size_t windowHnd, InputsState *pInputState);
 
         ~InputReader() override;
 
         void collectCodes();
 
     private:
-        InputsState * mPreUpdateFrameData;
+        InputsState * mInputState;
 
         OIS::InputManager *mInputManager;
         OIS::Keyboard *mKeyboard;

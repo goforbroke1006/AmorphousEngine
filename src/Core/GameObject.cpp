@@ -36,28 +36,28 @@ const std::map<std::string, AmE::Component *> &AmE::GameObject::getComponents() 
     return mComponents;
 }
 
-AmE::Component *AmE::GameObject::getComponent(const std::string &name) const {
-    return mComponents.at(name);
+AmE::Component *AmE::GameObject::getComponent(const std::string &path) const {
+    if (mComponents.find(path) == mComponents.end())
+        return nullptr;
+//        throw std::runtime_error("GameObject '" + mName + "' has no component " + path);
+
+    return mComponents.at(path);
 }
 
 void AmE::GameObject::addComponent(AmE::Component *const component) {
-    mComponents[component->mName] = component;
+    mComponents[component->mPathname] = component;
 }
 
-const std::string &AmE::GameObject::getMeshPathname() const {
-    return mMeshPathname;
-}
-
-void AmE::GameObject::setMeshPathname(const std::string &meshPathname) {
-    GameObject::mMeshPathname = meshPathname;
+bool AmE::GameObject::hasMeshRender() const {
+    return mComponents.find("Component/MeshRender") != mComponents.end();
 }
 
 bool AmE::GameObject::isCamera() const {
-    return mComponents.find("Camera") != mComponents.end();
+    return mComponents.find("Component/Camera") != mComponents.end();
 }
 
 bool AmE::GameObject::isLight() const {
-    return mComponents.find("Light") != mComponents.end();
+    return mComponents.find("Component/Light") != mComponents.end();
 }
 
 

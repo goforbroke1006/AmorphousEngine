@@ -7,11 +7,18 @@
 require 'Core/LuaBehaviour'
 require 'Core/Color'
 
-Camera = LuaBehaviour:new()
+Camera = {}
 
-Camera.backgroundColor = Color:new()
-Camera.nearClipPlane = 0.1
-Camera.farClipPlane = 1000.0
+function Camera:new()
+    instance = LuaBehaviour:new()
+    instance.backgroundColor = Color:new()
+    instance.nearClipPlane = 0.1
+    instance.farClipPlane = 1000.0
+
+    setmetatable(instance, self)
+    self.__index = self
+    return instance
+end
 
 function Camera:Start()
     -- Debug.Log("Camera :: Start");

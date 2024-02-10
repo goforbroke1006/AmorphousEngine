@@ -55,7 +55,17 @@ Object.Destroy = function(obj --[[Object]], t)
     -- TODO: find in __all_game_objects and disable forever
     -- TODO: find in __all_components and disable forever
 
-    error("Object.Destroy: implement me")
+    -- Debug.LogError("Object.Destroy: implement me")
+
+    for key, cmp in pairs(__all_components) do
+        if cmp.gameObject.__instanceID == obj.__instanceID then
+            -- Debug.Log("Remove component " .. key)
+            __all_components[key] = nil
+        end
+    end
+
+    -- Debug.Log("Remove gameObject " .. obj.__instanceID)
+    __all_game_objects[obj.__instanceID] = nil
 end
 
 --- https://docs.unity3d.com/ScriptReference/Object.Instantiate.html
@@ -77,13 +87,12 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     local instance = nil
 
     if arg1 == nil and arg2 == nil and arg3 == nil then
-        -- public static Object Instantiate(Object original);
+        --- public static Object Instantiate(Object original);
 
         instance = GameObject:new(
                 __scene_next_game_object_instance_id,
                 original.name .. " (Clone)"
         )
-        __scene_next_game_object_instance_id = __scene_next_game_object_instance_id + 1
         __all_game_objects[instance.__instanceID] = instance;
 
         instance.transform.position:Set(
@@ -103,10 +112,10 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
                 original.transform.localScale.z
         )
     elseif arg1 ~= nil and arg1:IsA("Transform") and arg2 == nil and arg3 == nil then
-        -- public static Object Instantiate(Object original, Transform parent);
+        --- public static Object Instantiate(Object original, Transform parent);
 
         instance = GameObject:new(
-                #__all_game_objects,
+                __scene_next_game_object_instance_id,
                 original.name .. " (Clone)"
         )
         __all_game_objects[instance.__instanceID] = instance;
@@ -128,15 +137,15 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
                 arg1.localScale.z
         )
     elseif arg1 ~= nil and arg1:IsA("Transform") and type(arg2) == "bool" and arg3 == nil then
-        -- public static Object Instantiate(Object original, Transform parent, bool instantiateInWorldSpace);
+        --- public static Object Instantiate(Object original, Transform parent, bool instantiateInWorldSpace);
 
         -- TODO: implement me
-        error("implement me")
+        Debug.LogError("implement me")
     elseif arg1 ~= nil and arg1:IsA("Vector3") and arg2 ~= nil and arg2:IsA("Quaternion") and arg3 == nil then
-        -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation);
+        --- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation);
 
         instance = GameObject:new(
-                #__all_game_objects,
+                __scene_next_game_object_instance_id,
                 original.name .. " (Clone)"
         )
         __all_game_objects[instance.__instanceID] = instance;
@@ -158,10 +167,10 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
                 original.transform.localScale.z
         )
     elseif arg1 ~= nil and arg1:IsA("Vector3") and arg2 ~= nil and arg2:IsA("Quaternion") and arg3 ~= nil and arg3:IsA("Transform") then
-        -- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent);
+        --- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent);
 
         -- TODO: implement me
-        error("implement me")
+        Debug.LogError("implement me")
     else
         Debug.LogError("Unexpected signature")
         return nil
@@ -171,14 +180,17 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     --if instance ~= nil then
     for _, cmp in pairs(original.__components) do
         local cmpKey = '' .. instance.__instanceID .. ' :: ' .. cmp.__name
+        --Debug.Log("Create component: " .. cmpKey)
         __all_components[cmpKey] = LuaBehaviour.__make_clone(cmp)
+        __all_components[cmpKey].__name = cmp.__name
         __all_components[cmpKey].enabled = true
         __all_components[cmpKey].gameObject = instance
         __all_components[cmpKey].transform = instance.transform
     end
     --end
 
-    -- Debug.Log("Create new object: " .. instance.__instanceID)
+    __scene_next_game_object_instance_id = __scene_next_game_object_instance_id + 1
+    --Debug.Log("Create new object: " .. instance.__instanceID)
 
     return instance
 end

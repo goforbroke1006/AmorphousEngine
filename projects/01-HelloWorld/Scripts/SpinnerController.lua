@@ -7,17 +7,33 @@
 require "Core/LuaBehaviour"
 require "Core/Time"
 
-SpinnerController = LuaBehaviour:new()
+SpinnerController = {}
 
-SpinnerController.rotationSpeed = 0.0
+function SpinnerController:new()
+    instance = {}
+    instance.__name = ''
+    instance.gameObject = nil
+    instance.transform = nil
+    setmetatable(instance, self)
+    self.__index = self
+    return instance
+end
 
 function SpinnerController:Start()
-    if (self.rotationSpeed == 0.0) then
+    if self.rotationSpeed == nil then
         Debug.LogWarning("rotationSpeed should not be equals zero")
     end
 end
 
 function SpinnerController:Update()
+    if self == nil then
+        Debug.LogWarning("self is null")
+        return
+    end
+    if self.transform == nil then
+        Debug.LogWarning("self.transform is null")
+        return
+    end
     self.transform:Rotate(Vector3:new(
             0.0,
             0.0,

@@ -32,9 +32,7 @@ namespace AmE {
 
         void addComponent(Component *const component);
 
-        const std::string &getMeshPathname() const;
-
-        void setMeshPathname(const std::string &meshPathname);
+        [[nodiscard]] bool hasMeshRender() const;
 
         [[nodiscard]] bool isCamera() const;
 
@@ -45,8 +43,6 @@ namespace AmE {
         std::string mName;
         Transform *mTransform;
         std::map<std::string, Component *> mComponents;
-
-        std::string mMeshPathname;
     };
 }
 

@@ -7,12 +7,17 @@
   },
   "components": [
     {
-      "name": "EnemyController",
+      "pathname": "Component/MeshRender",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "path", "type": "string", "value": "./Models/Tank1.mesh"}
+      ]
+    },
+    {
       "pathname": "Scripts/EnemyController",
       "properties": [
         {"name": "enabled", "type": "boolean", "value": "true"}
       ]
     }
-  ],
-  "mesh": "./Models/Tank1.mesh"
+  ]
 }

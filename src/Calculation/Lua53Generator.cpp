@@ -3,6 +3,9 @@
 //
 
 #include "../../include/Calculation/Lua53Generator.h"
+
+#include <set>
+
 #include "../../include/Core/Property.h"
 
 std::string
@@ -19,26 +22,29 @@ AmE::Lua53Generator::buildInitLuaCode(
 
     // inject components for prefabs
     {
-        std::map<std::string, std::string> cmpNameToPath;
+        std::map<std::string, Component *> cmpPaths;
         for (const auto &goPair: sceneState->getPrefabGameObjects()) {
             for (const auto &cmpPair: goPair.second->getComponents()) {
-                cmpNameToPath[cmpPair.second->mName] = cmpPair.second->mPathname;
+                cmpPaths[cmpPair.second->mPathname] = cmpPair.second;
             }
         }
 
-        if (!cmpNameToPath.empty()) {
-            initCode += "require 'Core/LuaBehaviour'\n\n";
-            for (const auto &cmpPair: cmpNameToPath) {
-                initCode += "require '" + cmpPair.second + "'\n";
-                initCode += "\n";
-
-                initCode += std::string()
-                            + "function " + cmpPair.first + ":new()\n"
-                            + "    local instance = LuaBehaviour:new()\n"
-                            + "    setmetatable(instance, self)\n"
-                            + "    self.__index = self\n"
-                            + "    return instance\n"
-                            + "end\n\n";
+        if (!cmpPaths.empty()) {
+            for (const auto &[path, cmp]: cmpPaths) {
+                if (!cmp->isFromLib()) {
+                    initCode += "require '" + path + "'\n";
+                    initCode += "\n";
+                    initCode += std::string()
+                                + "function " + cmp->getName() + ":new()\n"
+                                + "    local instance = LuaBehaviour:new()\n"
+                                + "    instance.__name = ''\n"
+                                + "    instance.gameObject = nil\n"
+                                + "    instance.transform = nil\n"
+                                + "    setmetatable(instance, self)\n"
+                                + "    self.__index = self\n"
+                                + "    return instance\n"
+                                + "end\n\n";
+                }
             }
         }
     }
@@ -65,38 +71,44 @@ AmE::Lua53Generator::buildInitLuaCode(
         );
     }
 
-    // TODO:
-    std::map<std::string, std::string> cmpNameToPath;
-    for (const auto &goPair: sceneState->getSceneGameObjects()) {
-        for (const auto &cmpPair: goPair.second->getComponents()) {
-            cmpNameToPath[cmpPair.second->mName] = cmpPair.second->mPathname;
+    {
+        // TODO:
+        std::map<std::string, Component *> cmpPaths;
+        for (const auto &goPair: sceneState->getSceneGameObjects()) {
+            for (const auto &[path, pCmp]: goPair.second->getComponents()) {
+                cmpPaths[path] = pCmp;
+            }
         }
-    }
-    initCode += "require 'Core/LuaBehaviour'\n\n";
-    for (const auto &cmpPair: cmpNameToPath) {
-        initCode += "require '" + cmpPair.second + "'\n";
-        initCode += "\n";
 
-        initCode += std::string()
-                    + "function " + cmpPair.first + ":new()\n"
-                    + "    local instance = LuaBehaviour:new()\n"
-                    + "    setmetatable(instance, self)\n"
-                    + "    self.__index = self\n"
-                    + "    return instance\n"
-                    + "end\n\n";
+        for (const auto &[path, pCmp]: cmpPaths) {
+            if (!pCmp->isFromLib()) {
+                initCode += "require '" + path + "'\n";
+                initCode += "\n";
+                initCode += std::string()
+                            + "function " + pCmp->getName() + ":new()\n"
+                            + "    instance = {}\n"
+                            + "    instance.__name = ''\n"
+                            + "    instance.gameObject = nil\n"
+                            + "    instance.transform = nil\n"
+                            + "    setmetatable(instance, self)\n"
+                            + "    self.__index = self\n"
+                            + "    return instance\n"
+                            + "end\n\n";
+            }
+        }
     }
 
     // inject components to lua context
     for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
         const auto &idStr = std::to_string(pGameObj->getID());
 
-        for (const auto &[_, pCmp]: pGameObj->getComponents()) {
-            std::string cmpID = idStr + " :: " + pCmp->mName;
+        for (const auto &[path, pCmp]: pGameObj->getComponents()) {
+            std::string cmpID = idStr + " :: " + pCmp->mPathname;
 
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + pCmp->mName + ":new()\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + pCmp->getName() + ":new()\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + pCmp->mName + "'\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + path + "'\n";
             initCode += std::string()
                         + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = "
                         + LUA53_G_VAR_GO_T + "[" + idStr + "]\n";
@@ -165,13 +177,13 @@ AmE::Lua53Generator::generateInitCode(
     code += "\n";
 
     if (!isSceneObject) {
-        for (const auto &[_, pCmp]: pGameObj->getComponents()) {
+        for (const auto &[path, pCmp]: pGameObj->getComponents()) {
             code.append(
                     std::string()
-                    + luaRef + ".__components['" + pCmp->mName + "'] = " + pCmp->mName + "\n"
-                    + luaRef + ".__components['" + pCmp->mName + "'].__name = '" + pCmp->mName + "'\n"
-                    + luaRef + ".__components['" + pCmp->mName + "'].gameObject = nil\n"
-                    + luaRef + ".__components['" + pCmp->mName + "'].transform = nil\n"
+                    + luaRef + ".__components['" + path + "'] = " + pCmp->getName() + ":new()\n"
+                    + luaRef + ".__components['" + path + "'].__name = '" + path + "'\n"
+                    + luaRef + ".__components['" + path + "'].gameObject = nil\n"
+                    + luaRef + ".__components['" + path + "'].transform = nil\n"
             );
 
             for (auto &[_, prop]: pCmp->mProperties) {
@@ -179,7 +191,7 @@ AmE::Lua53Generator::generateInitCode(
                 if (val.empty())
                     continue;
 
-                code += luaRef + ".__components['" + pCmp->mName + "']." + prop.mName + " = " + val;
+                code += luaRef + ".__components['" + path + "']." + prop.mName + " = " + val;
                 code += "\n";
             }
 

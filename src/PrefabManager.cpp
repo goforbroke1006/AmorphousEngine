@@ -47,12 +47,15 @@ AmE::GameObject *AmE::PrefabManager::loadFromFile(const std::string &jsonFilepat
         );
     }
 
+    Logger::Trace("Prefab loading: " + jsonFilepath);
+
     if (prefabObj["components"].empty())
         Logger::Warn("Prefab '" + jsonFilepath + "' does not have components");
 
     for (const auto &cmpVal: prefabObj["components"]) {
-        std::map<std::string, Property> properties;
+        Logger::Trace("Component binding: " + cmpVal["pathname"].asString());
 
+        std::map<std::string, Property> properties;
         for (const auto &propJSON: cmpVal["properties"]) {
             Property prop;
             prop.mName = propJSON["name"].asString();
@@ -63,7 +66,6 @@ AmE::GameObject *AmE::PrefabManager::loadFromFile(const std::string &jsonFilepat
         }
 
         auto *pComponent = new Component(
-                cmpVal["name"].asString(),
                 cmpVal["pathname"].asString(),
                 properties
         );

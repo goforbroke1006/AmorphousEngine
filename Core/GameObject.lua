@@ -21,6 +21,7 @@ function GameObject:new(__instanceID --[[integer]], name --[[string]])
     gameObj = Object:new(__instanceID)
     gameObj.name = name
     gameObj.transform = Transform:new()
+    gameObj.__components = {}
 
     self.__index = self
     setmetatable(gameObj, self)

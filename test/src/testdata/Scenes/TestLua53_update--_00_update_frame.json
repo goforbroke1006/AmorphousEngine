@@ -26,12 +26,19 @@
     },
     {
       "name": "Drone 1",
-      "mesh": "./ogrehead.mesh",
       "transform": {
         "position": {"x": 4.0, "y": 5.0, "z": 6.0},
         "rotation": {"x": 45.0, "y": 45.0, "z": 45.0}
       },
       "components": [
+        {
+          "name": "MeshRender",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "./ogrehead.mesh"}
+          ]
+        },
         {
           "name": "DroneController",
           "pathname": "Scripts/DroneController",

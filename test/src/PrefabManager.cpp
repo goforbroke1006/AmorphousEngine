@@ -26,9 +26,10 @@ namespace AmE {
         EXPECT_EQ(1.0, pGameObj->getTransform()->mLocalScale.getY());
         EXPECT_EQ(1.0, pGameObj->getTransform()->mLocalScale.getZ());
 
-        EXPECT_EQ(1, pGameObj->getComponents().size());
+        EXPECT_EQ(2, pGameObj->getComponents().size());
 
-        EXPECT_TRUE(nullptr != pGameObj->getComponent("EnemyController"));
+        EXPECT_TRUE(nullptr != pGameObj->getComponent("Component/MeshRender"));
+        EXPECT_TRUE(nullptr != pGameObj->getComponent("Scripts/EnemyController"));
 
         delete pGameObj;
     }

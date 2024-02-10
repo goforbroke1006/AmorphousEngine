@@ -6,12 +6,20 @@
 
 require "Core/LuaBehaviour"
 
-DroneController = LuaBehaviour:new()
+DroneController = {}
 
-DroneController.motionSpeed = 0.0
+function DroneController:new()
+    instance = {}
+    instance.__name = ''
+    instance.gameObject = nil
+    instance.transform = nil
+    setmetatable(instance, self)
+    self.__index = self
+    return instance
+end
 
 function DroneController:Start()
-    if (self.motionSpeed == 0.0) then
+    if self.motionSpeed == nil then
         Debug.LogWarning("motionSpeed should not be equals zero")
     end
 end

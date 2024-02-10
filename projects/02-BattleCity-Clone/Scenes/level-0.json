@@ -101,8 +101,16 @@
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
         "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
       },
-      "components": [],
-      "mesh": "Terrain.mesh"
+      "components": [
+        {
+          "name": "MeshRender",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Terrain.mesh"}
+          ]
+        }
+      ]
     },
     {
       "name": "Base Banner",
@@ -113,6 +121,14 @@
       },
       "components": [
         {
+          "name": "MeshRender",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BaseBanner.mesh"}
+          ]
+        },
+        {
           "name": "BaseBanner",
           "pathname": "Scripts/BaseBanner",
           "properties": [
@@ -120,8 +136,7 @@
             {"name": "isDestroyed", "type": "boolean", "value": "false"}
           ]
         }
-      ],
-      "mesh": "BaseBanner.mesh"
+      ]
     },
     {
       "name": "Player 1",
@@ -132,15 +147,24 @@
       },
       "components": [
         {
+          "name": "MeshRender",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Tank001.mesh"}
+          ]
+        },
+        {
           "name": "PlayerController",
           "pathname": "Scripts/PlayerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "motionSpeed", "type": "double", "value": "10.0"}
+            {"name": "motionSpeed", "type": "double", "value": "10.0"},
+            {"name": "reloadingTimeout", "type": "double", "value": "2.0"},
+            {"name": "projectilePrefab", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"}
           ]
         }
-      ],
-      "mesh": "Tank001.mesh"
+      ]
     },
     {
       "name": "Enemy Respawn System",

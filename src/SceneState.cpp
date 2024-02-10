@@ -120,7 +120,6 @@ AmE::SceneState *AmE::SceneState::loadFromFile(
         const Json::Value &componentsVals = goVal["components"];
         for (const auto &cmpVal: componentsVals) {
             auto *pCmp = new Component();
-            pCmp->mName = cmpVal["name"].asString();
             pCmp->mPathname = cmpVal["pathname"].asString();
 
             const Json::Value &argumentsVals = cmpVal["properties"];
@@ -142,17 +141,13 @@ AmE::SceneState *AmE::SceneState::loadFromFile(
             pGameObject->addComponent(pCmp);
         }
 
-        if (!goVal["mesh"].empty() && goVal["mesh"].isString()) {
-            pGameObject->setMeshPathname(goVal["mesh"].asString());
-        }
-
         pSceneState->mSceneGameObjects[nextID] = pGameObject;
 
         ++nextID;
     }
 
     for (auto &[prefabPath, _]: pSceneState->mPrefabGameObjects) {
-        auto pGameObj = PrefabManager::loadFromFile(
+        auto *pGameObj = PrefabManager::loadFromFile(
                 projectRoot + std::filesystem::path::preferred_separator + prefabPath
         );
 

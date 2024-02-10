@@ -6,8 +6,12 @@
 
 #include <sstream>
 
-AmE::InputReader::InputReader(const size_t windowHnd, InputsState *const preUpdateFrameData) {
-    mPreUpdateFrameData = preUpdateFrameData;
+AmE::InputReader::InputReader(const size_t windowHnd, InputsState *const pInputState) {
+    mInputState = pInputState;
+
+    mInputManager = nullptr;
+    mKeyboard = nullptr;
+    mMouse = nullptr;
 
     std::ostringstream windowHndStr;
     windowHndStr << windowHnd;
@@ -17,24 +21,26 @@ AmE::InputReader::InputReader(const size_t windowHnd, InputsState *const preUpda
     mInputManager = OIS::InputManager::createInputSystem(pl);
 
     if (mInputManager->getNumberOfDevices(OIS::OISKeyboard) > 0) {
+        Logger::Trace("Initialize OIS keyboard");
         mKeyboard = dynamic_cast<OIS::Keyboard *>(mInputManager->createInputObject(OIS::OISKeyboard, true));
         mKeyboard->setEventCallback(this);
     }
 
     if (mInputManager->getNumberOfDevices(OIS::OISMouse) > 0) {
-        mMouse = dynamic_cast<OIS::Mouse *>(mInputManager->createInputObject(OIS::OISMouse, false));
+        Logger::Trace("Initialize OIS mouse");
+        mMouse = dynamic_cast<OIS::Mouse *>(mInputManager->createInputObject(OIS::OISMouse, true));
         mMouse->setEventCallback(this);
     }
 
     // put all keys for keyboard
     for (const auto &pair: InputReader::kbOisToAME) {
-        mPreUpdateFrameData->pressed[pair.second] = false;
-        mPreUpdateFrameData->released[pair.second] = false;
+        mInputState->pressed[pair.second] = false;
+        mInputState->released[pair.second] = false;
     }
     // put all keys for mouse
     for (const auto &pair: InputReader::msOisToAME) {
-        mPreUpdateFrameData->pressed[pair.second] = false;
-        mPreUpdateFrameData->released[pair.second] = false;
+        mInputState->pressed[pair.second] = false;
+        mInputState->released[pair.second] = false;
     }
 }
 
@@ -55,8 +61,8 @@ AmE::InputReader::~InputReader() {
 
 void AmE::InputReader::collectCodes() {
     // reset all states
-    for (auto &[_, v]: mPreUpdateFrameData->pressed) v = false;
-    for (auto &[_, v]: mPreUpdateFrameData->released) v = false;
+    for (auto &[_, v]: mInputState->pressed) v = false;
+    for (auto &[_, v]: mInputState->released) v = false;
 
     // https://wiki.ogre3d.org/Using+OIS
 
@@ -90,7 +96,8 @@ bool AmE::InputReader::keyPressed(const OIS::KeyEvent &arg) {
     if (InputReader::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
-    mPreUpdateFrameData->pressed[kbOisToAME[arg.key]] = true;
+    Logger::Trace("Press keyboard: " + kbOisToAME[arg.key].toString());
+    mInputState->pressed[kbOisToAME[arg.key]] = true;
 
     return true;
 }
@@ -99,7 +106,8 @@ bool AmE::InputReader::keyReleased(const OIS::KeyEvent &arg) {
     if (InputReader::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
-    mPreUpdateFrameData->released[kbOisToAME[arg.key]] = true;
+    Logger::Trace("Release keyboard: " + kbOisToAME[arg.key].toString());
+    mInputState->released[kbOisToAME[arg.key]] = true;
 
     return true;
 }
@@ -114,7 +122,8 @@ bool AmE::InputReader::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButton
     if (InputReader::msOisToAME.find(id) == msOisToAME.end())
         return true;
 
-    mPreUpdateFrameData->pressed[msOisToAME[id]] = true;
+    Logger::Trace("Press mouse: " + msOisToAME[id].toString());
+    mInputState->pressed[msOisToAME[id]] = true;
 
     return true;
 }
@@ -123,7 +132,8 @@ bool AmE::InputReader::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButto
     if (InputReader::msOisToAME.find(id) == msOisToAME.end())
         return true;
 
-    mPreUpdateFrameData->released[msOisToAME[id]] = true;
+    Logger::Trace("Release mouse: " + msOisToAME[id].toString());
+    mInputState->released[msOisToAME[id]] = true;
 
     return true;
 }

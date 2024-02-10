@@ -6,13 +6,20 @@
 
 require 'Core/LuaBehaviour'
 
-CharacterController = LuaBehaviour:new()
+CharacterController = {}
 
-CharacterController.isGrounded = false
-CharacterController.center = Vector3.zero
-CharacterController.height = 1.8
-CharacterController.radius = 0.5
-CharacterController.velocity = 0.2
+function CharacterController:new()
+    instance = LuaBehaviour:new()
+    instance.isGrounded = false
+    instance.center = Vector3.zero
+    instance.height = 1.8
+    instance.radius = 0.5
+    instance.velocity = 0.2
+
+    setmetatable(instance, self)
+    self.__index = self
+    return instance
+end
 
 function CharacterController:Start()
     -- Debug.Log("Camera :: Start");

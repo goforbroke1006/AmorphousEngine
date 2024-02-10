@@ -30,7 +30,8 @@
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
             {"name": "camera", "type": "GameObjectTransform", "value": "0"},
-            {"name": "runningSpeed", "type": "double", "value": "2.0"}
+            {"name": "runningSpeed", "type": "double", "value": "2.0"},
+            {"name": "projectile", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"}
           ]
         }
       ]
@@ -54,7 +55,7 @@
           "pathname": "Scripts/BotsRespawnPoint",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "bot", "type": "PrefabPath", "value": "./Prefabs/TestLua53Generator_buildInitLuaCode--_03_scene_prefabs--Bot.json"}
+            {"name": "bot", "type": "PrefabPath", "value": "./Prefabs/Bot.json"}
           ]
         }
       ]

@@ -15,17 +15,14 @@
 namespace AmE {
     class Component {
     public:
-        std::string mName;
         std::string mPathname;
         std::map<std::string, Property> mProperties;
 
         Component() = default;
 
-        Component(std::string name,
-                  std::string pathname,
+        Component(std::string pathname,
                   std::map<std::string, Property> properties
-        ) : mName(std::move(name)),
-            mPathname(std::move(pathname)),
+        ) : mPathname(std::move(pathname)),
             mProperties(std::move(properties)) {
             if (mProperties.find("enabled") == mProperties.end())
                 mProperties["enabled"] = Property{"enabled", PropType::PropTypeBoolean, true};
@@ -43,6 +40,18 @@ namespace AmE {
 
         [[nodiscard]] bool isEnabled() const {
             return std::any_cast<bool>(mProperties.at("enabled").mValue);
+        }
+
+        [[nodiscard]] std::string getName() const {
+            // TODO: do better solution for extracting component's name
+            std::string cmpName;
+            if ("Component/" == mPathname.substr(0, 10)) cmpName = mPathname.substr(10);
+            if ("Scripts/" == mPathname.substr(0, 8)) cmpName = mPathname.substr(8);
+            return cmpName;
+        }
+
+        [[nodiscard]] bool isFromLib() const {
+            return "Component/" == mPathname.substr(0, 10);
         }
     };
 }

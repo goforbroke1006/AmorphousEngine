@@ -25,11 +25,23 @@ end
 function PlayerController:Update()
     if Input.GetButtonDown("Fire1") and self.reloading <= 0.0 then
         Debug.Log("Fire!!!")
-        Object.Instantiate(
+
+        for cmpKey, cmpInst in pairs(__all_components) do
+            Debug.Log("BEFORE: " .. cmpKey .. " for " .. cmpInst.gameObject.name)
+        end
+
+        local projectile = Object.Instantiate(
                 self.projectilePrefab,
                 self.transform.position,
                 self.transform.rotation
         );
+        Debug.Log("Create projectile " .. projectile:GetInstanceID())
+
+        for cmpKey, cmpInst in pairs(__all_components) do
+            Debug.Log("AFTER: " .. cmpKey .. " for " .. cmpInst.gameObject.name)
+        end
+
+        --Debug.Log("Create projectile " .. projectile.__instanceID)
         self.reloading = self.reloadingTimeout
     end
 
@@ -38,7 +50,7 @@ function PlayerController:Update()
         if self.reloading <= 0.0 then
             Debug.Log("Projectile is loaded")
         else
-            Debug.Log("Projectile will ready in " .. self.reloading .. " seconds")
+            -- Debug.Log("Projectile will ready in " .. self.reloading .. " seconds")
         end
     end
 

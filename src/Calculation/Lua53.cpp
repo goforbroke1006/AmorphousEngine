@@ -39,6 +39,8 @@ AmE::Lua53::Lua53(const std::string &engineRoot, const std::string &projectRoot)
 //    setLuaPathCode += "package.path = package.path .. ';" + projectRoot + "?.lua'\n";
     setLuaPathCode += "print(package.path)\n";
 
+    Logger::Debug("\n" + setLuaPathCode);
+
     luaL_loadstring(*L, setLuaPathCode.c_str());
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
@@ -63,7 +65,7 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
 
     const std::string &initCode = Lua53Generator::buildInitLuaCode(sceneState);
     luaL_loadstring(*L, initCode.c_str());
-//    Logger::Trace("\n" + initCode);
+    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
@@ -74,23 +76,6 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
 
         throw std::runtime_error(lua_tostring(*L, 1));
     }
-
-//    {
-//        std::string prefabsLoadingCode;
-//
-//        for (const auto &[path, pGO]: sceneState->getPrefabGameObjects()) {
-//            prefabsLoadingCode +=
-//                    "__global_prefab_game_objects['" + path + "'] = GameObject:new(-1, '" + pGO->getName() + "')\n"
-//                    + "__global_prefab_game_objects['" + path + "'].transform.position";
-//        }
-//
-//        luaL_loadstring(*L, prefabsLoadingCode.c_str());
-//        int res = lua_pcall(*L, 0, 0, 0);
-//        if (res != LUA_OK) {
-//            L->PrintStack(std::cerr);
-//            throw std::runtime_error(lua_tostring(*L, 1));
-//        }
-//    }
 
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);
@@ -136,83 +121,92 @@ void AmE::Lua53::update(
     // extract scene state
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);
-    for (const auto &[_, luaGameObjTbl]: mGameObjectsTbl.getValues()) {
-        auto *goTbl = (LETable *) luaGameObjTbl.get();
+    for (const auto &[luaTblIdx, luaGameObjTbl]: mGameObjectsTbl.getValues()) {
+        try {
+            auto *goTbl = (LETable *) luaGameObjTbl.get();
 
-        auto &idVal = goTbl->getValue(LETKey(GO_PROP_INSTANCE_ID));
-        auto id = (GameObjectInstanceID) ((LENum &) idVal).getValue();
+            auto &idVal = goTbl->getValue(LETKey(GO_PROP_INSTANCE_ID));
+            auto id = (GameObjectInstanceID) ((LENum &) idVal).getValue();
 
-        GameObject *pGameObj = sceneState->getSceneGameObject(id);
+            GameObject *pGameObj = sceneState->getSceneGameObject(id);
 
-        // register new GO, that was created with user scripts
-        if (nullptr == pGameObj) {
-            auto &nameVal = ((LEString &) goTbl->getValue(LETKey(GO_PROP_NAME)));
-            pGameObj = new GameObject(id, nameVal.getValue());
-            sceneState->addSceneGameObject(pGameObj);
-        }
+            // register new GO, that was created with user scripts
+            if (nullptr == pGameObj) {
+                auto &nameVal = ((LEString &) goTbl->getValue(LETKey(GO_PROP_NAME)));
+                pGameObj = new GameObject(id, nameVal.getValue());
+                sceneState->addSceneGameObject(pGameObj);
+            }
 
-        {
-            auto &transform = (LETable &) goTbl->getValue(LETKey(CMP_PROP_TR));
+            {
+                auto &transform = (LETable &) goTbl->getValue(LETKey(CMP_PROP_TR));
 
-            auto &position = (LETable &) transform.getValue(LETKey(CMP_PROP_TR_POS));
-            auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
-            auto &localScale = (LETable &) transform.getValue(LETKey("localScale"));
+                auto &position = (LETable &) transform.getValue(LETKey(CMP_PROP_TR_POS));
+                auto &rotation = (LETable &) transform.getValue(LETKey("rotation"));
+                auto &localScale = (LETable &) transform.getValue(LETKey("localScale"));
 
-            pGameObj->getTransform()->mPosition.Set(
-                    ((LENum &) position.getValue(LETKey("x"))).getValue(),
-                    ((LENum &) position.getValue(LETKey("y"))).getValue(),
-                    ((LENum &) position.getValue(LETKey("z"))).getValue()
-            );
-            pGameObj->getTransform()->mRotation.Set(
-                    ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
-                    ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
-                    ((LENum &) rotation.getValue(LETKey("z"))).getValue(),
-                    ((LENum &) rotation.getValue(LETKey("w"))).getValue()
-            );
-            pGameObj->getTransform()->mLocalScale.Set(
-                    ((LENum &) localScale.getValue(LETKey("x"))).getValue(),
-                    ((LENum &) localScale.getValue(LETKey("y"))).getValue(),
-                    ((LENum &) localScale.getValue(LETKey("z"))).getValue()
-            );
+                pGameObj->getTransform()->mPosition.Set(
+                        ((LENum &) position.getValue(LETKey("x"))).getValue(),
+                        ((LENum &) position.getValue(LETKey("y"))).getValue(),
+                        ((LENum &) position.getValue(LETKey("z"))).getValue()
+                );
+                pGameObj->getTransform()->mRotation.Set(
+                        ((LENum &) rotation.getValue(LETKey("x"))).getValue(),
+                        ((LENum &) rotation.getValue(LETKey("y"))).getValue(),
+                        ((LENum &) rotation.getValue(LETKey("z"))).getValue(),
+                        ((LENum &) rotation.getValue(LETKey("w"))).getValue()
+                );
+                pGameObj->getTransform()->mLocalScale.Set(
+                        ((LENum &) localScale.getValue(LETKey("x"))).getValue(),
+                        ((LENum &) localScale.getValue(LETKey("y"))).getValue(),
+                        ((LENum &) localScale.getValue(LETKey("z"))).getValue()
+                );
+            }
+        } catch (std::out_of_range &ex) {
+            Logger::Error("GameObject parsing failed: " + luaTblIdx.ToString());
         }
     }
 
-    for (const auto &cmpState: mComponentsTbl.getValues()) {
-        auto *cmpTbl = (LETable *) cmpState.second.get();
+    for (const auto &[luaIdx, luaCmp]: mComponentsTbl.getValues()) {
+        try {
+            auto *cmpTbl = (LETable *) luaCmp.get();
 
-        LETable &goVal = (LETable &) cmpTbl->getValue(LETKey(CMP_PROP_GO));
-        const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(LETKey(GO_PROP_INSTANCE_ID))).getValue();
+            LETable &goVal = (LETable &) cmpTbl->getValue(LETKey(CMP_PROP_GO));
+            const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(
+                    LETKey(GO_PROP_INSTANCE_ID))).getValue();
 
-        const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
+            const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 
-        auto *pCmp = sceneState->getSceneGameObject(goID)->getComponent(cmpName);
+            auto *pCmp = sceneState->getSceneGameObject(goID)->getComponent(cmpName);
 
-        for (const auto &luaAttrState: cmpTbl->getValues()) {
-            std::string luaAttrName = luaAttrState.first.ToString();
-            std::string luaAttrVal = luaAttrState.second->ToString();
+            for (const auto &[luaAttrName, luaAttrVal]: cmpTbl->getValues()) {
+                std::string attrName = luaAttrName.ToString();
+                std::string attrVal = luaAttrVal->ToString();
 
-            // skip "Start", "Update" and another functions of component
-            if (luaAttrVal == "function")
-                continue;
+                // skip "Start", "Update" and another functions of component
+                if (attrName == "function")
+                    continue;
 
-            if (luaAttrName == "__name")
-                continue;
-            if (luaAttrName == CMP_PROP_GO)
-                continue;
-            if (luaAttrName == CMP_PROP_TR)
-                continue;
+                if (attrName == "__name")
+                    continue;
+                if (attrName == CMP_PROP_GO)
+                    continue;
+                if (attrName == CMP_PROP_TR)
+                    continue;
 
-            // skip private fields of component
-            if (pCmp->mProperties.find(luaAttrName) == pCmp->mProperties.end())
-                continue;
+                // skip private fields of component
+                if (pCmp->mProperties.find(attrName) == pCmp->mProperties.end())
+                    continue;
 
-            PropType::Kind kind = pCmp->mProperties[luaAttrName].mType;
-            if (kind == PropType::PropTypeGameObject)
-                continue;
-            if (kind == PropType::PropTypeGameObjectTransform)
-                continue;
+                PropType::Kind kind = pCmp->mProperties[attrName].mType;
+                if (kind == PropType::PropTypeGameObject)
+                    continue;
+                if (kind == PropType::PropTypeGameObjectTransform)
+                    continue;
 
-            pCmp->mProperties[luaAttrName].mValue = parsePropValFromLua(kind, luaAttrState.second.get());
+                pCmp->mProperties[attrName].mValue = parsePropValFromLua(kind, luaAttrVal.get());
+            }
+        } catch (std::out_of_range &ex) {
+            Logger::Error(std::string() + "Component parsing failed: " + ex.what() + ": " + luaIdx.ToString());
         }
     }
 

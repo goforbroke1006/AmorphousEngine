@@ -87,26 +87,6 @@ size_t AmE::OgreOne::getWindowHnd() const {
 
 void AmE::OgreOne::initialize(const AmE::SceneState *const sceneState) {
     for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
-//        if (pGameObj->isCamera()) {
-//            createCameraNode(pGameObj);
-//        } else if (pGameObj->isLight()) {
-//            auto color = pGameObj->getComponent("Light")->mProperties["color"].asColor();
-//
-//            auto *light = mSceneManager->createLight();
-//            light->setType(Ogre::Light::LT_POINT);
-//            light->setDiffuseColour((Ogre::Real) color.mR, (Ogre::Real) color.mG, (Ogre::Real) color.mB);
-//            light->setSpecularColour((Ogre::Real) color.mR, (Ogre::Real) color.mG, (Ogre::Real) color.mB);
-//
-//            auto *spotLightNode = mSceneManager->getRootSceneNode()->createChildSceneNode();
-//            spotLightNode->attachObject(light);
-//            spotLightNode->setDirection(-1, -1, 0);
-//            spotLightNode->setPosition(Ogre::Vector3(0, 0, 0));
-//
-//            mSceneNodes[pGameObj->getID()] = spotLightNode;
-//        } else {
-//            createSceneNode(pGameObj);
-//        }
-
         initOrUpdateNode(pGameObj);
     }
 }
@@ -114,23 +94,6 @@ void AmE::OgreOne::initialize(const AmE::SceneState *const sceneState) {
 bool AmE::OgreOne::update(const AmE::SceneState *const sceneState) {
     if (mWindow->isVisible() && !mQuit) {
         for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
-//            if (pGameObj->isCamera()) {
-//                bool isNewObj = mSceneNodes.find(pGameObj->getID()) == mSceneNodes.end();
-//
-//                if (isNewObj)
-//                    createCameraNode(pGameObj);
-//                else
-//                    updateCameraNode(pGameObj);
-//            } else if (pGameObj->isLight()) {
-//                // TODO: ???
-//            } else {
-//                bool isNewObj = mSceneNodes.find(pGameObj->getID()) == mSceneNodes.end();
-//
-//                if (isNewObj)
-//                    createSceneNode(pGameObj);
-//                else
-//                    updateSceneNode(pGameObj);
-//            }
             initOrUpdateNode(pGameObj);
         }
 
@@ -142,112 +105,6 @@ bool AmE::OgreOne::update(const AmE::SceneState *const sceneState) {
 
 void AmE::OgreOne::stop() {
     mRoot->saveConfig();
-}
-
-void AmE::OgreOne::createCameraNode(const GameObject *const gameObjectPtr) {
-    mSceneNodes[gameObjectPtr->getID()] = mSceneManager->getRootSceneNode()->createChildSceneNode();
-
-    if (gameObjectPtr->getComponent("Camera")->isEnabled()) {
-//        auto backgroundColor = std::any_cast<Color>(
-//                gameObjectPtr->getComponent("Camera")->mProperties.at("backgroundColor").mValue);
-//
-//        const Ogre::ColourValue backgroundColour(
-//                (float) backgroundColor.mR,
-//                (float) backgroundColor.mG,
-//                (float) backgroundColor.mB,
-//                (float) backgroundColor.mA);
-//        mWindow->getViewport(0)->setBackgroundColour(backgroundColour);
-
-        auto nearClipPlane = gameObjectPtr->getComponent("Camera")->mProperties.at("nearClipPlane").asDouble();
-        auto farClipPlane = gameObjectPtr->getComponent("Camera")->mProperties.at("farClipPlane").asDouble();
-
-        Ogre::Camera *cam = mSceneManager->createCamera(gameObjectPtr->getName());
-        cam->setNearClipDistance((Ogre::Real) nearClipPlane);
-        cam->setFarClipDistance((Ogre::Real) farClipPlane);
-        cam->setAutoAspectRatio(true);
-
-        mWindow->addViewport(cam);
-
-        mSceneNodes[gameObjectPtr->getID()]->attachObject(cam);
-    }
-
-    updateCameraNode(gameObjectPtr);
-}
-
-void AmE::OgreOne::updateCameraNode(const GameObject *const gameObjectPtr) {
-    auto *tr = gameObjectPtr->getTransform();
-    auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
-    auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
-
-    mSceneNodes[gameObjectPtr->getID()]->setPosition(
-            (Ogre::Real) pos.getX(),
-            (Ogre::Real) pos.getY(),
-            (Ogre::Real) pos.getZ()
-    );
-
-    mSceneNodes[gameObjectPtr->getID()]->setOrientation(
-            Ogre::Quaternion(
-                    (Ogre::Real) rot.getW(),
-                    (Ogre::Real) rot.getX(),
-                    (Ogre::Real) rot.getY(),
-                    (Ogre::Real) rot.getZ()
-            )
-    );
-
-    if (nullptr != mWindow->getViewport(0)) {
-        auto backgroundColor = std::any_cast<Color>(
-                gameObjectPtr->getComponent("Camera")->mProperties.at("backgroundColor").mValue);
-
-        const Ogre::ColourValue backgroundColour(
-                (float) backgroundColor.mR,
-                (float) backgroundColor.mG,
-                (float) backgroundColor.mB,
-                (float) backgroundColor.mA);
-        mWindow->getViewport(0)->setBackgroundColour(backgroundColour);
-    }
-}
-
-void AmE::OgreOne::createSceneNode(const GameObject *const gameObjectPtr) {
-    auto *sceneNode = mSceneManager->getRootSceneNode()->createChildSceneNode(gameObjectPtr->getName());
-    mSceneNodes[gameObjectPtr->getID()] = sceneNode;
-
-    if (!gameObjectPtr->getMeshPathname().empty()) {
-        Ogre::Entity *ent = mSceneManager->createEntity(gameObjectPtr->getMeshPathname());
-        sceneNode->attachObject((Ogre::MovableObject *) ent);
-    }
-
-    updateSceneNode(gameObjectPtr);
-}
-
-void AmE::OgreOne::updateSceneNode(const GameObject *const gameObjectPtr) {
-    auto *tr = gameObjectPtr->getTransform();
-
-    auto pos = GraphicsEngine::convertPositionLeftToRightHand(tr->mPosition);
-    auto rot = GraphicsEngine::convertRotationLeftToRightHand(tr->mRotation);
-    auto &scale = tr->mLocalScale;
-
-    mSceneNodes[gameObjectPtr->getID()]->setPosition(
-            Ogre::Vector3(
-                    (Ogre::Real) pos.getX(),
-                    (Ogre::Real) pos.getY(),
-                    (Ogre::Real) pos.getZ()
-            )
-    );
-    mSceneNodes[gameObjectPtr->getID()]->setOrientation(
-            Ogre::Quaternion(
-                    (Ogre::Real) rot.getW(),
-                    (Ogre::Real) rot.getX(),
-                    (Ogre::Real) rot.getY(),
-                    (Ogre::Real) rot.getZ()
-            )
-    );
-    mSceneNodes[gameObjectPtr->getID()]->setScale(
-            Ogre::Vector3(
-                    (Ogre::Real) scale.getX(),
-                    (Ogre::Real) scale.getY(),
-                    (Ogre::Real) scale.getZ()
-            )
-    );
 }
 
 void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
@@ -292,7 +149,8 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
         );
     }
 
-    if (pGameObject->isCamera() && pGameObject->getComponent("Camera")->isEnabled()) {
+    Component *pCameraComponent = pGameObject->getComponent("Component/Camera");
+    if (nullptr != pCameraComponent && pCameraComponent->isEnabled()) {
         std::string cameraName = "Camera: " + pGameObject->getName();
 
         if (isNew) {
@@ -305,8 +163,8 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
                 mSceneNodes[pGameObject->getID()]->getAttachedObject(cameraName)
         );
 
-        auto nearClipPlane = pGameObject->getComponent("Camera")->mProperties.at("nearClipPlane").asDouble();
-        auto farClipPlane = pGameObject->getComponent("Camera")->mProperties.at("farClipPlane").asDouble();
+        auto nearClipPlane = pCameraComponent->mProperties.at("nearClipPlane").asDouble();
+        auto farClipPlane = pCameraComponent->mProperties.at("farClipPlane").asDouble();
 
         cam->setNearClipDistance((Ogre::Real) nearClipPlane);
         cam->setFarClipDistance((Ogre::Real) farClipPlane);
@@ -315,7 +173,7 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
         const unsigned short defaultViewport = 0;
         if (nullptr != mWindow->getViewport(defaultViewport)) {
             auto backgroundColor =
-                    pGameObject->getComponent("Camera")->mProperties.at("backgroundColor").asColor();
+                    pCameraComponent->mProperties.at("backgroundColor").asColor();
 
             const Ogre::ColourValue backgroundColour(
                     (float) backgroundColor.mR,
@@ -329,7 +187,8 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
         return;
     }
 
-    if (pGameObject->isLight() && pGameObject->getComponent("Light")->isEnabled()) {
+    Component *pLightComponent = pGameObject->getComponent("Component/Light");
+    if (nullptr != pLightComponent && pLightComponent->isEnabled()) {
         std::string lightName = "Light: " + pGameObject->getName();
 
         if (isNew) {
@@ -346,11 +205,11 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
                 mSceneNodes[pGameObject->getID()]->getAttachedObject(lightName)
         );
 
-        auto color = pGameObject->getComponent("Light")->mProperties["color"].asColor();
+        auto color = pLightComponent->mProperties["color"].asColor();
         light->setDiffuseColour((Ogre::Real) color.mR, (Ogre::Real) color.mG, (Ogre::Real) color.mB);
         light->setSpecularColour((Ogre::Real) color.mR, (Ogre::Real) color.mG, (Ogre::Real) color.mB);
 
-        auto type = Light::parse(pGameObject->getComponent("Light")->mProperties["type"].asString());
+        auto type = Light::parse(pLightComponent->mProperties["type"].asString());
         switch (type) {
             case LightType::Point: {
                 light->setType(Ogre::Light::LT_POINT);
@@ -372,9 +231,11 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
         return;
     }
 
-    if (!pGameObject->getMeshPathname().empty()) {
+    if (pGameObject->hasMeshRender()) {
         if (isNew) {
-            Ogre::Entity *ent = mSceneManager->createEntity(pGameObject->getMeshPathname());
+            Ogre::Entity *ent = mSceneManager->createEntity(
+                    pGameObject->getComponent("Component/MeshRender")->mProperties["path"].asString()
+            );
             mSceneNodes[pGameObject->getID()]->attachObject((Ogre::MovableObject *) ent);
         }
     }
