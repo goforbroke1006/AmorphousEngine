@@ -19,17 +19,25 @@ mkdir -p cmake-build-release
 #
 #
 
-rm -rf ./release
+#rm -rf ./release
 mkdir -p ./release
 
 cat <<EOT > ./release/launcher
 #!/usr/bin/env bash
 
+set -e
+
 SCRIPT_DIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-PROJECT_DIR="\$(pwd)"
+PROJECT_DIR="\$PWD"
+
+#SCRIPT_DIR=\$(realpath \$(pwd)/\${SCRIPT_DIR})
+#PROJECT_DIR=\$(realpath \$(pwd)/\${PROJECT_DIR})
+
 cd "\${SCRIPT_DIR}"
 
-LD_LIBRARY_PATH=. ./AmorphousEngine OgreNext "\${SCRIPT_DIR}" "\${PROJECT_DIR}" "\${PROJECT_DIR}/Scenes/level-0.json"
+echo "Engine:  \${SCRIPT_DIR}"
+echo "Project: \${PROJECT_DIR}"
+LD_LIBRARY_PATH=. ./AmorphousEngine Ogre "\${SCRIPT_DIR}" "\${PROJECT_DIR}" "\${PROJECT_DIR}/Scenes/level-0.json"
 
 EOT
 
@@ -47,6 +55,9 @@ cp ~/ogre/build/Release/lib/RenderSystem_GLES2.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/Plugin_ParticleFX.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/Plugin_BSPSceneManager.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/Codec_STBI.so.14.1 ./release/
+
+cp /usr/lib/x86_64-linux-gnu/libIrrlicht.so.1.8.5 ./release/
+cp /usr/lib/x86_64-linux-gnu/libIrrlicht.so.1.8 ./release/
 
 rm -rf release/Component
 cp -r ./Component/ ./release/

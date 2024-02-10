@@ -16,15 +16,20 @@ no)
   ;;
 esac
 
-sudo rm -rf /usr/local/include/OGRE/
-sudo rm -rf /usr/local/lib/OGRE/
-sudo rm -f /usr/local/lib/libOgre*
-sudo rm -f /usr/local/lib/pkgconfig/OGRE*
-sudo rm -rf /usr/local/share/OGRE/
+sudo rm -f \
+  /usr/local/lib/libOgre*         \
+  /usr/local/bin/OgreXMLConverter \
+  /usr/local/bin/VRMLConverter    \
+  /usr/local/bin/OgreMeshUpgrader
+sudo rm -rf \
+  /usr/local/include/OGRE/    \
+  /usr/local/lib/OGRE/        \
+  /usr/local/share/OGRE-14.1/ \
+  /usr/local/share/doc/OGRE/
 
-sudo rm -rf /usr/local/include/LuaCpp/
+# Remove LuaCPP
 sudo rm -f /usr/local/lib/libluacpp*
-sudo rm -rf /usr/local/lib/LuaCpp/
+sudo rm -rf /usr/local/include/LuaCpp/ /usr/local/lib/LuaCpp/
 
 sudo apt remove lua5.3 liblua5.3-dev
 

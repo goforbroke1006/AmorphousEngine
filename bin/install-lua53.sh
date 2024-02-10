@@ -18,6 +18,7 @@ mkdir -p third_party
     git clone https://github.com/jordanvrtanoski/luacpp.git
   else
     cd luacpp
+    git checkout main
     git pull
     cd ..
   fi

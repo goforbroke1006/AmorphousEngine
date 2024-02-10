@@ -5,8 +5,8 @@ CXX_STANDARD=14
 
 set -e
 
-sudo apt-get install libgles2-mesa-dev
-sudo apt-get install libsdl2-dev libxt-dev libxaw7-dev doxygen
+sudo apt-get install libgles2-mesa-dev -y
+sudo apt-get install libsdl2-dev libxt-dev libxaw7-dev doxygen -y
 
 cd ~
 if [[ -d ./ogre ]]; then

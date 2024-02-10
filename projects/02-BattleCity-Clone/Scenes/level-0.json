@@ -126,7 +126,7 @@
     {
       "name": "Player 1",
       "transform": {
-        "position": {"x": -20.0, "y": 5.0, "z": -60.0},
+        "position": {"x": -20.0, "y": 0.0, "z": -60.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
         "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
       },
