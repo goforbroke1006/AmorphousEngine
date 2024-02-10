@@ -40,9 +40,6 @@ cp ./third_party/luacpp/build/libluacpp.so ./release/
 cp ~/ogre/build/Release/lib/libOgreMain.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/libOgreBites.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/libOgreRTShaderSystem.so.14.1 ./release/
-#cp ./third_party/ogre-next/build/Release/lib/libOgreMain.so.2.3.3 ./release/
-#cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsPbs.so.2.3.3 ./release/
-#cp ./third_party/ogre-next/build/Release/lib/libOgreHlmsUnlit.so.2.3.3 ./release/
 
 cp ~/ogre/build/Release/lib/RenderSystem_GL.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/RenderSystem_GL3Plus.so.14.1 ./release/
@@ -50,10 +47,6 @@ cp ~/ogre/build/Release/lib/RenderSystem_GLES2.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/Plugin_ParticleFX.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/Plugin_BSPSceneManager.so.14.1 ./release/
 cp ~/ogre/build/Release/lib/Codec_STBI.so.14.1 ./release/
-#cp ./third_party/ogre-next/build/Release/lib/RenderSystem_GL3Plus.so.2.3.3 ./release/
-#cp ./third_party/ogre-next/build/Release/lib/Plugin_ParticleFX.so.2.3.3 ./release/
-
-#cp ./third_party/ogre-next/build/Release/bin/OgreMeshTool ./release/
 
 rm -rf release/Component
 cp -r ./Component/ ./release/
@@ -106,6 +99,8 @@ else
   OS_NAME='unknown'
   OS_ARCH='unknown'
 fi
+
+sudo chmod -R 0777 ./release
 
 rm -f "./release-${OS_NAME}-${OS_ARCH}.zip"
 zip -r "./release-${OS_NAME}-${OS_ARCH}" ./release
