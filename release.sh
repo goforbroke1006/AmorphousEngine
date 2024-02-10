@@ -45,16 +45,8 @@ chmod +x ./release/launcher
 
 cp ./third_party/luacpp/build/libluacpp.so ./release/
 
-cp ~/ogre/build/Release/lib/libOgreMain.so.14.1 ./release/
-cp ~/ogre/build/Release/lib/libOgreBites.so.14.1 ./release/
-cp ~/ogre/build/Release/lib/libOgreRTShaderSystem.so.14.1 ./release/
-
-cp ~/ogre/build/Release/lib/RenderSystem_GL.so.14.1 ./release/
-cp ~/ogre/build/Release/lib/RenderSystem_GL3Plus.so.14.1 ./release/
-cp ~/ogre/build/Release/lib/RenderSystem_GLES2.so.14.1 ./release/
-cp ~/ogre/build/Release/lib/Plugin_ParticleFX.so.14.1 ./release/
-cp ~/ogre/build/Release/lib/Plugin_BSPSceneManager.so.14.1 ./release/
-cp ~/ogre/build/Release/lib/Codec_STBI.so.14.1 ./release/
+cp ~/ogre/build/Release/lib/*.so ./release/
+cp ~/ogre/build/Release/lib/*.so.* ./release/
 
 cp /usr/lib/x86_64-linux-gnu/libIrrlicht.so.1.8.5 ./release/
 cp /usr/lib/x86_64-linux-gnu/libIrrlicht.so.1.8 ./release/
@@ -65,6 +57,7 @@ cp -r ./Component/ ./release/
 rm -rf release/Core
 cp -r ./Core/ ./release/
 
+sudo cp /usr/local/lib/libOIS.so.1.5.0 ./release/
 sudo cp /usr/local/lib/libOIS.so.1.5.1 ./release/
 
 cp ./plugins.cfg ./release/

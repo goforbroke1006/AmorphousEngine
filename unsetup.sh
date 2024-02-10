@@ -1,21 +1,5 @@
 #!/bin/bash
 
-read -p "Do you want to remove local builds? (yes/no) " yn
-case $yn in
-yes)
-  sudo rm -rf ./third_party/luacpp/build/
-  sudo rm -rf ./third_party/ogre-next-deps/build/
-  sudo rm -rf ./third_party/ogre-next/build/
-  ;;
-no)
-  echo Leave local builds
-  ;;
-*)
-  echo invalid response
-  exit 1
-  ;;
-esac
-
 sudo rm -f \
   /usr/local/lib/libOgre*         \
   /usr/local/bin/OgreXMLConverter \
@@ -31,9 +15,9 @@ sudo rm -rf \
 sudo rm -f /usr/local/lib/libluacpp*
 sudo rm -rf /usr/local/include/LuaCpp/ /usr/local/lib/LuaCpp/
 
-sudo apt remove lua5.3 liblua5.3-dev
+sudo apt remove lua5.3 liblua5.3-dev -y
 
-sudo apt-get remove libirrlicht1.8 libirrlicht-dev libirrlicht-doc
+sudo apt-get remove libirrlicht1.8 libirrlicht-dev libirrlicht-doc -y
 
 # Deps for ColladaOgreImporter
 #sudo apt remove -y \
