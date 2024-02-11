@@ -4,13 +4,12 @@
 
 #include <gtest/gtest.h>
 
-#include <fstream>
-#include <filesystem>
-
 #include "../../include/Application.h"
 
-//TEST(TestApplication_buildInitLuaCode, _00_empty_scene) {
-//    const auto &actual = Lua53("./").buildInitLuaCode({});
+//namespace AmE {
+//    TEST(TestApplication_loadScene, loadScene) {
+//        auto *app = new Application("","", nullptr, nullptr);
 //
-//    EXPECT_EQ("", actual);
+//        EXPECT_EQ("", actual);
+//    }
 //}

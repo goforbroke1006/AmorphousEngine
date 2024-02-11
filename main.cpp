@@ -11,6 +11,7 @@
 #include "include/Graphics/OgreOne.h"
 #include "include/Graphics/Irrlicht.h"
 #include "include/Calculation/Lua53.h"
+#include "include/InputReaderOIS.h"
 
 int main(int argc, char **argv) {
     // Usage:
@@ -57,7 +58,10 @@ int main(int argc, char **argv) {
     }
 
     auto *pCalculationEngine = new AmE::Lua53(engineRoot, projectRoot);
-    auto *pApplication = new AmE::Application(engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine);
+    auto pInputReader = new AmE::InputReaderOIS(pGraphicsEngine->getWindowHnd());
+
+    auto *pApplication = new AmE::Application(
+            engineRoot, projectRoot, pGraphicsEngine, pCalculationEngine, pInputReader);
     pApplication->loadScene(sceneFilename);
     pApplication->runMainLoop();
 

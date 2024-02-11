@@ -1,0 +1,69 @@
+{
+  "gameObjects": [
+    {
+      "name": "Application System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "name": "ApplicationSystem",
+          "pathname": "Scripts/ApplicationSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Main Camera",
+      "transform": {
+        "position": {"x": 0.0, "y": 150.0, "z": -150.0},
+        "rotation": {"x": -45.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "name": "Camera",
+          "pathname": "Component/Camera",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "backgroundColor", "type": "Color", "value": "0.0 0.25 1.0 1.0"},
+            {"name": "nearClipPlane", "type": "double", "value": "0.1"},
+            {"name": "farClipPlane", "type": "double", "value": "1000.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player 1",
+      "transform": {
+        "position": {"x": -20.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "name": "MeshRender",
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Tank001.mesh"}
+          ]
+        },
+        {
+          "name": "PlayerController",
+          "pathname": "Scripts/PlayerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "10.0"},
+            {"name": "reloadingTimeout", "type": "double", "value": "2.0"},
+            {"name": "projectilePrefab", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"}
+          ]
+        }
+      ]
+    }
+  ]
+}

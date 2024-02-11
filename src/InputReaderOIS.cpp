@@ -2,12 +2,12 @@
 // Created by goforbroke on 1/13/24.
 //
 
-#include "../include/InputReader.h"
+#include "../include/InputReaderOIS.h"
 
 #include <sstream>
 
-AmE::InputReader::InputReader(const size_t windowHnd, InputsState *const pInputState) {
-    mInputState = pInputState;
+AmE::InputReaderOIS::InputReaderOIS(const size_t windowHnd) {
+    mInputState = new InputsState();
 
     mInputManager = nullptr;
     mKeyboard = nullptr;
@@ -33,18 +33,18 @@ AmE::InputReader::InputReader(const size_t windowHnd, InputsState *const pInputS
     }
 
     // put all keys for keyboard
-    for (const auto &pair: InputReader::kbOisToAME) {
+    for (const auto &pair: InputReaderOIS::kbOisToAME) {
         mInputState->pressed[pair.second] = false;
         mInputState->released[pair.second] = false;
     }
     // put all keys for mouse
-    for (const auto &pair: InputReader::msOisToAME) {
+    for (const auto &pair: InputReaderOIS::msOisToAME) {
         mInputState->pressed[pair.second] = false;
         mInputState->released[pair.second] = false;
     }
 }
 
-AmE::InputReader::~InputReader() {
+AmE::InputReaderOIS::~InputReaderOIS() {
     if (mMouse) {
         mInputManager->destroyInputObject(mMouse);
         mMouse = nullptr;
@@ -59,7 +59,7 @@ AmE::InputReader::~InputReader() {
     mInputManager = nullptr;
 }
 
-void AmE::InputReader::collectCodes() {
+void AmE::InputReaderOIS::collectCodes() {
     // reset all states
     for (auto &[_, v]: mInputState->pressed) v = false;
     for (auto &[_, v]: mInputState->released) v = false;
@@ -70,7 +70,11 @@ void AmE::InputReader::collectCodes() {
     if (mMouse != nullptr) mMouse->capture();
 }
 
-std::map<OIS::KeyCode, AmE::KeyCode> AmE::InputReader::kbOisToAME = {
+AmE::InputsState *AmE::InputReaderOIS::getState() const {
+    return mInputState;
+}
+
+std::map<OIS::KeyCode, AmE::KeyCode> AmE::InputReaderOIS::kbOisToAME = {
         {OIS::KC_W,        KeyCode_W},
         {OIS::KC_A,        KeyCode_A},
         {OIS::KC_S,        KeyCode_S},
@@ -86,14 +90,14 @@ std::map<OIS::KeyCode, AmE::KeyCode> AmE::InputReader::kbOisToAME = {
         {OIS::KC_SPACE,    KeyCode_Space},
 };
 
-std::map<OIS::MouseButtonID, AmE::KeyCode> AmE::InputReader::msOisToAME = {
+std::map<OIS::MouseButtonID, AmE::KeyCode> AmE::InputReaderOIS::msOisToAME = {
         {OIS::MB_Left,   KeyCode_Mouse0},
         {OIS::MB_Right,  KeyCode_Mouse1},
         {OIS::MB_Middle, KeyCode_Mouse2},
 };
 
-bool AmE::InputReader::keyPressed(const OIS::KeyEvent &arg) {
-    if (InputReader::kbOisToAME.find(arg.key) == kbOisToAME.end())
+bool AmE::InputReaderOIS::keyPressed(const OIS::KeyEvent &arg) {
+    if (InputReaderOIS::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
     Logger::Trace("Press keyboard: " + kbOisToAME[arg.key].toString());
@@ -102,8 +106,8 @@ bool AmE::InputReader::keyPressed(const OIS::KeyEvent &arg) {
     return true;
 }
 
-bool AmE::InputReader::keyReleased(const OIS::KeyEvent &arg) {
-    if (InputReader::kbOisToAME.find(arg.key) == kbOisToAME.end())
+bool AmE::InputReaderOIS::keyReleased(const OIS::KeyEvent &arg) {
+    if (InputReaderOIS::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
     Logger::Trace("Release keyboard: " + kbOisToAME[arg.key].toString());
@@ -112,14 +116,14 @@ bool AmE::InputReader::keyReleased(const OIS::KeyEvent &arg) {
     return true;
 }
 
-bool AmE::InputReader::mouseMoved(const OIS::MouseEvent &arg) {
+bool AmE::InputReaderOIS::mouseMoved(const OIS::MouseEvent &arg) {
     // TODO: implement me
 
     return true;
 }
 
-bool AmE::InputReader::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-    if (InputReader::msOisToAME.find(id) == msOisToAME.end())
+bool AmE::InputReaderOIS::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+    if (InputReaderOIS::msOisToAME.find(id) == msOisToAME.end())
         return true;
 
     Logger::Trace("Press mouse: " + msOisToAME[id].toString());
@@ -128,8 +132,8 @@ bool AmE::InputReader::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButton
     return true;
 }
 
-bool AmE::InputReader::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-    if (InputReader::msOisToAME.find(id) == msOisToAME.end())
+bool AmE::InputReaderOIS::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+    if (InputReaderOIS::msOisToAME.find(id) == msOisToAME.end())
         return true;
 
     Logger::Trace("Release mouse: " + msOisToAME[id].toString());
@@ -137,3 +141,5 @@ bool AmE::InputReader::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButto
 
     return true;
 }
+
+

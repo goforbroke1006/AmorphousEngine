@@ -65,7 +65,7 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
 
     const std::string &initCode = Lua53Generator::buildInitLuaCode(sceneState);
     luaL_loadstring(*L, initCode.c_str());
-    Logger::Trace("\n" + initCode);
+//    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {

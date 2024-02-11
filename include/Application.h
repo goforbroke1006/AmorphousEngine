@@ -6,6 +6,7 @@
 #define AMORPHOUS_ENGINE_APPLICATION_H
 
 #include <string>
+#include <chrono>
 
 #include "Core/KeyCode.h"
 #include "Core/GameObject.h"
@@ -21,7 +22,8 @@ namespace AmE {
                 std::string mEngineRoot,
                 std::string mProjectRoot,
                 GraphicsEngine *mGraphicsEngine,
-                CalculationEngine *mCalculationEngine
+                CalculationEngine *mCalculationEngine,
+                InputReader *inputReader
         );
 
         virtual ~Application();
@@ -42,6 +44,10 @@ namespace AmE {
          */
         void runMainLoop();
 
+        bool updateOneFrame();
+
+        [[nodiscard]] SceneState *getSceneState() const;
+
     private:
         std::string mEngineRoot;
         std::string mProjectRoot;
@@ -49,8 +55,12 @@ namespace AmE {
         GraphicsEngine *mGraphicsEngine;
         CalculationEngine *mCalculationEngine;
 
+        InputReader *mInputReader;
+
         SceneState *mSceneState;
+
         TimeDelta *mTimeDelta;
+        std::chrono::time_point<std::chrono::system_clock> timeLast;
     };
 }
 

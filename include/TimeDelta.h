@@ -11,24 +11,25 @@ class TimeDelta {
 public:
     explicit TimeDelta(size_t keepSize)
             : mKeepSize(keepSize),
-              mWindowSize(0),
               mWindowSum(0),
               mInsertIdx(0),
               mAvg(0.0) {}
 
     void insert(const double value) {
-        ++mWindowSize;
         mWindowSum += value;
         mWindowValues.push_back(value);
 
-        if (mWindowSize > mKeepSize) {
-            --mWindowSize;
+        if (mWindowValues.size() > mKeepSize) {
             mWindowSum -= mWindowValues.front(), mWindowValues.pop_front();
         }
 
-        mInsertIdx = mInsertIdx % mKeepSize;
-        if (mInsertIdx == 0)
-            mAvg = mWindowSum / static_cast<double>(mWindowSize);
+        if (mInsertIdx % mKeepSize == 0)
+            mAvg = mWindowSum / static_cast<double>(mWindowValues.size());
+
+        if (mWindowValues.size() < mKeepSize) {
+            mAvg = mWindowValues.back();
+        }
+
         ++mInsertIdx;
     }
 
@@ -39,7 +40,6 @@ public:
 private:
     size_t mKeepSize;
 
-    size_t mWindowSize;
     std::list<double> mWindowValues;
     double mWindowSum;
     size_t mInsertIdx;

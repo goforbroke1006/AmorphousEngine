@@ -187,7 +187,13 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
         __all_components[cmpKey].gameObject = instance
         __all_components[cmpKey].transform = instance.transform
 
+        __all_components[cmpKey]['Awake'] = cmp['Awake']
+        __all_components[cmpKey]['Start'] = cmp['Start']
         __all_components[cmpKey]['Update'] = cmp['Update']
+
+        if __all_components[cmpKey]['Awake'] ~= nil then
+            __all_components[cmpKey]:Awake()
+        end
     end
     --end
 

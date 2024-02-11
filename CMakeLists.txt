@@ -14,7 +14,7 @@ add_executable(${PROJECT_NAME} main.cpp
         src/Calculation/Lua53.cpp
         src/Calculation/Lua53Generator.cpp
         src/GraphicsEngine.cpp
-        src/InputReader.cpp
+        src/InputReaderOIS.cpp
         src/SceneState.cpp
         src/PrefabManager.cpp
 )

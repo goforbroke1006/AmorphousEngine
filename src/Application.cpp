@@ -6,7 +6,7 @@
 
 #include <utility>
 #include <filesystem>
-#include <chrono>
+
 
 #include "../include/Logger.h"
 #include "../include/PrefabManager.h"
@@ -16,12 +16,15 @@ AmE::Application::Application(
         std::string mEngineRoot,
         std::string mProjectRoot,
         GraphicsEngine *mGraphicsEngine,
-        CalculationEngine *mCalculationEngine
+        CalculationEngine *mCalculationEngine,
+        InputReader *inputReader
 )
         : mEngineRoot(std::move(mEngineRoot)),
           mProjectRoot(std::move(mProjectRoot)),
           mGraphicsEngine(mGraphicsEngine),
           mCalculationEngine(mCalculationEngine),
+          mInputReader(inputReader),
+          mSceneState(nullptr),
           mTimeDelta(new TimeDelta(100)) {}
 
 AmE::Application::~Application() {
@@ -37,41 +40,42 @@ void AmE::Application::runMainLoop() {
     if (nullptr == mSceneState)
         throw std::runtime_error("scene is not loaded");
 
-    double timeDiff = 0;
-    auto timeLast = std::chrono::high_resolution_clock::now();
-
     mGraphicsEngine->initialize(mSceneState);
     mCalculationEngine->initialize(mSceneState);
 
-    timeDiff = std::chrono::duration<double, std::ratio<1>>(
-            std::chrono::high_resolution_clock::now() - timeLast).count();
-    mTimeDelta->insert(timeDiff);
-    timeLast = std::chrono::high_resolution_clock::now();
-
-    auto *pInputsState = new InputsState();
-
-    auto *pInputReader = new InputReader(mGraphicsEngine->getWindowHnd(), pInputsState);
+//    timeLast = std::chrono::high_resolution_clock::now();;
+//    mTimeDelta->insert(
+//            std::chrono::duration<double, std::ratio<1>>(
+//                    std::chrono::high_resolution_clock::now() - timeLast
+//            ).count()
+//    );
+//    timeLast = std::chrono::high_resolution_clock::now();
 
     while (!mSceneState->isAppQuit()) {
-        pInputReader->collectCodes();
-
-        mCalculationEngine->update(pInputsState, mSceneState, mTimeDelta->getAvg());
-
-        if (!mGraphicsEngine->update(mSceneState))
-            break;
-
-        timeDiff = std::chrono::duration<double, std::ratio<1>>(
-                std::chrono::high_resolution_clock::now() - timeLast).count();
-        mTimeDelta->insert(timeDiff);
-        timeLast = std::chrono::high_resolution_clock::now();
-
+        this->updateOneFrame();
         //std::cout << (1.0 / mTimeDelta->getAvg()) << "\t" << mTimeDelta->getAvg() << std::endl;
     }
 
     mGraphicsEngine->stop();
-
-    delete pInputReader;
-    delete pInputsState;
 }
 
+bool AmE::Application::updateOneFrame() {
+    mInputReader->collectCodes();
 
+    mCalculationEngine->update(
+            mInputReader->getState(), mSceneState, mTimeDelta->getAvg()
+    );
+
+    if (!mGraphicsEngine->update(mSceneState))
+        return false;
+
+    mTimeDelta->insert(std::chrono::duration<double, std::ratio<1>>(
+            std::chrono::high_resolution_clock::now() - timeLast).count());
+    timeLast = std::chrono::high_resolution_clock::now();
+
+    return true;
+}
+
+[[maybe_unused]] AmE::SceneState *AmE::Application::getSceneState() const {
+    return mSceneState;
+}
