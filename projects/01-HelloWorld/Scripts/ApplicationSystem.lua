@@ -4,11 +4,10 @@
 --- DateTime: 1/20/24 1:45 PM
 ---
 
-require "Core/LuaBehaviour"
 require "Core/KeyCode"
 require "Core/Application"
 
-ApplicationSystem = LuaBehaviour:new()
+ApplicationSystem = {}
 
 function ApplicationSystem:Start()
     -- TODO:

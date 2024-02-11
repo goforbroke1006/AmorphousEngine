@@ -37,9 +37,6 @@ AmE::Lua53Generator::buildInitLuaCode(
                     initCode += std::string()
                                 + "function " + cmp->getName() + ":new()\n"
                                 + "    local instance = LuaBehaviour:new()\n"
-                                + "    instance.__name = ''\n"
-                                + "    instance.gameObject = nil\n"
-                                + "    instance.transform = nil\n"
                                 + "    setmetatable(instance, self)\n"
                                 + "    self.__index = self\n"
                                 + "    return instance\n"
@@ -86,10 +83,7 @@ AmE::Lua53Generator::buildInitLuaCode(
                 initCode += "\n";
                 initCode += std::string()
                             + "function " + pCmp->getName() + ":new()\n"
-                            + "    instance = {}\n"
-                            + "    instance.__name = ''\n"
-                            + "    instance.gameObject = nil\n"
-                            + "    instance.transform = nil\n"
+                            + "    instance = LuaBehaviour:new()\n"
                             + "    setmetatable(instance, self)\n"
                             + "    self.__index = self\n"
                             + "    return instance\n"

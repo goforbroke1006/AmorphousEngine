@@ -66,7 +66,7 @@ void AmE::Irrlicht::initialize(const SceneState * const sceneState) {
     }
 }
 
-bool AmE::Irrlicht::update(const SceneState * const sceneState) {
+bool AmE::Irrlicht::update( SceneState * const sceneState) {
     mQuit |= !mDevice->run();
     if (mQuit)
         return false;

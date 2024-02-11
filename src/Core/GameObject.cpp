@@ -36,10 +36,14 @@ const std::map<std::string, AmE::Component *> &AmE::GameObject::getComponents() 
     return mComponents;
 }
 
+bool AmE::GameObject::hasComponent(const std::string &path) const {
+    return mComponents.find(path) != mComponents.end();
+}
+
 AmE::Component *AmE::GameObject::getComponent(const std::string &path) const {
     if (mComponents.find(path) == mComponents.end())
-        return nullptr;
-//        throw std::runtime_error("GameObject '" + mName + "' has no component " + path);
+//        return nullptr;
+        throw std::runtime_error("GameObject '" + mName + "' has no component " + path);
 
     return mComponents.at(path);
 }

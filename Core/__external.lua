@@ -109,8 +109,10 @@ function __on_update_frame()
     --    return
     --end
 
-    for _, cmpInstance in pairs(__all_components) do
-        if (cmpInstance.enabled) then
+    for cmpKey, cmpInstance in pairs(__all_components) do
+        if cmpInstance['Update'] == nil then
+            Debug.LogWarning(cmpKey .. " has no Update method")
+        elseif (cmpInstance.enabled) then
             cmpInstance:Update()
         end
     end

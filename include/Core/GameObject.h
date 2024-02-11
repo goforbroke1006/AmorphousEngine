@@ -28,7 +28,9 @@ namespace AmE {
 
         const std::map<std::string, Component *> &getComponents() const;
 
-        [[nodiscard]] Component *getComponent(const std::string &name) const;
+        [[nodiscard]] bool hasComponent(const std::string &path) const;
+
+        [[nodiscard]] Component *getComponent(const std::string &path) const;
 
         void addComponent(Component *const component);
 

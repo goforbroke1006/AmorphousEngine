@@ -6,7 +6,7 @@
 
 require "Core/LuaBehaviour"
 
-ProjectileController = LuaBehaviour:new()
+ProjectileController = {}
 
 ProjectileController.motionSpeed = 20.0
 
@@ -15,14 +15,14 @@ function ProjectileController:Start()
 end
 
 function ProjectileController:Update()
-    --if self.transform.position.x < -70
-    --        or self.transform.position.x > 70
-    --        or self.transform.position.z < -70
-    --        or self.transform.position.z > 70 then
-    --    Object.Destroy(self.gameObject);
-    --    Debug.Log("Remove projectile");
-    --    return ;
-    --end
+    if self.transform.position.x < -70
+            or self.transform.position.x > 70
+            or self.transform.position.z < -70
+            or self.transform.position.z > 70 then
+        Object.Destroy(self.gameObject)
+        Debug.Log("Remove projectile")
+        return
+    end
 
     local movement = self.transform.rotation
             * Vector3.forward

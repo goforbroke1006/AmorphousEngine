@@ -64,7 +64,7 @@ Object.Destroy = function(obj --[[Object]], t)
         end
     end
 
-    -- Debug.Log("Remove gameObject " .. obj.__instanceID)
+    Debug.Log("Remove gameObject " .. obj.__instanceID)
     __all_game_objects[obj.__instanceID] = nil
 end
 
@@ -180,17 +180,19 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     --if instance ~= nil then
     for _, cmp in pairs(original.__components) do
         local cmpKey = '' .. instance.__instanceID .. ' :: ' .. cmp.__name
-        --Debug.Log("Create component: " .. cmpKey)
+        Debug.Log("Create component: " .. cmpKey)
         __all_components[cmpKey] = LuaBehaviour.__make_clone(cmp)
         __all_components[cmpKey].__name = cmp.__name
         __all_components[cmpKey].enabled = true
         __all_components[cmpKey].gameObject = instance
         __all_components[cmpKey].transform = instance.transform
+
+        __all_components[cmpKey]['Update'] = cmp['Update']
     end
     --end
 
     __scene_next_game_object_instance_id = __scene_next_game_object_instance_id + 1
-    --Debug.Log("Create new object: " .. instance.__instanceID)
+    Debug.Log("Create new object: " .. instance.__instanceID)
 
     return instance
 end

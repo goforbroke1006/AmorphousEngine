@@ -15,32 +15,49 @@
 AmE::SceneState::SceneState() : mAppQuit(false) {}
 
 AmE::SceneState::~SceneState() {
-    for (const auto &[_, pGameObj]: mSceneGameObjects)
+    for (const auto &[_, pGameObj]: mSceneGameObjectsActive)
         delete pGameObj;
-    Logger::Trace("Clear " + std::to_string(mSceneGameObjects.size()) + " scene game objects");
-    mSceneGameObjects.clear();
+    Logger::Trace("Clear " + std::to_string(mSceneGameObjectsActive.size()) + " scene game objects");
+    mSceneGameObjectsActive.clear();
 
     for (const auto &[_, pGameObj]: mPrefabGameObjects)
         delete pGameObj;
-    Logger::Trace("Clear " + std::to_string(mSceneGameObjects.size()) + " prefab game objects");
+    Logger::Trace("Clear " + std::to_string(mSceneGameObjectsActive.size()) + " prefab game objects");
     mPrefabGameObjects.clear();
+}
+
+const std::map<std::string, AmE::Component *> &AmE::SceneState::getComponents() const {
+    return mComponents;
 }
 
 const std::map<GameObjectInstanceID, AmE::GameObject *> &
 AmE::SceneState::getSceneGameObjects() const {
-    return mSceneGameObjects;
+    return mSceneGameObjectsActive;
 }
 
 AmE::GameObject *
 AmE::SceneState::getSceneGameObject(GameObjectInstanceID id) const {
-    if (mSceneGameObjects.find(id) == mSceneGameObjects.end())
+    if (mSceneGameObjectsActive.find(id) == mSceneGameObjectsActive.end())
         return nullptr;
 
-    return mSceneGameObjects.at(id);
+    return mSceneGameObjectsActive.at(id);
 }
 
 void AmE::SceneState::addSceneGameObject(AmE::GameObject *const pGameObj) {
-    mSceneGameObjects[pGameObj->getID()] = pGameObj;
+    mSceneGameObjectsActive[pGameObj->getID()] = pGameObj;
+}
+
+void AmE::SceneState::markSceneGameObjectAsRemoved(GameObjectInstanceID id) {
+    mSceneObjectRemoved[id] = mSceneGameObjectsActive[id];
+}
+
+const std::map<long long int, AmE::GameObject *> &AmE::SceneState::getSceneObjectForRemove() const {
+    return mSceneObjectRemoved;
+}
+
+void AmE::SceneState::removeSceneObjectFinally(GameObjectInstanceID id) {
+    mSceneObjectRemoved.erase(id);
+    mSceneGameObjectsActive.erase(id);
 }
 
 const std::map<std::string, AmE::GameObject *> &
@@ -139,9 +156,10 @@ AmE::SceneState *AmE::SceneState::loadFromFile(
             }
 
             pGameObject->addComponent(pCmp);
+            pSceneState->mComponents[pCmp->mPathname] = pCmp;
         }
 
-        pSceneState->mSceneGameObjects[nextID] = pGameObject;
+        pSceneState->mSceneGameObjectsActive[nextID] = pGameObject;
 
         ++nextID;
     }
@@ -152,6 +170,8 @@ AmE::SceneState *AmE::SceneState::loadFromFile(
         );
 
         pSceneState->mPrefabGameObjects[prefabPath] = pGameObj;
+        for (auto &[path, pCmp]: pGameObj->getComponents())
+            pSceneState->mComponents[path] = pCmp;
 
         Logger::Trace("Load prefab " + prefabPath);
     }

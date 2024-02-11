@@ -20,9 +20,9 @@ namespace AmE {
 
         [[nodiscard]] size_t getWindowHnd() const override;
 
-        void initialize(const SceneState * const sceneState) override;
+        void initialize(const SceneState *sceneState) override;
 
-        bool update(const SceneState * const sceneState) override;
+        bool update(SceneState *sceneState) override;
 
         void stop() override;
 

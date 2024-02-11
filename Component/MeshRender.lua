@@ -6,7 +6,9 @@
 
 require 'Core/LuaBehaviour'
 
-MeshRender = {}
+MeshRender = {
+    path = ""
+}
 
 function MeshRender:new()
     instance = LuaBehaviour:new()

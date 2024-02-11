@@ -4,20 +4,9 @@
 --- DateTime: 12/29/23 2:44 PM
 ---
 
-require "Core/LuaBehaviour"
 require "Core/Time"
 
 SpinnerController = {}
-
-function SpinnerController:new()
-    instance = {}
-    instance.__name = ''
-    instance.gameObject = nil
-    instance.transform = nil
-    setmetatable(instance, self)
-    self.__index = self
-    return instance
-end
 
 function SpinnerController:Start()
     if self.rotationSpeed == nil then
@@ -26,18 +15,9 @@ function SpinnerController:Start()
 end
 
 function SpinnerController:Update()
-    if self == nil then
-        Debug.LogWarning("self is null")
-        return
-    end
-    if self.transform == nil then
-        Debug.LogWarning("self.transform is null")
-        return
-    end
     self.transform:Rotate(Vector3:new(
             0.0,
             0.0,
             self.rotationSpeed * Time.deltaTime
     ))
-    --Debug.Log("Angle Y for " .. self.gameObject.name .. " is " .. self.transform.rotation.eulerAngles.z);
 end

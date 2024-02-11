@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 #include <utility>
+#include <set>
 
 #include "Core/GameObject.h"
 #include "Core/KeyCode.h"
@@ -22,6 +23,8 @@ namespace AmE {
 
         virtual ~SceneState();
 
+        [[nodiscard]] const std::map<std::string, Component *> &getComponents() const;
+
         [[nodiscard]]
         const std::map<GameObjectInstanceID, GameObject *> &
         getSceneGameObjects() const;
@@ -30,7 +33,15 @@ namespace AmE {
         GameObject *
         getSceneGameObject(GameObjectInstanceID id) const;
 
-        void addSceneGameObject(GameObject *const pGameObj);
+        void addSceneGameObject(GameObject *pGameObj);
+
+        void markSceneGameObjectAsRemoved(GameObjectInstanceID id);
+
+        [[nodiscard]]
+        const std::map<GameObjectInstanceID, GameObject *> &
+        getSceneObjectForRemove() const;
+
+        void removeSceneObjectFinally(GameObjectInstanceID id);
 
         [[nodiscard]]
         const std::map<std::string, GameObject *> &
@@ -47,9 +58,11 @@ namespace AmE {
         );
 
     private:
-        std::map<GameObjectInstanceID, GameObject *> mSceneGameObjects;
+        std::map<std::string, Component *> mComponents;
+        std::map<GameObjectInstanceID, GameObject *> mSceneGameObjectsActive;
         std::map<std::string, GameObject *> mPrefabGameObjects;
         bool mAppQuit;
+        std::map<GameObjectInstanceID, GameObject *> mSceneObjectRemoved;
     };
 }
 

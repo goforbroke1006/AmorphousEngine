@@ -19,6 +19,7 @@ function GameObject:new(__instanceID --[[integer]], name --[[string]])
     name = name or ""
 
     gameObj = Object:new(__instanceID)
+    gameObj.__instanceID = __instanceID
     gameObj.name = name
     gameObj.transform = Transform:new()
     gameObj.__components = {}
@@ -27,6 +28,12 @@ function GameObject:new(__instanceID --[[integer]], name --[[string]])
     setmetatable(gameObj, self)
 
     return gameObj
+end
+
+--- https://docs.unity3d.com/ScriptReference/Object.GetInstanceID.html
+--- int Returns the instance ID of the object.
+function GameObject:GetInstanceID()
+    return self.__instanceID;
 end
 
 function GameObject:IsA(className --[[string]])

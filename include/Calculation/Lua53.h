@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <set>
 
 #include <LuaCpp/Engine/LuaState.hpp>
 #include <LuaCpp/Engine/LuaTTable.hpp>
@@ -58,6 +59,8 @@ namespace AmE {
         LuaCpp::Engine::LuaTTable mBtnReleasedTbl;
         LuaCpp::Engine::LuaTBoolean *mAppQuit;
         LuaCpp::Engine::LuaTNumber *mTimeDelta;
+
+        std::set<GameObjectInstanceID> mUpdatedIDs;
     };
 }
 

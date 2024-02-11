@@ -91,8 +91,17 @@ void AmE::OgreOne::initialize(const AmE::SceneState *const sceneState) {
     }
 }
 
-bool AmE::OgreOne::update(const AmE::SceneState *const sceneState) {
+bool AmE::OgreOne::update(AmE::SceneState *const sceneState) {
     if (mWindow->isVisible() && !mQuit) {
+        std::set<GameObjectInstanceID> removed;
+        for (const auto &[id, pGameObj]: sceneState->getSceneObjectForRemove()) {
+            Logger::Trace("OgreOne: Detect removable game object " + std::to_string(id));
+            removeNode(pGameObj);
+            removed.insert(id);
+        }
+        for (const auto &id: removed)
+            sceneState->removeSceneObjectFinally(id);
+
         for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
             initOrUpdateNode(pGameObj);
         }
@@ -111,12 +120,17 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
     bool isNew = false;
 
     if (mSceneNodes.find(pGameObject->getID()) == mSceneNodes.end()) {
-        std::string nodeName = "Node: " + pGameObject->getName();
+        std::string nodeName = "Node: " + std::to_string(pGameObject->getID()) + " :: " + pGameObject->getName();
 
-        mSceneNodes[pGameObject->getID()] =
-                mSceneManager
-                        ->getRootSceneNode()
-                        ->createChildSceneNode(nodeName);
+        try {
+            mSceneNodes[pGameObject->getID()] =
+                    mSceneManager
+                            ->getRootSceneNode()
+                            ->createChildSceneNode(nodeName);
+        } catch (Ogre::ItemIdentityException &ex) {
+            Logger::Error("OgreOne: try to create node with same name " + nodeName + ": " + ex.what());
+            return;
+        }
         isNew = true;
 
         Logger::Trace("Create new node: " + pGameObject->getName());
@@ -149,8 +163,9 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
         );
     }
 
-    Component *pCameraComponent = pGameObject->getComponent("Component/Camera");
-    if (nullptr != pCameraComponent && pCameraComponent->isEnabled()) {
+    if (pGameObject->isCamera() && pGameObject->getComponent("Component/Camera")->isEnabled()) {
+        Component *pCameraComponent = pGameObject->getComponent("Component/Camera");
+
         std::string cameraName = "Camera: " + pGameObject->getName();
 
         if (isNew) {
@@ -187,8 +202,9 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
         return;
     }
 
-    Component *pLightComponent = pGameObject->getComponent("Component/Light");
-    if (nullptr != pLightComponent && pLightComponent->isEnabled()) {
+    if (pGameObject->isLight() && pGameObject->getComponent("Component/Light")->isEnabled()) {
+        Component *pLightComponent = pGameObject->getComponent("Component/Light");
+
         std::string lightName = "Light: " + pGameObject->getName();
 
         if (isNew) {
@@ -232,11 +248,20 @@ void AmE::OgreOne::initOrUpdateNode(const AmE::GameObject *const pGameObject) {
     }
 
     if (pGameObject->hasMeshRender()) {
+        auto *pMeshRenderComponent = pGameObject->getComponent("Component/MeshRender");
+
         if (isNew) {
             Ogre::Entity *ent = mSceneManager->createEntity(
-                    pGameObject->getComponent("Component/MeshRender")->mProperties["path"].asString()
+                    pMeshRenderComponent->mProperties["path"].asString()
             );
             mSceneNodes[pGameObject->getID()]->attachObject((Ogre::MovableObject *) ent);
         }
     }
+}
+
+void AmE::OgreOne::removeNode(const AmE::GameObject *const pGameObject) {
+    mSceneManager
+            ->getRootSceneNode()
+            ->removeAndDestroyChild(mSceneNodes[pGameObject->getID()]);
+    Logger::Trace("OgreOne: Remove node for game object " + std::to_string(pGameObject->getID()));
 }

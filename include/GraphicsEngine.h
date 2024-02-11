@@ -33,7 +33,7 @@ namespace AmE {
          * @param gameObjects
          * @return
          */
-        virtual bool update(const SceneState * const sceneState) = 0;
+        virtual bool update(SceneState * sceneState) = 0;
 
         virtual void stop() = 0;
 

@@ -121,8 +121,13 @@ void AmE::Lua53::update(
     // extract scene state
     mGameObjectsTbl.PopGlobal(*L);
     mComponentsTbl.PopGlobal(*L);
+
+    mUpdatedIDs.clear();
     for (const auto &[luaTblIdx, luaGameObjTbl]: mGameObjectsTbl.getValues()) {
         try {
+            GameObjectInstanceID goID = luaTblIdx.getIntValue();
+            mUpdatedIDs.insert(goID);
+
             auto *goTbl = (LETable *) luaGameObjTbl.get();
 
             auto &idVal = goTbl->getValue(LETKey(GO_PROP_INSTANCE_ID));
@@ -135,6 +140,8 @@ void AmE::Lua53::update(
                 auto &nameVal = ((LEString &) goTbl->getValue(LETKey(GO_PROP_NAME)));
                 pGameObj = new GameObject(id, nameVal.getValue());
                 sceneState->addSceneGameObject(pGameObj);
+
+                Logger::Trace("Lua53: Create new game object " + std::to_string(goID));
             }
 
             {
@@ -162,13 +169,23 @@ void AmE::Lua53::update(
                 );
             }
         } catch (std::out_of_range &ex) {
-            Logger::Error("GameObject parsing failed: " + luaTblIdx.ToString());
+            Logger::Error("Lua53: GameObject parsing failed: " + luaTblIdx.ToString());
+        }
+    }
+
+    for (auto &[goID, _]: sceneState->getSceneGameObjects()) {
+        if (mUpdatedIDs.find(goID) == mUpdatedIDs.end()) {
+            sceneState->markSceneGameObjectAsRemoved(goID);
+            Logger::Trace("Lua53: Start to remove " + std::to_string(goID));
         }
     }
 
     for (const auto &[luaIdx, luaCmp]: mComponentsTbl.getValues()) {
         try {
             auto *cmpTbl = (LETable *) luaCmp.get();
+            if (nullptr == cmpTbl) {
+                continue;
+            }
 
             LETable &goVal = (LETable &) cmpTbl->getValue(LETKey(CMP_PROP_GO));
             const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(
@@ -176,7 +193,23 @@ void AmE::Lua53::update(
 
             const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
 
-            auto *pCmp = sceneState->getSceneGameObject(goID)->getComponent(cmpName);
+            GameObject *pGameObject = sceneState->getSceneGameObject(goID);
+            if (nullptr == pGameObject) {
+                continue;
+            }
+
+            if (!pGameObject->hasComponent(cmpName)) {
+                Logger::Trace("Create new component " + cmpName + " for " + std::to_string(goID));
+                auto *pCmp = new Component(cmpName, {});
+
+                auto *protoCmp = sceneState->getComponents().at(cmpName);
+                for (auto [key, val]: protoCmp->mProperties) {
+                    pCmp->mProperties[key] = val;
+                }
+
+                pGameObject->addComponent(pCmp);
+            }
+            auto *pCmp = pGameObject->getComponent(cmpName);
 
             for (const auto &[luaAttrName, luaAttrVal]: cmpTbl->getValues()) {
                 std::string attrName = luaAttrName.ToString();
@@ -206,7 +239,7 @@ void AmE::Lua53::update(
                 pCmp->mProperties[attrName].mValue = parsePropValFromLua(kind, luaAttrVal.get());
             }
         } catch (std::out_of_range &ex) {
-            Logger::Error(std::string() + "Component parsing failed: " + ex.what() + ": " + luaIdx.ToString());
+            Logger::Error(std::string() + "Lua53: Component parsing failed: " + ex.what() + ": " + luaIdx.ToString());
         }
     }
 
@@ -253,7 +286,7 @@ std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Eng
             return nullptr;
     }
 
-    throw std::runtime_error("AmE::Lua53::parsePropValFromLua: unexpected property type " + PropType::asString(kind));
+    throw std::runtime_error("Lua53::parsePropValFromLua: unexpected property type " + PropType::asString(kind));
 }
 
 

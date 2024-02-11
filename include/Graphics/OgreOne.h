@@ -28,12 +28,14 @@ namespace AmE {
 
         void initialize(const SceneState *sceneState) override;
 
-        bool update(const SceneState *sceneState) override;
+        bool update(SceneState *sceneState) override;
 
         void stop() override;
 
     private:
         void initOrUpdateNode(const AmE::GameObject *pGameObject);
+
+        void removeNode(const AmE::GameObject *pGameObject);
 
     private:
         Ogre::Root *mRoot;

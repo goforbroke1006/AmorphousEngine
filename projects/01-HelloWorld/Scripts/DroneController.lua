@@ -4,19 +4,7 @@
 --- DateTime: 12/29/23 2:44 PM
 ---
 
-require "Core/LuaBehaviour"
-
 DroneController = {}
-
-function DroneController:new()
-    instance = {}
-    instance.__name = ''
-    instance.gameObject = nil
-    instance.transform = nil
-    setmetatable(instance, self)
-    self.__index = self
-    return instance
-end
 
 function DroneController:Start()
     if self.motionSpeed == nil then
