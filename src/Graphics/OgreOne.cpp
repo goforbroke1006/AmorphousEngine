@@ -8,16 +8,20 @@
 
 #include <OGRE/Bites/OgreApplicationContext.h>
 #include <OGRE/OgreViewport.h>
-#include <OGRE/RTShaderSystem/OgreShaderRenderState.h>
 
-#include "../../include/Core/LIght.h"
+#include "../../include/Core/Light.h"
 
 
 AmE::OgreOne::OgreOne(
         const std::string &pluginsCfgPathname,
         const std::string &projectRoot
-) {
-    //OgreBites::ApplicationContext::setup();
+) : mRoot(nullptr),
+    mWindow(nullptr),
+    mWindowHnd(0),
+    mSceneManager(nullptr),
+    mShaderGenerator(nullptr),
+    mQuit(false) {
+
     mRoot = new Ogre::Root(pluginsCfgPathname);
     if (!mRoot->restoreConfig() && !mRoot->showConfigDialog(nullptr))
         throw std::runtime_error("Ogre config broken");
@@ -42,6 +46,7 @@ AmE::OgreOne::OgreOne(
 //			mShaderGenerator->createOrRetrieveRenderState(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME).first;
 //		pMainRenderState->resetToBuiltinSubRenderStates();
 //    }
+
 
     mWindow = mRoot->initialise(true, "");
     mWindowHnd = -1;
@@ -92,22 +97,27 @@ void AmE::OgreOne::initialize(const AmE::SceneState *const sceneState) {
 }
 
 bool AmE::OgreOne::update(AmE::SceneState *const sceneState) {
-    if (mWindow->isVisible() && !mQuit) {
-        std::set<GameObjectInstanceID> removed;
-        for (const auto &[id, pGameObj]: sceneState->getSceneObjectForRemove()) {
-            Logger::Trace("OgreOne: Detect removable game object " + std::to_string(id));
-            removeNode(pGameObj);
-            removed.insert(id);
-        }
-        for (const auto &id: removed)
-            sceneState->removeSceneObjectFinally(id);
+    if (!mWindow->isVisible())
+        return true;
 
-        for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
-            initOrUpdateNode(pGameObj);
-        }
+    if (mQuit)
+        return false;
 
-        mQuit |= !mRoot->renderOneFrame();
+
+    std::set<GameObjectInstanceID> removed;
+    for (const auto &[id, pGameObj]: sceneState->getSceneObjectForRemove()) {
+        Logger::Trace("OgreOne: Detect removable game object " + std::to_string(id));
+        removeNode(pGameObj);
+        removed.insert(id);
     }
+    for (const auto &id: removed)
+        sceneState->removeSceneObjectFinally(id);
+
+    for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
+        initOrUpdateNode(pGameObj);
+    }
+
+    mQuit |= !mRoot->renderOneFrame();
 
     return !mQuit;
 }

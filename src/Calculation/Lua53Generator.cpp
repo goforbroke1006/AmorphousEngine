@@ -7,6 +7,7 @@
 #include <set>
 
 #include "../../include/Core/Property.h"
+#include "../../include/helpers.h"
 
 std::string
 AmE::Lua53Generator::buildInitLuaCode(
@@ -97,12 +98,15 @@ AmE::Lua53Generator::buildInitLuaCode(
         const auto &idStr = std::to_string(pGameObj->getID());
 
         for (const auto &[path, pCmp]: pGameObj->getComponents()) {
-            std::string cmpID = idStr + " :: " + pCmp->mPathname;
+            std::string cmpTableName = stringSplit(pCmp->mPathname, '/').back();
+            std::string cmpID = idStr + " :: " + cmpTableName;
 
             initCode += std::string()
                         + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + pCmp->getName() + ":new()\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__name = '" + path + "'\n";
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__type_name = '" + cmpTableName + "'\n";
+            initCode += std::string()
+                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__type_filepath = '" + path + "'\n";
             initCode += std::string()
                         + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = "
                         + LUA53_G_VAR_GO_T + "[" + idStr + "]\n";
@@ -172,12 +176,15 @@ AmE::Lua53Generator::generateInitCode(
 
     if (!isSceneObject) {
         for (const auto &[path, pCmp]: pGameObj->getComponents()) {
+            std::string cmpTableName = stringSplit(pCmp->mPathname, '/').back();
+
             code.append(
                     std::string()
-                    + luaRef + ".__components['" + path + "'] = " + pCmp->getName() + ":new()\n"
-                    + luaRef + ".__components['" + path + "'].__name = '" + path + "'\n"
-                    + luaRef + ".__components['" + path + "'].gameObject = nil\n"
-                    + luaRef + ".__components['" + path + "'].transform = nil\n"
+                    + luaRef + ".__components['" + cmpTableName + "'] = " + pCmp->getName() + ":new()\n"
+                    + luaRef + ".__components['" + cmpTableName + "'].__type_name = '" + cmpTableName + "'\n"
+                    + luaRef + ".__components['" + cmpTableName + "'].__type_filepath = '" + path + "'\n"
+                    + luaRef + ".__components['" + cmpTableName + "'].gameObject = nil\n"
+                    + luaRef + ".__components['" + cmpTableName + "'].transform = nil\n"
             );
 
             for (auto &[_, prop]: pCmp->mProperties) {
@@ -185,7 +192,7 @@ AmE::Lua53Generator::generateInitCode(
                 if (val.empty())
                     continue;
 
-                code += luaRef + ".__components['" + path + "']." + prop.mName + " = " + val;
+                code += luaRef + ".__components['" + cmpTableName + "']." + prop.mName + " = " + val;
                 code += "\n";
             }
 

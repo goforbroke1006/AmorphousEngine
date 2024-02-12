@@ -46,7 +46,7 @@ namespace AmE {
 
         // Initialize the trigger for launching projectile.
         // PlayerController creates new projectile on LMB click.
-        pInputReader->getState()->pressed[AmE::KeyCode_Mouse0] = true;
+        pInputReader->fakePress(AmE::KeyCode_Mouse0);
         app->updateOneFrame();
         EXPECT_EQ(app->getSceneState()->getSceneGameObjects().size(), 4);
 
@@ -70,7 +70,11 @@ namespace AmE {
         // Initial object set still on the scene.
 
         EXPECT_FALSE(app->getSceneState()->isAppQuit());
-        pInputReader->getState()->released[AmE::KeyCode_Escape] = true;
+        {
+            pInputReader->fakePress(AmE::KeyCode_Escape);
+            app->updateOneFrame();
+            pInputReader->fakeRelease(AmE::KeyCode_Escape);
+        }
         app->updateOneFrame();
         // After releasing ESC application should be closed.
         EXPECT_TRUE(app->getSceneState()->isAppQuit());

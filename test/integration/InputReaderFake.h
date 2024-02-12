@@ -22,6 +22,14 @@ public:
 
     [[nodiscard]] AmE::InputsState *getState() const override { return mInputState; }
 
+    void fakePress(const AmE::KeyCode &code) {
+        mInputState->pressed[code] = true;
+    }
+
+    void fakeRelease(const AmE::KeyCode &code) {
+        mInputState->released[code] = true;
+    }
+
 private:
     AmE::InputsState *mInputState;
 };

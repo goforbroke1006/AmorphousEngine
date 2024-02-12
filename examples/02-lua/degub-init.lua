@@ -81,14 +81,14 @@ function SpinnerController:new()
 end
 
 __all_components['0 :: Scripts/ApplicationSystem'] = ApplicationSystem:new()
-__all_components['0 :: Scripts/ApplicationSystem'].__name = 'Scripts/ApplicationSystem'
+__all_components['0 :: Scripts/ApplicationSystem'].__type_name = 'Scripts/ApplicationSystem'
 __all_components['0 :: Scripts/ApplicationSystem'].gameObject = __all_game_objects[0]
 __all_components['0 :: Scripts/ApplicationSystem'].transform = __all_game_objects[0].transform
 
 __all_components['0 :: Scripts/ApplicationSystem'].enabled = true
 
 __all_components['1 :: Component/Camera'] = Camera:new()
-__all_components['1 :: Component/Camera'].__name = 'Component/Camera'
+__all_components['1 :: Component/Camera'].__type_name = 'Component/Camera'
 __all_components['1 :: Component/Camera'].gameObject = __all_game_objects[1]
 __all_components['1 :: Component/Camera'].transform = __all_game_objects[1].transform
 
@@ -98,7 +98,7 @@ __all_components['1 :: Component/Camera'].farClipPlane = 1000.000000
 __all_components['1 :: Component/Camera'].nearClipPlane = 0.100000
 
 __all_components['2 :: Component/Light'] = Light:new()
-__all_components['2 :: Component/Light'].__name = 'Component/Light'
+__all_components['2 :: Component/Light'].__type_name = 'Component/Light'
 __all_components['2 :: Component/Light'].gameObject = __all_game_objects[2]
 __all_components['2 :: Component/Light'].transform = __all_game_objects[2].transform
 
@@ -107,7 +107,7 @@ __all_components['2 :: Component/Light'].enabled = true
 __all_components['2 :: Component/Light'].type = 'Spot'
 
 __all_components['3 :: Component/MeshRender'] = MeshRender:new()
-__all_components['3 :: Component/MeshRender'].__name = 'Component/MeshRender'
+__all_components['3 :: Component/MeshRender'].__type_name = 'Component/MeshRender'
 __all_components['3 :: Component/MeshRender'].gameObject = __all_game_objects[3]
 __all_components['3 :: Component/MeshRender'].transform = __all_game_objects[3].transform
 
@@ -115,7 +115,7 @@ __all_components['3 :: Component/MeshRender'].enabled = true
 __all_components['3 :: Component/MeshRender'].path = 'Barrel.mesh'
 
 __all_components['3 :: Scripts/SpinnerController'] = SpinnerController:new()
-__all_components['3 :: Scripts/SpinnerController'].__name = 'Scripts/SpinnerController'
+__all_components['3 :: Scripts/SpinnerController'].__type_name = 'Scripts/SpinnerController'
 __all_components['3 :: Scripts/SpinnerController'].gameObject = __all_game_objects[3]
 __all_components['3 :: Scripts/SpinnerController'].transform = __all_game_objects[3].transform
 
@@ -123,7 +123,7 @@ __all_components['3 :: Scripts/SpinnerController'].enabled = true
 __all_components['3 :: Scripts/SpinnerController'].rotationSpeed = 10.000000
 
 __all_components['4 :: Component/MeshRender'] = MeshRender:new()
-__all_components['4 :: Component/MeshRender'].__name = 'Component/MeshRender'
+__all_components['4 :: Component/MeshRender'].__type_name = 'Component/MeshRender'
 __all_components['4 :: Component/MeshRender'].gameObject = __all_game_objects[4]
 __all_components['4 :: Component/MeshRender'].transform = __all_game_objects[4].transform
 
@@ -131,7 +131,7 @@ __all_components['4 :: Component/MeshRender'].enabled = true
 __all_components['4 :: Component/MeshRender'].path = 'Barrel.mesh'
 
 __all_components['4 :: Scripts/SpinnerController'] = SpinnerController:new()
-__all_components['4 :: Scripts/SpinnerController'].__name = 'Scripts/SpinnerController'
+__all_components['4 :: Scripts/SpinnerController'].__type_name = 'Scripts/SpinnerController'
 __all_components['4 :: Scripts/SpinnerController'].gameObject = __all_game_objects[4]
 __all_components['4 :: Scripts/SpinnerController'].transform = __all_game_objects[4].transform
 
@@ -139,7 +139,7 @@ __all_components['4 :: Scripts/SpinnerController'].enabled = true
 __all_components['4 :: Scripts/SpinnerController'].rotationSpeed = 15.000000
 
 __all_components['5 :: Component/MeshRender'] = MeshRender:new()
-__all_components['5 :: Component/MeshRender'].__name = 'Component/MeshRender'
+__all_components['5 :: Component/MeshRender'].__type_name = 'Component/MeshRender'
 __all_components['5 :: Component/MeshRender'].gameObject = __all_game_objects[5]
 __all_components['5 :: Component/MeshRender'].transform = __all_game_objects[5].transform
 
@@ -147,7 +147,7 @@ __all_components['5 :: Component/MeshRender'].enabled = true
 __all_components['5 :: Component/MeshRender'].path = 'Barrel.mesh'
 
 __all_components['5 :: Scripts/SpinnerController'] = SpinnerController:new()
-__all_components['5 :: Scripts/SpinnerController'].__name = 'Scripts/SpinnerController'
+__all_components['5 :: Scripts/SpinnerController'].__type_name = 'Scripts/SpinnerController'
 __all_components['5 :: Scripts/SpinnerController'].gameObject = __all_game_objects[5]
 __all_components['5 :: Scripts/SpinnerController'].transform = __all_game_objects[5].transform
 
@@ -155,7 +155,7 @@ __all_components['5 :: Scripts/SpinnerController'].enabled = true
 __all_components['5 :: Scripts/SpinnerController'].rotationSpeed = 10.000000
 
 __all_components['6 :: Component/MeshRender'] = MeshRender:new()
-__all_components['6 :: Component/MeshRender'].__name = 'Component/MeshRender'
+__all_components['6 :: Component/MeshRender'].__type_name = 'Component/MeshRender'
 __all_components['6 :: Component/MeshRender'].gameObject = __all_game_objects[6]
 __all_components['6 :: Component/MeshRender'].transform = __all_game_objects[6].transform
 
@@ -163,7 +163,7 @@ __all_components['6 :: Component/MeshRender'].enabled = true
 __all_components['6 :: Component/MeshRender'].path = 'Barrel.mesh'
 
 __all_components['6 :: Scripts/SpinnerController'] = SpinnerController:new()
-__all_components['6 :: Scripts/SpinnerController'].__name = 'Scripts/SpinnerController'
+__all_components['6 :: Scripts/SpinnerController'].__type_name = 'Scripts/SpinnerController'
 __all_components['6 :: Scripts/SpinnerController'].gameObject = __all_game_objects[6]
 __all_components['6 :: Scripts/SpinnerController'].transform = __all_game_objects[6].transform
 
@@ -171,7 +171,7 @@ __all_components['6 :: Scripts/SpinnerController'].enabled = true
 __all_components['6 :: Scripts/SpinnerController'].rotationSpeed = 10.000000
 
 __all_components['7 :: Component/MeshRender'] = MeshRender:new()
-__all_components['7 :: Component/MeshRender'].__name = 'Component/MeshRender'
+__all_components['7 :: Component/MeshRender'].__type_name = 'Component/MeshRender'
 __all_components['7 :: Component/MeshRender'].gameObject = __all_game_objects[7]
 __all_components['7 :: Component/MeshRender'].transform = __all_game_objects[7].transform
 
@@ -179,7 +179,7 @@ __all_components['7 :: Component/MeshRender'].enabled = true
 __all_components['7 :: Component/MeshRender'].path = 'Barrel.mesh'
 
 __all_components['7 :: Scripts/SpinnerController'] = SpinnerController:new()
-__all_components['7 :: Scripts/SpinnerController'].__name = 'Scripts/SpinnerController'
+__all_components['7 :: Scripts/SpinnerController'].__type_name = 'Scripts/SpinnerController'
 __all_components['7 :: Scripts/SpinnerController'].gameObject = __all_game_objects[7]
 __all_components['7 :: Scripts/SpinnerController'].transform = __all_game_objects[7].transform
 
@@ -187,7 +187,7 @@ __all_components['7 :: Scripts/SpinnerController'].enabled = true
 __all_components['7 :: Scripts/SpinnerController'].rotationSpeed = 10.000000
 
 __all_components['8 :: Component/MeshRender'] = MeshRender:new()
-__all_components['8 :: Component/MeshRender'].__name = 'Component/MeshRender'
+__all_components['8 :: Component/MeshRender'].__type_name = 'Component/MeshRender'
 __all_components['8 :: Component/MeshRender'].gameObject = __all_game_objects[8]
 __all_components['8 :: Component/MeshRender'].transform = __all_game_objects[8].transform
 
@@ -195,7 +195,7 @@ __all_components['8 :: Component/MeshRender'].enabled = true
 __all_components['8 :: Component/MeshRender'].path = 'ogrehead.mesh'
 
 __all_components['8 :: Scripts/DroneController'] = DroneController:new()
-__all_components['8 :: Scripts/DroneController'].__name = 'Scripts/DroneController'
+__all_components['8 :: Scripts/DroneController'].__type_name = 'Scripts/DroneController'
 __all_components['8 :: Scripts/DroneController'].gameObject = __all_game_objects[8]
 __all_components['8 :: Scripts/DroneController'].transform = __all_game_objects[8].transform
 

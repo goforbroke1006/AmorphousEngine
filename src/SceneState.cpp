@@ -56,6 +56,8 @@ const std::map<long long int, AmE::GameObject *> &AmE::SceneState::getSceneObjec
 }
 
 void AmE::SceneState::removeSceneObjectFinally(GameObjectInstanceID id) {
+    delete mSceneObjectRemoved[id];
+
     mSceneObjectRemoved.erase(id);
     mSceneGameObjectsActive.erase(id);
 }

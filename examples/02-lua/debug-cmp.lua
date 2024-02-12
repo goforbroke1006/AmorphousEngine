@@ -32,7 +32,7 @@ __global_prefab_game_objects['./Prefabs/Bot.json'].transform.rotation:Set(0.0000
 __global_prefab_game_objects['./Prefabs/Bot.json'].transform.localScale:Set(1.000000, 1.000000, 1.000000)
 
 __global_prefab_game_objects['./Prefabs/Bot.json'].__components['EnemyController'] = EnemyController:new()
-__global_prefab_game_objects['./Prefabs/Bot.json'].__components['EnemyController'].__name = 'EnemyController'
+__global_prefab_game_objects['./Prefabs/Bot.json'].__components['EnemyController'].__type_name = 'EnemyController'
 __global_prefab_game_objects['./Prefabs/Bot.json'].__components['EnemyController'].gameObject = nil
 __global_prefab_game_objects['./Prefabs/Bot.json'].__components['EnemyController'].transform = nil
 __global_prefab_game_objects['./Prefabs/Bot.json'].__components['EnemyController'].enabled = true
@@ -43,7 +43,7 @@ __global_prefab_game_objects['./Prefabs/Projectile.json'].transform.rotation:Set
 __global_prefab_game_objects['./Prefabs/Projectile.json'].transform.localScale:Set(1.000000, 1.000000, 1.000000)
 
 __global_prefab_game_objects['./Prefabs/Projectile.json'].__components['ProjectileController'] = ProjectileController:new()
-__global_prefab_game_objects['./Prefabs/Projectile.json'].__components['ProjectileController'].__name = 'ProjectileController'
+__global_prefab_game_objects['./Prefabs/Projectile.json'].__components['ProjectileController'].__type_name = 'ProjectileController'
 __global_prefab_game_objects['./Prefabs/Projectile.json'].__components['ProjectileController'].gameObject = nil
 __global_prefab_game_objects['./Prefabs/Projectile.json'].__components['ProjectileController'].transform = nil
 __global_prefab_game_objects['./Prefabs/Projectile.json'].__components['ProjectileController'].enabled = true

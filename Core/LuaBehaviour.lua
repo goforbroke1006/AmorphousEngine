@@ -14,7 +14,7 @@ require 'Core/Space'
 
 
 LuaBehaviour = {
-    --__name = "",
+    --__type_name = "",
     --enabled = true,
     --gameObject = GameObject,
     --transform = Transform,
@@ -22,7 +22,8 @@ LuaBehaviour = {
 
 function LuaBehaviour:new()
     lb = {
-        __name = "",
+        __type_name = "",
+        __type_filepath = "",
         enabled = true,
         gameObject = GameObject:new(),
         transform = Transform,

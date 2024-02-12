@@ -160,11 +160,12 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
 
     -- create components for new instance
     for _, cmp in pairs(original.__components) do
-        local cmpKey = '' .. instance.__instanceID .. ' :: ' .. cmp.__name
+        local cmpKey = '' .. instance.__instanceID .. ' :: ' .. cmp.__type_name
         --Debug.Log("Create component: " .. cmpKey)
         __all_components[cmpKey] = LuaBehaviour.__make_clone(cmp)
-        __all_components[cmpKey].__name = cmp.__name
-        __all_components[cmpKey].enabled = true
+        __all_components[cmpKey].__type_name = cmp.__type_name
+        __all_components[cmpKey].__type_filepath = cmp.__type_filepath
+        __all_components[cmpKey].enabled = cmp.enabled
         __all_components[cmpKey].gameObject = instance
         __all_components[cmpKey].transform = instance.transform
 
@@ -184,4 +185,32 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     --)
 
     return instance
+end
+
+function Object.FindObjectsOfType(typeArg)
+    local next_idx = 0
+    local result = {}
+
+    -- print(type(typeArg))
+
+    if type(typeArg) == "table" then
+        local typeName = getTableName(typeArg)
+        for _, cmp in pairs(__all_components) do
+            if cmp.__type_name == typeName then
+                result[next_idx] = cmp.gameObject
+                next_idx = next_idx + 1
+            end
+        end
+    elseif type(typeArg) == "string" then
+        for _, cmp in pairs(__all_components) do
+            if cmp.__type_name == typeArg then
+                result[next_idx] = cmp.gameObject
+                next_idx = next_idx + 1
+            end
+        end
+    else
+        Debug.LogWarning("unexpected type arg of " .. type(typeArg) .. " type")
+    end
+
+    return result
 end

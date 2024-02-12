@@ -191,7 +191,7 @@ void AmE::Lua53::update(
             const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(
                     LETKey(GO_PROP_INSTANCE_ID))).getValue();
 
-            const std::string &cmpName = cmpTbl->getValue(LETKey("__name")).ToString();
+            const std::string &cmpName = cmpTbl->getValue(LETKey("__type_filepath")).ToString();
 
             GameObject *pGameObject = sceneState->getSceneGameObject(goID);
             if (nullptr == pGameObject) {
@@ -219,8 +219,9 @@ void AmE::Lua53::update(
                 if (attrName == "function")
                     continue;
 
-                if (attrName == "__name")
-                    continue;
+                if (attrName == "__type_name") continue;
+                if (attrName == "__type_filepath") continue;
+
                 if (attrName == CMP_PROP_GO)
                     continue;
                 if (attrName == CMP_PROP_TR)

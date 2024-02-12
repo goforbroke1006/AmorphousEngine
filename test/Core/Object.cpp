@@ -46,9 +46,9 @@ TEST(TestObject_Instantiate, create_2_clones_and_modify_props_independently) {
             "local orig = GameObject:new(-1, 'Some entity')\n"
             "orig.transform.position:Set(10.0, 20.0, 30.0)\n"
             "orig.__components['BotController'] = BotController\n"
-            "orig.__components['BotController'].__name = 'BotController'\n"
+            "orig.__components['BotController'].__type_name = 'BotController'\n"
             "orig.__components['EnemyController'] = EnemyController\n"
-            "orig.__components['EnemyController'].__name = 'EnemyController'\n"
+            "orig.__components['EnemyController'].__type_name = 'EnemyController'\n"
             ""
             "local clone1 = Object.Instantiate(orig)\n"
             "print(clone1.name)\n"
@@ -124,9 +124,9 @@ TEST(TestObject_Destroy, create_two_detroy_both) {
             "local orig = GameObject:new(-1, 'Some entity')\n"
             "orig.transform.position:Set(10.0, 20.0, 30.0)\n"
             "orig.__components['BotController'] = BotController\n"
-            "orig.__components['BotController'].__name = 'BotController'\n"
+            "orig.__components['BotController'].__type_name = 'BotController'\n"
             "orig.__components['EnemyController'] = EnemyController\n"
-            "orig.__components['EnemyController'].__name = 'EnemyController'\n"
+            "orig.__components['EnemyController'].__type_name = 'EnemyController'\n"
             ""
             "local clone1 = Object.Instantiate(orig)\n"
             "print(clone1.name)\n"
@@ -163,4 +163,17 @@ TEST(TestObject_Destroy, create_two_detroy_both) {
               "2\n"
               "0\n"
               "0\n", output);
+}
+
+TEST(TestObject_FindObjectsOfType, create_two_detroy_both) {
+//    testing::internal::CaptureStdout();
+
+    LuaCpp::LuaContext ctx;
+    ctx.CompileFile("test", "./testdata/Object/positive1.lua");
+    ctx.Run("test");
+
+//    std::string output = testing::internal::GetCapturedStdout();
+//    EXPECT_EQ("2\n"
+//              "1\n"
+//              "1\n", output);
 }

@@ -27,7 +27,7 @@ end
 function ProjectileController:Update()
     if self.framesCount >= self.ttlInFrames then
         Object.Destroy(self.gameObject)
-        Debug.Log("Remove projectile " .. self.framesCount)
+        Debug.Log("Remove projectile because frame count is " .. self.framesCount)
         return
     end
     self.framesCount = self.framesCount + 1
