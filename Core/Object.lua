@@ -84,16 +84,13 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
         __scene_next_game_object_instance_id = table_length(__all_game_objects)
     end
 
-    local instance = nil
+    local instance = GameObject:new(
+            __scene_next_game_object_instance_id,
+            original.name .. " (Clone)"
+    )
 
     if arg1 == nil and arg2 == nil and arg3 == nil then
         --- public static Object Instantiate(Object original);
-
-        instance = GameObject:new(
-                __scene_next_game_object_instance_id,
-                original.name .. " (Clone)"
-        )
-        __all_game_objects[instance.__instanceID] = instance;
 
         instance.transform.position:Set(
                 original.transform.position.x,
@@ -113,12 +110,6 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
         )
     elseif arg1 ~= nil and arg1:IsA("Transform") and arg2 == nil and arg3 == nil then
         --- public static Object Instantiate(Object original, Transform parent);
-
-        instance = GameObject:new(
-                __scene_next_game_object_instance_id,
-                original.name .. " (Clone)"
-        )
-        __all_game_objects[instance.__instanceID] = instance;
 
         instance.transform.position:Set(
                 arg1.position.x,
@@ -144,23 +135,12 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     elseif arg1 ~= nil and arg1:IsA("Vector3") and arg2 ~= nil and arg2:IsA("Quaternion") and arg3 == nil then
         --- public static Object Instantiate(Object original, Vector3 position, Quaternion rotation);
 
-        instance = GameObject:new(
-                __scene_next_game_object_instance_id,
-                original.name .. " (Clone)"
-        )
-        __all_game_objects[instance.__instanceID] = instance;
+        local initPos = Vector3:new(arg1.x, arg1.y, arg1.z);
+        instance.transform.position = initPos;
 
-        instance.transform.position:Set(
-                arg1.x,
-                arg1.y,
-                arg1.z
-        )
-        instance.transform.rotation:Set(
-                arg2.x,
-                arg2.y,
-                arg2.z,
-                arg2.w
-        )
+        local origRotEuler = arg2.eulerAngles;
+        instance.transform.rotation = Quaternion.Euler(origRotEuler.x, origRotEuler.y, origRotEuler.z);
+
         instance.transform.localScale:Set(
                 original.transform.localScale.x,
                 original.transform.localScale.y,
@@ -176,8 +156,9 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
         return nil
     end
 
+    __all_game_objects[instance.__instanceID] = instance;
+
     -- create components for new instance
-    --if instance ~= nil then
     for _, cmp in pairs(original.__components) do
         local cmpKey = '' .. instance.__instanceID .. ' :: ' .. cmp.__name
         Debug.Log("Create component: " .. cmpKey)
@@ -195,10 +176,12 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
             __all_components[cmpKey]:Awake()
         end
     end
-    --end
 
     __scene_next_game_object_instance_id = __scene_next_game_object_instance_id + 1
-    Debug.Log("Create new object: " .. instance.__instanceID)
+    Debug.Log("Create new object: " .. instance.__instanceID
+            .. " in " .. instance.transform.position:ToString()
+            .. " with " .. instance.transform.rotation.eulerAngles:ToString()
+    )
 
     return instance
 end

@@ -26,7 +26,7 @@ public:
         if (mInsertIdx % mKeepSize == 0)
             mAvg = mWindowSum / static_cast<double>(mWindowValues.size());
 
-        if (mWindowValues.size() < mKeepSize) {
+        if (mWindowValues.size() <= mKeepSize) {
             mAvg = mWindowValues.back();
         }
 

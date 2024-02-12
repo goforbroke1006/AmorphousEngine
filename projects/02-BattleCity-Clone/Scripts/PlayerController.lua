@@ -31,7 +31,10 @@ function PlayerController:Update()
                 self.transform.position,
                 self.transform.rotation
         );
-        Debug.Log("Create projectile " .. projectile:GetInstanceID())
+        Debug.Log("Create projectile " .. projectile:GetInstanceID()
+                .. " in " .. self.transform.position:ToString()
+                .. " with " .. self.transform.rotation.eulerAngles:ToString()
+        )
 
         --Debug.Log("Create projectile " .. projectile.__instanceID)
         self.reloading = self.reloadingTimeout
@@ -50,12 +53,24 @@ function PlayerController:Update()
     local horMove = Input.GetAxis("Horizontal");
 
     if verMove ~= 0.0 then
-        local move = Vector3:new(0.0, 0.0, verMove)
-        self.transform:Translate(move * self.motionSpeed * Time.deltaTime);
+        if verMove > 0 then
+            self.transform.rotation = Quaternion.Euler(0, 0, 0);
+        end
+        if verMove < 0 then
+            self.transform.rotation = Quaternion.Euler(0, -180, 0);
+        end
+
+        self.transform:Translate(Vector3.forward * math.abs(verMove) * self.motionSpeed * Time.deltaTime);
     else
         if horMove ~= 0.0 then
-            local move = Vector3:new(horMove, 0.0, 0.0)
-            self.transform:Translate(move * self.motionSpeed * Time.deltaTime);
+            if horMove > 0 then
+                self.transform.rotation = Quaternion.Euler(0, 90, 0);
+            end
+            if horMove < 0 then
+                self.transform.rotation = Quaternion.Euler(0, -90, 0);
+            end
+
+            self.transform:Translate(Vector3.forward * math.abs(horMove) * self.motionSpeed * Time.deltaTime);
         end
     end
 end

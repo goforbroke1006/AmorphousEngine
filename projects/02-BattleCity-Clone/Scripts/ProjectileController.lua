@@ -24,8 +24,7 @@ function ProjectileController:Update()
         return
     end
 
-    local movement = self.transform.rotation
-            * Vector3.forward
+    local movement = Vector3.forward
             * self.motionSpeed
             * Time.deltaTime;
     self.transform:Translate(movement)

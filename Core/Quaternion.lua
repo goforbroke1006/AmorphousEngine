@@ -30,6 +30,8 @@ function Quaternion:new(newX --[[number]], newY --[[number]], newZ --[[number]],
         y = newY,
         z = newZ,
         w = newW,
+
+        eulerAngles = Vector3.zero,
     }
 
     self.__index = self
@@ -42,14 +44,12 @@ function Quaternion:IsA(className --[[string]])
     return className == "Quaternion"
 end
 
-
-
 function Quaternion.Euler(roll --[[number]], pitch --[[number]], yaw --[[number]])
     -- https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Source_code_2
 
-    roll = math.fmod(roll, 180)
-    pitch = math.fmod(pitch, 180)
-    yaw = math.fmod(yaw, 180)
+    roll = math.fmod(roll, 360)
+    pitch = math.fmod(pitch, 360)
+    yaw = math.fmod(yaw, 360)
 
     local rad_roll = math.rad(roll)
     local rad_pitch = math.rad(pitch)
@@ -120,6 +120,10 @@ function Quaternion:Normalize()
         self.y = self.y / magnitude
         self.z = self.z / magnitude
     end
+end
+
+function Quaternion:ToString()
+    return "(" .. self.x .. ", " .. self.y .. ", " .. self.z .. ", " .. self.w .. ")"
 end
 
 Quaternion.__mul = function(qtr --[[Quaternion]], arg --[[Quaternion|Vector3]])
