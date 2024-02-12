@@ -6,6 +6,7 @@
 
 require 'math'
 require 'Core/Debug'
+require 'Core/Vector3'
 
 Quaternion = {
     w = 0.0,

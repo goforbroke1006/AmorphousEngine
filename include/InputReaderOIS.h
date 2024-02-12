@@ -23,9 +23,9 @@ namespace AmE {
 
         ~InputReaderOIS() override;
 
-        void collectCodes();
+        void collectCodes() override;
 
-        [[nodiscard]] InputsState *getState() const;
+        [[nodiscard]] InputsState *getState() const override;
 
     private:
         InputsState *mInputState;

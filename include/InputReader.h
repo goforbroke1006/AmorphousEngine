@@ -13,11 +13,9 @@ namespace AmE {
      */
     class InputReader {
     public:
-        virtual ~InputReader() = default;
-
         virtual void collectCodes() = 0;
 
-        virtual InputsState *getState() const = 0;
+        [[nodiscard]] virtual InputsState *getState() const  = 0;
     };
 }
 

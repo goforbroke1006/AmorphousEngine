@@ -14,7 +14,7 @@ public:
         mInputState = new AmE::InputsState();
     }
 
-    ~InputReaderFake() override {
+    ~InputReaderFake() {
         delete mInputState;
     }
 
