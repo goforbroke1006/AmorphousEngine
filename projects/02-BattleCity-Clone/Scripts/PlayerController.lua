@@ -31,6 +31,8 @@ function PlayerController:Update()
                 self.transform.position,
                 self.transform.rotation
         );
+        projectile.senderObject = self.gameObject
+
         Debug.Log("Create projectile " .. projectile:GetInstanceID()
                 .. " in " .. self.transform.position:ToString()
                 .. " with " .. self.transform.rotation.eulerAngles:ToString()

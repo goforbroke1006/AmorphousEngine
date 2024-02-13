@@ -21,6 +21,7 @@ namespace AmE {
         enum Kind {
             PropTypeBoolean,
             PropTypeDouble,
+            PropTypeInteger,
             PropTypeString,
             PropTypeColor,
             PropTypeVector3,
@@ -32,6 +33,7 @@ namespace AmE {
         static PropType::Kind parseKind(const std::string &str) {
             if (str == "boolean") return PropTypeBoolean;
             if (str == "double") return PropTypeDouble;
+            if (str == "integer") return PropTypeInteger;
             if (str == "string") return PropTypeString;
             if (str == "Color") return PropTypeColor;
             if (str == "Vector3") return PropTypeVector3;
@@ -48,6 +50,8 @@ namespace AmE {
                     return "boolean";
                 case PropTypeDouble:
                     return "double";
+                case PropTypeInteger:
+                    return "integer";
                 case PropTypeString:
                     return "string";
                 case PropTypeColor:
@@ -71,19 +75,19 @@ namespace AmE {
         PropType::Kind mType;
         std::any mValue;
 
-        std::string asString() const {
+        [[nodiscard]] std::string asString() const {
             return std::any_cast<std::string>(mValue);
         }
 
-        int asInt() const {
+        [[nodiscard]] int asInt() const {
             return std::any_cast<int>(mValue);
         }
 
-        double asDouble() const {
+        [[nodiscard]] double asDouble() const {
             return std::any_cast<double>(mValue);
         }
 
-        Color asColor() const {
+        [[nodiscard]] Color asColor() const {
             return std::any_cast<Color>(mValue);
         }
 
@@ -94,6 +98,8 @@ namespace AmE {
                 }
                 case PropType::PropTypeDouble:
                     return std::stod(raw);
+                case PropType::PropTypeInteger:
+                    return std::stoi(raw);
                 case PropType::PropTypeString:
                     return raw;
                 case PropType::PropTypeColor: {

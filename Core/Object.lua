@@ -50,10 +50,10 @@ Object.Destroy = function(obj --[[Object]], t)
         return
     end
 
-    -- TODO: implement me
-
-    -- TODO: find in __all_game_objects and disable forever
-    -- TODO: find in __all_components and disable forever
+    if not obj:IsA("GameObject") then
+        Debug.LogError("Object.Destroy can work just with GameObject type for now")
+        return
+    end
 
     -- Debug.LogError("Object.Destroy: implement me")
 
@@ -197,14 +197,14 @@ function Object.FindObjectsOfType(typeArg)
         local typeName = getTableName(typeArg)
         for _, cmp in pairs(__all_components) do
             if cmp.__type_name == typeName then
-                result[next_idx] = cmp.gameObject
+                result[next_idx] = cmp
                 next_idx = next_idx + 1
             end
         end
     elseif type(typeArg) == "string" then
         for _, cmp in pairs(__all_components) do
             if cmp.__type_name == typeArg then
-                result[next_idx] = cmp.gameObject
+                result[next_idx] = cmp
                 next_idx = next_idx + 1
             end
         end

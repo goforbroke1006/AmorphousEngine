@@ -1,0 +1,24 @@
+{
+  "name": "Obstacle-01-BrickWall",
+  "transform": {
+    "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+  },
+  "components": [
+    {
+      "pathname": "Component/MeshRender",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+      ]
+    },
+    {
+      "pathname": "Scripts/Obstacle",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "solidity", "type": "integer", "value": "2"}
+      ]
+    }
+  ]
+}

@@ -210,6 +210,8 @@ AmE::Lua53Generator::simplePropValToLuaCode(const Property &prop) {
             return std::any_cast<bool>(prop.mValue) ? "true" : "false";
         case PropType::PropTypeDouble:
             return std::to_string(std::any_cast<double>(prop.mValue));
+        case PropType::PropTypeInteger:
+            return std::to_string(std::any_cast<int>(prop.mValue));
         case PropType::PropTypeString:
             return "'" + std::any_cast<std::string>(prop.mValue) + "'";
         case PropType::PropTypeColor: {

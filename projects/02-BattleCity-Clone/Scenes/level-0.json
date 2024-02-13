@@ -9,8 +9,23 @@
       },
       "components": [
         {
-          "name": "ApplicationSystem",
           "pathname": "Scripts/ApplicationSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hitting System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/HittingSystem",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"}
           ]
@@ -26,7 +41,6 @@
       },
       "components": [
         {
-          "name": "Camera",
           "pathname": "Component/Camera",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -46,7 +60,6 @@
       },
       "components": [
         {
-          "name": "Light",
           "pathname": "Component/Light",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -65,7 +78,6 @@
       },
       "components": [
         {
-          "name": "Light",
           "pathname": "Component/Light",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -84,7 +96,6 @@
       },
       "components": [
         {
-          "name": "Light",
           "pathname": "Component/Light",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -103,7 +114,6 @@
       },
       "components": [
         {
-          "name": "MeshRender",
           "pathname": "Component/MeshRender",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -121,7 +131,6 @@
       },
       "components": [
         {
-          "name": "MeshRender",
           "pathname": "Component/MeshRender",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -129,11 +138,130 @@
           ]
         },
         {
-          "name": "BaseBanner",
           "pathname": "Scripts/BaseBanner",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
             {"name": "isDestroyed", "type": "boolean", "value": "false"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall",
+      "transform": {
+        "position": {"x": -10.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall",
+      "transform": {
+        "position": {"x": -10.0, "y": 0.0, "z": -50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": -50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall",
+      "transform": {
+        "position": {"x": 10.0, "y": 0.0, "z": -50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall",
+      "transform": {
+        "position": {"x": 10.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
           ]
         }
       ]
@@ -147,7 +275,6 @@
       },
       "components": [
         {
-          "name": "MeshRender",
           "pathname": "Component/MeshRender",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -155,7 +282,6 @@
           ]
         },
         {
-          "name": "PlayerController",
           "pathname": "Scripts/PlayerController",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -175,7 +301,6 @@
       },
       "components": [
         {
-          "name": "EnemyRespawnSystem",
           "pathname": "Scripts/EnemyRespawnSystem",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"}
@@ -192,7 +317,6 @@
       },
       "components": [
         {
-          "name": "EnemyRespawnPoint",
           "pathname": "Scripts/EnemyRespawnPoint",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -210,7 +334,6 @@
       },
       "components": [
         {
-          "name": "EnemyRespawnPoint",
           "pathname": "Scripts/EnemyRespawnPoint",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
@@ -228,7 +351,6 @@
       },
       "components": [
         {
-          "name": "EnemyRespawnPoint",
           "pathname": "Scripts/EnemyRespawnPoint",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},

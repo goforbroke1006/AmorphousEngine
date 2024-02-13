@@ -255,7 +255,10 @@ std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Eng
             return ((LEBoolean *) rawLuaVal)->getValue();
         }
         case PropType::PropTypeDouble: {
-            return ((LENum *) rawLuaVal)->getValue();
+            return (double) ((LENum *) rawLuaVal)->getValue();
+        }
+        case PropType::PropTypeInteger: {
+            return (int) ((LENum *) rawLuaVal)->getValue();
         }
         case PropType::PropTypeString: {
             return ((LEString *) rawLuaVal)->getValue();
