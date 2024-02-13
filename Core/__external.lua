@@ -80,6 +80,30 @@ __application_quit = false
 
 __global_prefab_game_objects = {}
 
+function __before_scene_components_awake()
+    for _, cmpInstance in pairs(__all_components) do
+        if cmpInstance['Awake'] ~= nil and type(cmpInstance['Awake']) == "function" then
+            local fn = cmpInstance['Awake']
+            local status, err = pcall(fn, cmpInstance)
+            if err ~= nil then
+                Debug.LogError(err)
+            end
+        end
+    end
+end
+
+function __before_scene_components_start()
+    for _, cmpInstance in pairs(__all_components) do
+        if cmpInstance['Start'] ~= nil and type(cmpInstance['Start']) == "function" then
+            local fn = cmpInstance['Start']
+            local status, err = pcall(fn, cmpInstance)
+            if err ~= nil then
+                Debug.LogError(err)
+            end
+        end
+    end
+end
+
 function __before_update_frame()
     --if __application_quit then
     --    return
@@ -109,11 +133,13 @@ function __on_update_frame()
     --    return
     --end
 
-    for cmpKey, cmpInstance in pairs(__all_components) do
-        if cmpInstance['Update'] == nil then
-            Debug.LogWarning(cmpKey .. " has no Update method")
-        elseif (cmpInstance.enabled) then
-            cmpInstance:Update()
+    for _, cmpInstance in pairs(__all_components) do
+        if cmpInstance['Update'] ~= nil and cmpInstance.enabled then
+            local fn = cmpInstance['Update']
+            local status, err = pcall(fn, cmpInstance)
+            if err ~= nil then
+                Debug.LogError(err)
+            end
         end
     end
 end

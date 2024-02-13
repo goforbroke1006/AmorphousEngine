@@ -187,6 +187,29 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     return instance
 end
 
+--- https://docs.unity3d.com/ScriptReference/Object.FindObjectOfType.html
+function Object.FindObjectOfType(typeArg)
+    if type(typeArg) == "table" then
+        local typeName = getTableName(typeArg)
+        for _, cmp in pairs(__all_components) do
+            if cmp.__type_name == typeName then
+                return cmp
+            end
+        end
+    elseif type(typeArg) == "string" then
+        for _, cmp in pairs(__all_components) do
+            if cmp.__type_name == typeArg then
+                return cmp
+            end
+        end
+    else
+        Debug.LogWarning("unexpected type arg of " .. type(typeArg) .. " type")
+    end
+
+    return nil
+end
+
+--- https://docs.unity3d.com/ScriptReference/Object.FindObjectsOfType.html
 function Object.FindObjectsOfType(typeArg)
     local next_idx = 0
     local result = {}

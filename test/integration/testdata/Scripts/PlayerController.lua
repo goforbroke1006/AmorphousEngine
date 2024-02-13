@@ -8,10 +8,12 @@ require "Core/LuaBehaviour"
 
 PlayerController = {}
 
-PlayerController.motionSpeed = 10.0
-PlayerController.reloading = 0.0
-PlayerController.reloadingTimeout = 2.0
-PlayerController.projectilePrefab = GameObject:new(-1, "")
+function PlayerController:Awake()
+    self.motionSpeed = self.motionSpeed or 10.0
+    self.reloading = self.reloading or 0.0
+    self.reloadingTimeout = self.reloadingTimeout or 2.0
+    self.projectilePrefab = self.projectilePrefab or nil
+end
 
 function PlayerController:Start()
     if (self.motionSpeed == 0.0) then

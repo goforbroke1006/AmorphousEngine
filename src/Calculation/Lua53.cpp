@@ -63,7 +63,10 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
     // 4) Set each component with args (static values, references to gameObject or transforms)
     // 5) Run 'Start()' method for each component
 
-    const std::string &initCode = Lua53Generator::buildInitLuaCode(sceneState);
+    std::string initCode = Lua53Generator::buildInitLuaCode(sceneState);
+    initCode += "__before_scene_components_awake();\n"
+                "__before_scene_components_start();\n"
+                "\n";
     luaL_loadstring(*L, initCode.c_str());
 //    Logger::Trace("\n" + initCode);
 

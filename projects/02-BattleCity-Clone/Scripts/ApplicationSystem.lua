@@ -18,4 +18,10 @@ function ApplicationSystem:Update()
         Debug.Log("Quit...")
         Application.Quit();
     end
+
+    local playerCmp = Object.FindObjectOfType(PlayerController)
+    if playerCmp == nil then
+        Debug.Log("<<< You are dead >>>")
+        Application.Quit();
+    end
 end

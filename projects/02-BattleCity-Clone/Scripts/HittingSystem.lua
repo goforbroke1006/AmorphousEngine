@@ -10,7 +10,10 @@ require "Core/Object"
 HittingSystem = LuaBehaviour:new()
 
 function HittingSystem:Start()
-    --
+    self.baseBannerCmp = Object.FindObjectOfType(BaseBanner)
+    if self.baseBannerCmp == nil then
+        Debug.LogError("Base Banner is not placed on the map")
+    end
 end
 
 function HittingSystem:Update()
@@ -20,12 +23,17 @@ function HittingSystem:Update()
         return
     end
 
-    -- TODO: check hitting with base banner (game over)
+    for _, shellCmp in pairs(shells) do
+        if Vector3.Distance(shellCmp.transform.position, self.baseBannerCmp.transform.position) < 6.0 then
+            Debug.Log("<<< GAME OVER >>>");
+            Application.Quit();
+        end
+    end
 
     local obstacles = Object.FindObjectsOfType(Obstacle)
     for _, shellCmp in pairs(shells) do
         for _, obsCmp in pairs(obstacles) do
-            if Vector3.Distance(shellCmp.transform.position, obsCmp.transform.position) < 8.0 then
+            if Vector3.Distance(shellCmp.transform.position, obsCmp.transform.position) < 6.0 then
                 obsCmp.solidity = obsCmp.solidity - 1
                 if obsCmp.solidity <= 0 then
                     Object.Destroy(obsCmp.gameObject)
@@ -35,6 +43,21 @@ function HittingSystem:Update()
         end
     end
 
-    -- TODO: check hitting tank from another team
+    local tanks = Object.FindObjectsOfType(Tank);
+    for _, shellCmp in pairs(shells) do
+        for _, tankCmp in pairs(tanks) do
+            if shellCmp.senderObject:GetInstanceID() ~= tankCmp.gameObject:GetInstanceID() then
+                if Vector3.Distance(shellCmp.transform.position, tankCmp.transform.position) < 6.0 then
+                    tankCmp.solidity = tankCmp.solidity - 1
+                    if tankCmp.solidity <= 0 then
+                        Object.Destroy(tankCmp.gameObject)
+                    end
+                    Object.Destroy(shellCmp.gameObject)
+
+                    Debug.Log("Hit tank " .. tankCmp.gameObject.name)
+                end
+            end
+        end
+    end
 
 end

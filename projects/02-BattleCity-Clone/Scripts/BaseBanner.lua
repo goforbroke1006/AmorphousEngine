@@ -8,7 +8,9 @@ require "Core/LuaBehaviour"
 
 BaseBanner = {}
 
-BaseBanner.isDestroyed = false
+function BaseBanner:Awake()
+    self.isDestroyed = false
+end
 
 function BaseBanner:Start()
     -- TODO: ???

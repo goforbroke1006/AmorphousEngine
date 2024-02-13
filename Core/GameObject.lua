@@ -45,6 +45,17 @@ function GameObject:AddComponent(name --[[string]])
     return nil
 end
 
+function GameObject:GetComponent(typeArg)
+    if type(typeArg) ~= "table" then
+        Debug.LogError("Incompatible component ref type " .. type(typeArg) .. ", table required")
+        return nil
+    end
+
+    local typeName = getTableName(typeArg)
+
+    return __all_components['' .. self.__instanceID .. " :: " .. typeName]
+end
+
 function GameObject.Find(name --[[string]])
     -- TODO: implement me
     return nil

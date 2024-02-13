@@ -9,20 +9,28 @@ require "Core/Object"
 
 EnemyRespawnPoint = LuaBehaviour:new()
 
-EnemyRespawnPoint.request = ""
-EnemyRespawnPoint.tank1Prefab = GameObject:new(-1, "")
+function EnemyRespawnPoint:Awake()
+    self.request = self.request or ""
+    self.tank1Prefab = self.tank1Prefab or nil
+end
 
 function EnemyRespawnPoint:Start()
-    Debug.Log("Enemy respawn point '" .. self.gameObject.name .. "' are ready...")
+    if self.tank1Prefab == nil then
+        Debug.LogWarning("Need to specify prefab for Tank 1")
+    end
 end
 
 function EnemyRespawnPoint:Update()
     if self.request == "tank1" then
+        if self.tank1Prefab == nil then
+            Debug.LogError("Need to specify prefab for Tank 1")
+        end
         Object.Instantiate(
                 self.tank1Prefab,
                 self.transform.position,
-                Quaternion.identity
+                Quaternion.Euler(0.0, 180.0, 0.0)
         );
+        self.request = ""
     end
 
     -- TODO: create new enemy instance

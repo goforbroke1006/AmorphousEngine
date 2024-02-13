@@ -8,10 +8,28 @@ require "Core/LuaBehaviour"
 
 EnemyRespawnSystem = LuaBehaviour:new()
 
+function EnemyRespawnSystem:Awake()
+    self.maxEnemiesOnMap = 4
+    self.needToCreate = 3
+    self.nextRespawnIdx = 0
+end
+
 function EnemyRespawnSystem:Start()
-    -- TODO: collect all respawn points
+    self.respawns = Object.FindObjectsOfType(EnemyRespawnPoint);
+    self.respawnsCount = table_length(self.respawns);
 end
 
 function EnemyRespawnSystem:Update()
-    -- TODO: request new enemy
+    local enemies = Object.FindObjectsOfType(EnemyController)
+
+    --Debug.Log("Enemies left: " .. self.needToCreate)
+
+    if table_length(enemies) < self.maxEnemiesOnMap and self.needToCreate > 0 then
+        local current = self.respawns[self.nextRespawnIdx % self.respawnsCount];
+        Debug.Log("Select respawn " .. current.gameObject.name);
+        current.request = "tank1";
+
+        self.nextRespawnIdx = self.nextRespawnIdx + 1;
+        self.needToCreate = self.needToCreate - 1;
+    end
 end

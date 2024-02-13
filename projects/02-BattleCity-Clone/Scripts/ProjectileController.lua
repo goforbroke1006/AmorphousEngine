@@ -8,8 +8,10 @@ require "Core/LuaBehaviour"
 
 ProjectileController = {}
 
-ProjectileController.motionSpeed = 20.0
-ProjectileController.senderObject = nil
+function ProjectileController:Awake()
+    self.motionSpeed = self.motionSpeed or 20.0
+    self.senderObject = nil
+end
 
 function ProjectileController:Start()
     --

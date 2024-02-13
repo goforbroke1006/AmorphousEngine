@@ -210,4 +210,4 @@ __before_update_frame();
 __on_update_frame();
 __after_update_frame();
 
-print("")
+print(type(__all_components['8 :: Scripts/DroneController']['Update']))
