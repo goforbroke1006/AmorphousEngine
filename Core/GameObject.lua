@@ -45,6 +45,7 @@ function GameObject:AddComponent(name --[[string]])
     return nil
 end
 
+--- https://docs.unity3d.com/ScriptReference/GameObject.GetComponent.html
 function GameObject:GetComponent(typeArg)
     if type(typeArg) ~= "table" then
         Debug.LogError("Incompatible component ref type " .. type(typeArg) .. ", table required")
