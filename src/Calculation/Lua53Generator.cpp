@@ -130,7 +130,9 @@ AmE::Lua53Generator::buildInitLuaCode(
 
     initCode += std::string()
                 + "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do\n"
-                + "    cmpInstance:Start()\n"
+                + "    if cmpInstance['Start'] ~= nil and type(cmpInstance['Start']) == 'function' then"
+                + "        cmpInstance:Start()\n"
+                + "    end\n"
                 + "end\n";
 
     return initCode;

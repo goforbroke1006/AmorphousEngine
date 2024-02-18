@@ -17,6 +17,22 @@
       ]
     },
     {
+      "name": "Physics System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/PhysicsSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
       "name": "Hitting System",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -147,7 +163,7 @@
       ]
     },
     {
-      "name": "Obstacle BrickWall",
+      "name": "Obstacle BrickWall 1",
       "transform": {
         "position": {"x": -10.0, "y": 0.0, "z": -60.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -171,7 +187,7 @@
       ]
     },
     {
-      "name": "Obstacle BrickWall",
+      "name": "Obstacle BrickWall 2",
       "transform": {
         "position": {"x": -10.0, "y": 0.0, "z": -50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -195,7 +211,7 @@
       ]
     },
     {
-      "name": "Obstacle BrickWall",
+      "name": "Obstacle BrickWall 3",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": -50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -219,7 +235,7 @@
       ]
     },
     {
-      "name": "Obstacle BrickWall",
+      "name": "Obstacle BrickWall 4",
       "transform": {
         "position": {"x": 10.0, "y": 0.0, "z": -50.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -243,7 +259,7 @@
       ]
     },
     {
-      "name": "Obstacle BrickWall",
+      "name": "Obstacle BrickWall 5",
       "transform": {
         "position": {"x": 10.0, "y": 0.0, "z": -60.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
