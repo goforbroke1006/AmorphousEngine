@@ -4,16 +4,81 @@
 --- DateTime: 2/13/24 12:57 PM
 ---
 
+require "Core/Vector3"
+require "Scripts/Projectile"
+
 Tank = LuaBehaviour:new()
 
-function Tank:Start()
+function Tank:Awake()
+    -- movement properties
+    self.motionSpeed = self.motionSpeed or 10.0
+
+    -- shooting properties
+    self.reloading = self.reloading or 0.0
+    self.reloadingTimeout = self.reloadingTimeout or 2.0
+    self.projectilePrefab = self.projectilePrefab or GameObject:new(-1, "")
+
+    -- health level
     self.solidity = self.solidity or 1
 end
 
 function Tank:Start()
-    --
+    if (self.motionSpeed == 0.0) then
+        Debug.LogWarning("Tank: '" .. self.gameObject.name .. "' motionSpeed should not be equals zero")
+    end
+    if (self.projectilePrefab == nil) then
+        Debug.LogWarning("Tank: '" .. self.gameObject.name .. "' projectilePrefab should not be nil")
+    end
 end
 
 function Tank:Update()
-    --
+    if self.reloading > 0.0 then
+        self.reloading = self.reloading - Time.deltaTime
+        if self.reloading <= 0.0 then
+            Debug.Log("Projectile is loaded")
+        else
+            -- Debug.Log("Projectile will ready in " .. self.reloading .. " seconds")
+        end
+    end
+end
+
+function Tank:OnCollisionEnter(collision --[[Collision]])
+    if collision.gameObject:GetComponent(Projectile) ~= nil then
+        -- ignore projectiles
+        return
+    end
+
+    local enteringLen = 10.0 - self.transform.position:Distance(collision.transform.position)
+
+    if enteringLen > 0.01 then
+        Debug.Log("Tank " .. self.gameObject.name .. " hits something - move back")
+        self.transform:Translate(Vector3.back * (enteringLen + 0.5))
+    end
+end
+
+function Tank:DriveStraight(speed --[[number]])
+    local move = Vector3.forward * math.abs(speed) * self.motionSpeed * Time.deltaTime
+    self.transform:Translate(move)
+end
+
+function Tank:TryMakeAShot()
+    if self.reloading > 0.0 then
+        -- Need wait for reloading
+        return
+    end
+
+    local projectile = Object.Instantiate(
+            self.projectilePrefab,
+            self.transform.position,
+            self.transform.rotation
+    );
+    projectile:GetComponent(Projectile).senderObject = self.gameObject
+
+    Debug.Log("Create projectile " .. projectile:GetInstanceID()
+            .. " in " .. self.transform.position:ToString()
+            .. " with " .. self.transform.rotation.eulerAngles:ToString()
+    )
+
+    --Debug.Log("Create projectile " .. projectile.__instanceID)
+    self.reloading = self.reloadingTimeout
 end

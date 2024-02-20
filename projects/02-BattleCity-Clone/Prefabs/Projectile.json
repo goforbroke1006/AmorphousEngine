@@ -18,12 +18,12 @@
       "pathname": "Component/BoxCollider",
       "properties": [
         {"name": "enabled", "type": "boolean", "value": "true"},
-        {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+        {"name": "size", "type": "Vector3", "value": "5.0 5.0 5.0"}
       ]
     },
     {
-      "name": "ProjectileController",
-      "pathname": "Scripts/ProjectileController",
+      "name": "Projectile",
+      "pathname": "Scripts/Projectile",
       "properties": [
         {"name": "enabled", "type": "boolean", "value": "true"},
         {"name": "motionSpeed", "type": "double", "value": "20.0"}

@@ -114,6 +114,7 @@ void AmE::Lua53::update(
     std::string updateFrameCode
             = "__before_update_frame();\n"
               "__on_update_frame();\n"
+              "__check_all_collisions();\n"
               "__after_update_frame();\n";
     luaL_loadstring(*L, updateFrameCode.c_str());
     int res = lua_pcall(*L, 0, 0, 0);

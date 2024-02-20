@@ -6,7 +6,7 @@
 
 require "math"
 
-PhysicsSystemCustom = {}
+PhysicsSystemCustom = LuaBehaviour:new()
 
 MIN_DISTANCE = 10.0
 

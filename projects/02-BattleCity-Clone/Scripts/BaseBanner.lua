@@ -6,7 +6,7 @@
 
 require "Core/LuaBehaviour"
 
-BaseBanner = {}
+BaseBanner = LuaBehaviour:new()
 
 function BaseBanner:Awake()
     self.isDestroyed = false

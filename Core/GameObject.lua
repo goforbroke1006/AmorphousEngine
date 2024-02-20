@@ -7,12 +7,12 @@
 require 'Core/Object'
 require 'Core/Transform'
 
-GameObject = {} -- ToObject:new(0)
+GameObject = Object:new()
 
-GameObject.__instanceID = 0
-GameObject.name = ""
-GameObject.transform = Transform:new()
-GameObject.__components = {}
+--GameObject.__instanceID = 0
+--GameObject.name = ""
+--GameObject.transform = Transform:new()
+--GameObject.__components = {}
 
 function GameObject:new(__instanceID --[[integer]], name --[[string]])
     __instanceID = __instanceID or -1

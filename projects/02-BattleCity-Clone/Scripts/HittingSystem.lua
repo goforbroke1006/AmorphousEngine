@@ -17,7 +17,7 @@ function HittingSystem:Start()
 end
 
 function HittingSystem:Update()
-    local shells = Object.FindObjectsOfType(ProjectileController)
+    local shells = Object.FindObjectsOfType(Projectile)
     if table_length(shells) == 0 then
         -- no shells/bullets on scene, so skip
         return

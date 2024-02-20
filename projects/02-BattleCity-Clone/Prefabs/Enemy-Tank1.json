@@ -24,6 +24,9 @@
       "pathname": "Scripts/Tank",
       "properties": [
         {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "motionSpeed", "type": "double", "value": "10.0"},
+        {"name": "reloadingTimeout", "type": "double", "value": "2.0"},
+        {"name": "projectilePrefab", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"},
         {"name": "solidity", "type": "integer", "value": "1"}
       ]
     },

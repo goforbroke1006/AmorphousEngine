@@ -6,9 +6,12 @@
 
 require 'Core/__lib'
 require 'Core/__external'
+require 'Core/Debug'
 require 'Core/LuaBehaviour'
 require 'Core/Object'
 require 'Core/GameObject'
+
+Debug.level = DebugLevelDebug
 
 -- ensure that scene empty
 print(table_length(__all_game_objects))
@@ -41,6 +44,8 @@ print(table_length(__all_components))
 print(table_length(__all_components[clone1.__instanceID]))
 print(__all_components[clone1.__instanceID]['BotController'].__type_filepath)
 print(__all_components[clone1.__instanceID]['EnemyController'].__type_filepath)
+print(clone1:GetComponent(BotController) ~= nil)
+print(clone1:GetComponent(EnemyController) ~= nil)
 
 local clone2 = Object.Instantiate(orig)
 print(clone2.name)
@@ -49,6 +54,8 @@ print(table_length(__all_components))
 print(table_length(__all_components[clone2.__instanceID]))
 print(__all_components[clone2.__instanceID]['BotController'].__type_filepath)
 print(__all_components[clone2.__instanceID]['EnemyController'].__type_filepath)
+print(clone2:GetComponent(BotController) ~= nil)
+print(clone2:GetComponent(EnemyController) ~= nil)
 
 -- ensure components were registered
 print(__all_components[0]['BotController'].motionSpeed)

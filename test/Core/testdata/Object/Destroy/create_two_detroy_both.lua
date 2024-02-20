@@ -7,10 +7,12 @@
 require 'Core/__lib'
 require 'Core/__external'
 require 'Core/__runtime'
-
+require 'Core/Debug'
 require 'Core/LuaBehaviour'
 require 'Core/Object'
 require 'Core/GameObject'
+
+Debug.level = DebugLevelDebug
 
 -- ensure that scene empty
 print(table_length(__all_game_objects))

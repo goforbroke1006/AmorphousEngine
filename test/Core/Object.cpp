@@ -11,7 +11,7 @@ TEST(TestObject_file, Object_file_compilation) {
     EXPECT_NO_THROW(ctx.CompileString("", "require 'Core/Object'"));
 }
 
-TEST(TestObject_Instantiate, create_2_clones) {
+TEST(TestObject_Instantiate, _01_create_2_clones) {
     /**
      * Create one origin GameObject.
      * Create two clones from this origin.
@@ -22,7 +22,7 @@ TEST(TestObject_Instantiate, create_2_clones) {
     testing::internal::CaptureStdout();
 
     LuaCpp::LuaContext ctx;
-    ctx.CompileFile("test2", "./testdata/Object/Instantiate/create_2_clones.lua");
+    ctx.CompileFile("test2", "./testdata/Object/Instantiate/_01_create_2_clones.lua");
     ctx.Run("test2");
 
     std::string output = testing::internal::GetCapturedStdout();
@@ -35,6 +35,8 @@ TEST(TestObject_Instantiate, create_2_clones) {
               "2\n" // component of clone1
               "Scripts/BotController\n"
               "Scripts/EnemyController\n"
+              "true\n" // has BotController component
+              "true\n" // has EnemyController component
               //
               // create clone2
               "Some entity (Clone)\n" // clone2.name
@@ -43,9 +45,12 @@ TEST(TestObject_Instantiate, create_2_clones) {
               "2\n"
               "Scripts/BotController\n"
               "Scripts/EnemyController\n"
+              "true\n" // has BotController component
+              "true\n" // has EnemyController component
               //
               "1.0\n" // clone1 motionSpeed
               "1.0\n" // clone2 motionSpeed
+              //
               "(10.0, 20.0, 30.0)\n"
               "(10.0, 20.0, 30.0)\n"
               "(10.0, 20.0, 32.0)\n"

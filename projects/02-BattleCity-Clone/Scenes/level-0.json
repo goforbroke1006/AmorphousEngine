@@ -153,6 +153,13 @@
             {"name": "path", "type": "string", "value": "BaseBanner.mesh"}
           ]
         },
+    {
+      "pathname": "Component/BoxCollider",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+      ]
+    },
         {
           "pathname": "Scripts/BaseBanner",
           "properties": [
@@ -343,16 +350,16 @@
           "pathname": "Scripts/Tank",
           "properties": [
             {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "10.0"},
+            {"name": "reloadingTimeout", "type": "double", "value": "2.0"},
+            {"name": "projectilePrefab", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"},
             {"name": "solidity", "type": "integer", "value": "1"}
           ]
         },
         {
           "pathname": "Scripts/PlayerController",
           "properties": [
-            {"name": "enabled", "type": "boolean", "value": "true"},
-            {"name": "motionSpeed", "type": "double", "value": "10.0"},
-            {"name": "reloadingTimeout", "type": "double", "value": "2.0"},
-            {"name": "projectilePrefab", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"}
+            {"name": "enabled", "type": "boolean", "value": "true"}
           ]
         }
       ]

@@ -6,75 +6,53 @@
 
 require "Core/LuaBehaviour"
 
-PlayerController = {}
+-- TODO: invoke "= LuaBehaviour:new()" under the hood
+PlayerController = LuaBehaviour:new()
 
 function PlayerController:Awake()
-    self.motionSpeed = self.motionSpeed or 10.0
-    self.reloading = self.reloading or 0.0
-    self.reloadingTimeout = self.reloadingTimeout or 2.0
-    self.projectilePrefab = self.projectilePrefab or GameObject:new(-1, "")
+    self.tank = self:GetComponent(Tank)
+    if self.tank == nil then
+        Debug.LogWarning("Player: '" .. self.gameObject.name .. "' is not a tank")
+    end
 end
 
 function PlayerController:Start()
-    if (self.motionSpeed == 0.0) then
-        Debug.LogWarning("motionSpeed should not be equals zero")
-    end
-    if (self.projectilePrefab == nil) then
-        Debug.LogWarning("projectilePrefab should not be nil")
-    end
+
 end
 
 function PlayerController:Update()
-    if Input.GetButtonDown("Fire1") and self.reloading <= 0.0 then
+    if self.tank == nil then
+        return
+    end
+
+    if Input.GetButtonDown("Fire1") then
         Debug.Log("Fire!!!")
 
-        local projectile = Object.Instantiate(
-                self.projectilePrefab,
-                self.transform.position,
-                self.transform.rotation
-        );
-        projectile:GetComponent(ProjectileController).senderObject = self.gameObject
-
-        Debug.Log("Create projectile " .. projectile:GetInstanceID()
-                .. " in " .. self.transform.position:ToString()
-                .. " with " .. self.transform.rotation.eulerAngles:ToString()
-        )
-
-        --Debug.Log("Create projectile " .. projectile.__instanceID)
-        self.reloading = self.reloadingTimeout
+        self.tank:TryMakeAShot()
     end
 
-    if self.reloading > 0.0 then
-        self.reloading = self.reloading - Time.deltaTime
-        if self.reloading <= 0.0 then
-            Debug.Log("Projectile is loaded")
-        else
-            -- Debug.Log("Projectile will ready in " .. self.reloading .. " seconds")
-        end
-    end
+    local verSpeed = Input.GetAxis("Vertical");
+    local horSpeed = Input.GetAxis("Horizontal");
 
-    local verMove = Input.GetAxis("Vertical");
-    local horMove = Input.GetAxis("Horizontal");
-
-    if verMove ~= 0.0 then
-        if verMove > 0 then
+    if verSpeed ~= 0.0 then
+        if verSpeed > 0 then
             self.transform.rotation = Quaternion.Euler(0, 0, 0);
         end
-        if verMove < 0 then
+        if verSpeed < 0 then
             self.transform.rotation = Quaternion.Euler(0, -180, 0);
         end
 
-        self.transform:Translate(Vector3.forward * math.abs(verMove) * self.motionSpeed * Time.deltaTime);
+        self.tank:DriveStraight(verSpeed)
     else
-        if horMove ~= 0.0 then
-            if horMove > 0 then
+        if horSpeed ~= 0.0 then
+            if horSpeed > 0 then
                 self.transform.rotation = Quaternion.Euler(0, 90, 0);
             end
-            if horMove < 0 then
+            if horSpeed < 0 then
                 self.transform.rotation = Quaternion.Euler(0, -90, 0);
             end
 
-            self.transform:Translate(Vector3.forward * math.abs(horMove) * self.motionSpeed * Time.deltaTime);
+            self.tank:DriveStraight(horSpeed)
         end
     end
 end

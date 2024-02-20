@@ -6,18 +6,18 @@
 
 require "Core/LuaBehaviour"
 
-ProjectileController = {}
+Projectile = LuaBehaviour:new()
 
-function ProjectileController:Awake()
+function Projectile:Awake()
     self.motionSpeed = self.motionSpeed or 20.0
     self.senderObject = nil
 end
 
-function ProjectileController:Start()
+function Projectile:Start()
     --
 end
 
-function ProjectileController:Update()
+function Projectile:Update()
     if self.transform.position.x < -70
             or self.transform.position.x > 70
             or self.transform.position.z < -70
@@ -31,4 +31,8 @@ function ProjectileController:Update()
             * self.motionSpeed
             * Time.deltaTime;
     self.transform:Translate(movement)
+end
+
+function Projectile:OnCollisionEnter(collision --[[Collision]])
+    -- TODO: check hit with tank or obstacle
 end

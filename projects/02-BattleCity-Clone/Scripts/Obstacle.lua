@@ -8,7 +8,9 @@ require "Core/Collision"
 
 Obstacle = LuaBehaviour:new()
 
-Obstacle.solidity = 0
+function Obstacle:Awake()
+    self.solidity = 0
+end
 
 function Obstacle:Start()
     --
@@ -18,6 +20,13 @@ function Obstacle:Update()
     --
 end
 
-function Obstacle:OnCollisionEnter(collision --[[Collision]])
-    Debug.Log("GO " .. self.gameObject.name " detect hit with " .. collision.gameObject.name)
-end
+--function Obstacle:OnCollisionEnter(collision --[[Collision]])
+--    if collision.gameObject:GetComponent(Obstacle) ~= nil then
+--        return
+--    end
+--    if collision.gameObject:GetComponent(BaseBanner) ~= nil then
+--        return
+--    end
+--
+--    Debug.Log("GO " .. self.gameObject.name .. " detect hit with " .. collision.gameObject.name)
+--end

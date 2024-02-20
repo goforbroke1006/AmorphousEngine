@@ -25,3 +25,8 @@ end
 function BoxCollider:Update()
     -- Debug.Log("Camera :: Update");
 end
+
+function BoxCollider:IsA(tableName --[[string]])
+    return "Collider" == tableName
+            or "BoxCollider" == tableName
+end

@@ -11,8 +11,6 @@ require 'Core/Debug'
 require 'Core/Time'
 require 'Core/Space'
 
-
-
 LuaBehaviour = {
     --__type_name = "",
     --enabled = true,
@@ -36,14 +34,17 @@ function LuaBehaviour:new()
     return lb
 end
 
-function LuaBehaviour:GetComponent(name --[[string]])
-    return nil
+function LuaBehaviour:IsA(tableName --[[string]])
+    return "LuaBehaviour" == tableName
+end
+
+function LuaBehaviour:GetComponent(typeArg)
+    return self.gameObject:GetComponent(typeArg)
 end
 
 --- https://docs.unity3d.com/ScriptReference/Component.GetComponents.html
 function LuaBehaviour:GetComponents()
-    --
-    return nil
+    return __all_components[self.gameObject.__instanceID]
 end
 
 function LuaBehaviour.__make_clone(origin --[[LuaBehaviour]])
@@ -53,5 +54,5 @@ function LuaBehaviour.__make_clone(origin --[[LuaBehaviour]])
         component[k] = v
     end
 
-    return component
+    return setmetatable(component, getmetatable(origin))
 end

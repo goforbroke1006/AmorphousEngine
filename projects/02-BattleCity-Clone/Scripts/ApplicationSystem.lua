@@ -7,7 +7,7 @@
 require "Core/KeyCode"
 require "Core/Application"
 
-ApplicationSystem = {}
+ApplicationSystem = LuaBehaviour:new()
 
 function ApplicationSystem:Start()
     -- TODO:

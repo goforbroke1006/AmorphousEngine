@@ -152,28 +152,24 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
     __all_components[instance.__instanceID] = {}
 
     -- create components for new instance
-    for _, cmp in pairs(original.__components) do
-        __all_components[instance.__instanceID][cmp.__type_name] = LuaBehaviour.__make_clone(cmp)
-        __all_components[instance.__instanceID][cmp.__type_name].__type_name = cmp.__type_name
-        __all_components[instance.__instanceID][cmp.__type_name].__type_filepath = cmp.__type_filepath
-        __all_components[instance.__instanceID][cmp.__type_name].enabled = cmp.enabled
-        __all_components[instance.__instanceID][cmp.__type_name].gameObject = instance
-        __all_components[instance.__instanceID][cmp.__type_name].transform = instance.transform
+    for _, originCmp in pairs(original.__components) do
+        local cmp = LuaBehaviour.__make_clone(originCmp)
 
-        __all_components[instance.__instanceID][cmp.__type_name]['Awake'] = cmp['Awake']
-        __all_components[instance.__instanceID][cmp.__type_name]['Start'] = cmp['Start']
-        __all_components[instance.__instanceID][cmp.__type_name]['Update'] = cmp['Update']
+        cmp.gameObject = instance
+        cmp.transform = instance.transform
 
-        if __all_components[instance.__instanceID][cmp.__type_name]['Awake'] ~= nil then
-            __all_components[instance.__instanceID][cmp.__type_name]:Awake()
+        if cmp['Awake'] ~= nil and type(cmp['Awake']) == "function"
+                and cmp.enabled == true
+        then
+            cmp:Awake()
         end
+
+        __all_components[instance.__instanceID][cmp.__type_name] = cmp
+
+        Debug.LogTrace("Object.Instantiate " .. instance.name .. " add component " .. cmp.__type_name)
     end
 
     __scene_next_game_object_instance_id = __scene_next_game_object_instance_id + 1
-    --Debug.Log("Create new object: " .. instance.__instanceID
-    --        .. " in " .. instance.transform.position:ToString()
-    --        .. " with " .. instance.transform.rotation.eulerAngles:ToString()
-    --)
 
     return instance
 end

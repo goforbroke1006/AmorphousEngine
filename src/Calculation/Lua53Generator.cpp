@@ -84,7 +84,7 @@ AmE::Lua53Generator::buildInitLuaCode(
                 initCode += "\n";
                 initCode += std::string()
                             + "function " + pCmp->getName() + ":new()\n"
-                            + "    instance = LuaBehaviour:new()\n"
+                            + "    local instance = LuaBehaviour:new()\n"
                             + "    setmetatable(instance, self)\n"
                             + "    self.__index = self\n"
                             + "    return instance\n"
@@ -98,8 +98,8 @@ AmE::Lua53Generator::buildInitLuaCode(
         const auto &idStr = std::to_string(pGameObj->getID());
 
         initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "[" + idStr + "] = {}\n"
-                        "\n";
+                    + LUA53_G_VAR_CMP_T + "[" + idStr + "] = {}\n"
+                                                        "\n";
 
         for (const auto &[path, pCmp]: pGameObj->getComponents()) {
             std::string cmpTableName = stringSplit(pCmp->mPathname, '/').back();
@@ -127,8 +127,8 @@ AmE::Lua53Generator::buildInitLuaCode(
                     continue;
 
                 initCode += std::string()
-                            + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "']." + prop.mName + " = " + val +
-                            "\n";
+                            + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "']." + prop.mName + " = " +
+                            val + "\n";
             }
 
             initCode += "\n";

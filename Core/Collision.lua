@@ -7,8 +7,14 @@
 Collision = {}
 
 function Collision:new(gameObject --[[GameObject]])
+    if not gameObject:IsA("GameObject") then
+        Debug.LogError("Wrong gameObject type for collision")
+        return nil
+    end
+
     local c = {
         gameObject = gameObject,
+        transform = gameObject.transform,
     }
 
     self.__index = self

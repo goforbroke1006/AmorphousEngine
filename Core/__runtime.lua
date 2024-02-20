@@ -5,6 +5,8 @@
 ---
 
 require "Core/__external"
+require "Core/__physics"
+require "Core/Collision"
 
 function __before_scene_components_awake()
     for _, cmpTable in pairs(__all_components) do
@@ -76,6 +78,51 @@ function __on_update_frame()
                 local status, err = pcall(fn, cmpInstance)
                 if err ~= nil then
                     Debug.LogError(err)
+                end
+            end
+        end
+    end
+end
+
+function __check_all_collisions()
+    --if __application_quit then
+    --    return
+    --end
+
+    local colliders = {}
+    for _, cmpTable in pairs(__all_components) do
+        for _, cmpInstance in pairs(cmpTable) do
+            if cmpInstance["IsA"] ~= nil
+                    and type(cmpInstance["IsA"]) == "function"
+                    and cmpInstance:IsA("Collider")
+            then
+                colliders[cmpInstance.gameObject.__instanceID] = cmpInstance
+
+                --Debug.LogTrace("Found '" .. cmpInstance.gameObject.name .. "' colliders")
+            end
+        end
+    end
+
+    --Debug.LogTrace("Found " .. table_length(colliders) .. " colliders")
+
+    for objID1, col1 in pairs(colliders) do
+        for objID2, col2 in pairs(colliders) do
+            if objID1 ~= objID2 then
+                if PhysicsSystem.hasCollision(col1, col2) then
+                    for _, cmp in pairs(__all_components[objID1]) do
+                        if cmp["OnCollisionEnter"] ~= nil then
+                            cmp:OnCollisionEnter(
+                                    Collision:new(__all_game_objects[objID2])
+                            )
+                        end
+                    end
+                    for _, cmp in pairs(__all_components[objID2]) do
+                        if cmp["OnCollisionEnter"] ~= nil then
+                            cmp:OnCollisionEnter(
+                                    Collision:new(__all_game_objects[objID1])
+                            )
+                        end
+                    end
                 end
             end
         end
