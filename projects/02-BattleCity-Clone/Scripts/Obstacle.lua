@@ -4,6 +4,8 @@
 --- DateTime: 2/13/24 12:57 PM
 ---
 
+require "Core/Collision"
+
 Obstacle = LuaBehaviour:new()
 
 Obstacle.solidity = 0
@@ -14,4 +16,8 @@ end
 
 function Obstacle:Update()
     --
+end
+
+function Obstacle:OnCollisionEnter(collision --[[Collision]])
+    Debug.Log("GO " .. self.gameObject.name " detect hit with " .. collision.gameObject.name)
 end

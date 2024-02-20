@@ -6,7 +6,7 @@
 
 #include <LuaCpp/LuaContext.hpp>
 
-TEST(TestGameObject, file_compilation) {
+TEST(TestGameObject_file, file_compilation) {
     LuaCpp::LuaContext ctx;
     EXPECT_NO_THROW(ctx.CompileString("", "require 'Core/GameObject'"));
 }

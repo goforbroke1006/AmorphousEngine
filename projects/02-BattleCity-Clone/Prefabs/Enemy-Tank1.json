@@ -14,6 +14,13 @@
       ]
     },
     {
+      "pathname": "Component/BoxCollider",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+      ]
+    },
+    {
       "pathname": "Scripts/Tank",
       "properties": [
         {"name": "enabled", "type": "boolean", "value": "true"},

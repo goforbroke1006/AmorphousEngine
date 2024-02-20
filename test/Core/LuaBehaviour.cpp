@@ -6,7 +6,7 @@
 
 #include <LuaCpp/LuaContext.hpp>
 
-TEST(TestLuaBehaviour, file_compilation) {
+TEST(TestLuaBehaviour, LuaBehaviour_file_compilation) {
     LuaCpp::LuaContext ctx;
     EXPECT_NO_THROW(ctx.CompileString("", "require 'Core/LuaBehaviour'"));
 }

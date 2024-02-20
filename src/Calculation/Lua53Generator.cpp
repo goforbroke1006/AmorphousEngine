@@ -97,21 +97,27 @@ AmE::Lua53Generator::buildInitLuaCode(
     for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
         const auto &idStr = std::to_string(pGameObj->getID());
 
+        initCode += std::string()
+                        + LUA53_G_VAR_CMP_T + "[" + idStr + "] = {}\n"
+                        "\n";
+
         for (const auto &[path, pCmp]: pGameObj->getComponents()) {
             std::string cmpTableName = stringSplit(pCmp->mPathname, '/').back();
-            std::string cmpID = idStr + " :: " + cmpTableName;
 
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'] = " + pCmp->getName() + ":new()\n";
+                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'] = " + pCmp->getName() +
+                        ":new()\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__type_name = '" + cmpTableName + "'\n";
+                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].__type_name = '" +
+                        cmpTableName + "'\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].__type_filepath = '" + path + "'\n";
+                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].__type_filepath = '" + path +
+                        "'\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].gameObject = "
+                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].gameObject = "
                         + LUA53_G_VAR_GO_T + "[" + idStr + "]\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "['" + cmpID + "'].transform = "
+                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].transform = "
                         + LUA53_G_VAR_GO_T + "[" + idStr + "].transform\n";
             initCode += "\n";
 
@@ -121,7 +127,8 @@ AmE::Lua53Generator::buildInitLuaCode(
                     continue;
 
                 initCode += std::string()
-                            + LUA53_G_VAR_CMP_T + "['" + cmpID + "']." + prop.mName + " = " + val + "\n";
+                            + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "']." + prop.mName + " = " + val +
+                            "\n";
             }
 
             initCode += "\n";
@@ -129,9 +136,11 @@ AmE::Lua53Generator::buildInitLuaCode(
     }
 
     initCode += std::string()
-                + "for _, cmpInstance in pairs(" + LUA53_G_VAR_CMP_T + ") do\n"
-                + "    if cmpInstance['Start'] ~= nil and type(cmpInstance['Start']) == 'function' then"
-                + "        cmpInstance:Start()\n"
+                + "for _, cmpTable in pairs(" + LUA53_G_VAR_CMP_T + ") do\n"
+                + "    for _, cmpInstance in pairs(cmpTable) do\n"
+                + "        if cmpInstance['Start'] ~= nil and type(cmpInstance['Start']) == 'function' then\n"
+                + "            cmpInstance:Start()\n"
+                + "        end\n"
                 + "    end\n"
                 + "end\n";
 
@@ -230,7 +239,7 @@ AmE::Lua53Generator::simplePropValToLuaCode(const Property &prop) {
         }
         case PropType::PropTypeVector3: {
             auto vecVal = std::any_cast<Vector3>(prop.mValue);
-            return "Vector:new("
+            return "Vector3:new("
                    + std::to_string(vecVal.getX())
                    + ", "
                    + std::to_string(vecVal.getY())

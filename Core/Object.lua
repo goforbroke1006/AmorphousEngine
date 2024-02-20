@@ -55,17 +55,8 @@ Object.Destroy = function(obj --[[Object]], t)
         return
     end
 
-    -- Debug.LogError("Object.Destroy: implement me")
-
-    for key, cmp in pairs(__all_components) do
-        if cmp.gameObject.__instanceID == obj.__instanceID then
-            -- Debug.Log("Remove component " .. key)
-            __all_components[key] = nil
-        end
-    end
-
-    --Debug.Log("Remove gameObject " .. obj.__instanceID)
     __all_game_objects[obj.__instanceID] = nil
+    __all_components[obj.__instanceID] = nil
 end
 
 --- https://docs.unity3d.com/ScriptReference/Object.Instantiate.html
@@ -158,23 +149,23 @@ Object.Instantiate = function(original --[[GameObject]], arg1, arg2, arg3)
 
     __all_game_objects[instance.__instanceID] = instance;
 
+    __all_components[instance.__instanceID] = {}
+
     -- create components for new instance
     for _, cmp in pairs(original.__components) do
-        local cmpKey = '' .. instance.__instanceID .. ' :: ' .. cmp.__type_name
-        --Debug.Log("Create component: " .. cmpKey)
-        __all_components[cmpKey] = LuaBehaviour.__make_clone(cmp)
-        __all_components[cmpKey].__type_name = cmp.__type_name
-        __all_components[cmpKey].__type_filepath = cmp.__type_filepath
-        __all_components[cmpKey].enabled = cmp.enabled
-        __all_components[cmpKey].gameObject = instance
-        __all_components[cmpKey].transform = instance.transform
+        __all_components[instance.__instanceID][cmp.__type_name] = LuaBehaviour.__make_clone(cmp)
+        __all_components[instance.__instanceID][cmp.__type_name].__type_name = cmp.__type_name
+        __all_components[instance.__instanceID][cmp.__type_name].__type_filepath = cmp.__type_filepath
+        __all_components[instance.__instanceID][cmp.__type_name].enabled = cmp.enabled
+        __all_components[instance.__instanceID][cmp.__type_name].gameObject = instance
+        __all_components[instance.__instanceID][cmp.__type_name].transform = instance.transform
 
-        __all_components[cmpKey]['Awake'] = cmp['Awake']
-        __all_components[cmpKey]['Start'] = cmp['Start']
-        __all_components[cmpKey]['Update'] = cmp['Update']
+        __all_components[instance.__instanceID][cmp.__type_name]['Awake'] = cmp['Awake']
+        __all_components[instance.__instanceID][cmp.__type_name]['Start'] = cmp['Start']
+        __all_components[instance.__instanceID][cmp.__type_name]['Update'] = cmp['Update']
 
-        if __all_components[cmpKey]['Awake'] ~= nil then
-            __all_components[cmpKey]:Awake()
+        if __all_components[instance.__instanceID][cmp.__type_name]['Awake'] ~= nil then
+            __all_components[instance.__instanceID][cmp.__type_name]:Awake()
         end
     end
 
@@ -189,21 +180,22 @@ end
 
 --- https://docs.unity3d.com/ScriptReference/Object.FindObjectOfType.html
 function Object.FindObjectOfType(typeArg)
+    local typeName = nil
     if type(typeArg) == "table" then
-        local typeName = getTableName(typeArg)
-        for _, cmp in pairs(__all_components) do
+        typeName = getTableName(typeArg)
+    elseif type(typeArg) == "string" then
+        typeName = typeArg
+    else
+        Debug.LogWarning("unexpected type arg of " .. type(typeArg) .. " type")
+        return nil
+    end
+
+    for _, cmpTable in pairs(__all_components) do
+        for _, cmp in pairs(cmpTable) do
             if cmp.__type_name == typeName then
                 return cmp
             end
         end
-    elseif type(typeArg) == "string" then
-        for _, cmp in pairs(__all_components) do
-            if cmp.__type_name == typeArg then
-                return cmp
-            end
-        end
-    else
-        Debug.LogWarning("unexpected type arg of " .. type(typeArg) .. " type")
     end
 
     return nil
@@ -214,25 +206,23 @@ function Object.FindObjectsOfType(typeArg)
     local next_idx = 0
     local result = {}
 
-    -- print(type(typeArg))
-
+    local typeName = nil
     if type(typeArg) == "table" then
-        local typeName = getTableName(typeArg)
-        for _, cmp in pairs(__all_components) do
+        typeName = getTableName(typeArg)
+    elseif type(typeArg) == "string" then
+        typeName = typeArg
+    else
+        Debug.LogWarning("unexpected type arg of " .. type(typeArg) .. " type")
+        return nil
+    end
+
+    for _, cmpTable in pairs(__all_components) do
+        for _, cmp in pairs(cmpTable) do
             if cmp.__type_name == typeName then
                 result[next_idx] = cmp
                 next_idx = next_idx + 1
             end
         end
-    elseif type(typeArg) == "string" then
-        for _, cmp in pairs(__all_components) do
-            if cmp.__type_name == typeArg then
-                result[next_idx] = cmp
-                next_idx = next_idx + 1
-            end
-        end
-    else
-        Debug.LogWarning("unexpected type arg of " .. type(typeArg) .. " type")
     end
 
     return result

@@ -17,6 +17,7 @@ end
 function EnemyRespawnSystem:Start()
     self.respawns = Object.FindObjectsOfType(EnemyRespawnPoint);
     self.respawnsCount = table_length(self.respawns);
+    Debug.Log("EnemyRespawnSystem:Start respawns count " .. self.respawnsCount)
 end
 
 function EnemyRespawnSystem:Update()

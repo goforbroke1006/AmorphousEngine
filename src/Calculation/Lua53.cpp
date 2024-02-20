@@ -68,7 +68,7 @@ void AmE::Lua53::initialize(const SceneState *const sceneState) {
                 "__before_scene_components_start();\n"
                 "\n";
     luaL_loadstring(*L, initCode.c_str());
-//    Logger::Trace("\n" + initCode);
+    Logger::Trace("\n" + initCode);
 
     int res = lua_pcall(*L, 0, 0, 0);
     if (res != LUA_OK) {
@@ -183,67 +183,70 @@ void AmE::Lua53::update(
         }
     }
 
-    for (const auto &[luaIdx, luaCmp]: mComponentsTbl.getValues()) {
-        try {
-            auto *cmpTbl = (LETable *) luaCmp.get();
-            if (nullptr == cmpTbl) {
-                continue;
-            }
-
-            LETable &goVal = (LETable &) cmpTbl->getValue(LETKey(CMP_PROP_GO));
-            const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(
-                    LETKey(GO_PROP_INSTANCE_ID))).getValue();
-
-            const std::string &cmpName = cmpTbl->getValue(LETKey("__type_filepath")).ToString();
-
-            GameObject *pGameObject = sceneState->getSceneGameObject(goID);
-            if (nullptr == pGameObject) {
-                continue;
-            }
-
-            if (!pGameObject->hasComponent(cmpName)) {
-                Logger::Trace("Create new component " + cmpName + " for " + std::to_string(goID));
-                auto *pCmp = new Component(cmpName, {});
-
-                auto *protoCmp = sceneState->getComponents().at(cmpName);
-                for (auto [key, val]: protoCmp->mProperties) {
-                    pCmp->mProperties[key] = val;
+    for (const auto &[luaGoIdx, luaCmpList]: mComponentsTbl.getValues()) {
+        for (const auto &[luaIdx, luaCmp]: ((LETable *)luaCmpList.get())->getValues()) {
+            try {
+                auto *cmpTbl = (LETable *) luaCmp.get();
+                if (nullptr == cmpTbl) {
+                    continue;
                 }
 
-                pGameObject->addComponent(pCmp);
+                LETable &goVal = (LETable &) cmpTbl->getValue(LETKey(CMP_PROP_GO));
+                const auto &goID = (GameObjectInstanceID) ((LENum &) goVal.getValue(
+                        LETKey(GO_PROP_INSTANCE_ID))).getValue();
+
+                const std::string &cmpName = cmpTbl->getValue(LETKey("__type_filepath")).ToString();
+
+                GameObject *pGameObject = sceneState->getSceneGameObject(goID);
+                if (nullptr == pGameObject) {
+                    continue;
+                }
+
+                if (!pGameObject->hasComponent(cmpName)) {
+                    Logger::Trace("Create new component " + cmpName + " for " + std::to_string(goID));
+                    auto *pCmp = new Component(cmpName, {});
+
+                    auto *protoCmp = sceneState->getComponents().at(cmpName);
+                    for (auto [key, val]: protoCmp->mProperties) {
+                        pCmp->mProperties[key] = val;
+                    }
+
+                    pGameObject->addComponent(pCmp);
+                }
+                auto *pCmp = pGameObject->getComponent(cmpName);
+
+                for (const auto &[luaAttrName, luaAttrVal]: cmpTbl->getValues()) {
+                    std::string attrName = luaAttrName.ToString();
+                    std::string attrVal = luaAttrVal->ToString();
+
+                    // skip "Start", "Update" and another functions of component
+                    if (attrName == "function")
+                        continue;
+
+                    if (attrName == "__type_name") continue;
+                    if (attrName == "__type_filepath") continue;
+
+                    if (attrName == CMP_PROP_GO)
+                        continue;
+                    if (attrName == CMP_PROP_TR)
+                        continue;
+
+                    // skip private fields of component
+                    if (pCmp->mProperties.find(attrName) == pCmp->mProperties.end())
+                        continue;
+
+                    PropType::Kind kind = pCmp->mProperties[attrName].mType;
+                    if (kind == PropType::PropTypeGameObject)
+                        continue;
+                    if (kind == PropType::PropTypeGameObjectTransform)
+                        continue;
+
+                    pCmp->mProperties[attrName].mValue = parsePropValFromLua(kind, luaAttrVal.get());
+                }
+            } catch (std::out_of_range &ex) {
+                Logger::Error(
+                        std::string() + "Lua53: Component parsing failed: " + ex.what() + ": " + luaIdx.ToString());
             }
-            auto *pCmp = pGameObject->getComponent(cmpName);
-
-            for (const auto &[luaAttrName, luaAttrVal]: cmpTbl->getValues()) {
-                std::string attrName = luaAttrName.ToString();
-                std::string attrVal = luaAttrVal->ToString();
-
-                // skip "Start", "Update" and another functions of component
-                if (attrName == "function")
-                    continue;
-
-                if (attrName == "__type_name") continue;
-                if (attrName == "__type_filepath") continue;
-
-                if (attrName == CMP_PROP_GO)
-                    continue;
-                if (attrName == CMP_PROP_TR)
-                    continue;
-
-                // skip private fields of component
-                if (pCmp->mProperties.find(attrName) == pCmp->mProperties.end())
-                    continue;
-
-                PropType::Kind kind = pCmp->mProperties[attrName].mType;
-                if (kind == PropType::PropTypeGameObject)
-                    continue;
-                if (kind == PropType::PropTypeGameObjectTransform)
-                    continue;
-
-                pCmp->mProperties[attrName].mValue = parsePropValFromLua(kind, luaAttrVal.get());
-            }
-        } catch (std::out_of_range &ex) {
-            Logger::Error(std::string() + "Lua53: Component parsing failed: " + ex.what() + ": " + luaIdx.ToString());
         }
     }
 
@@ -277,11 +280,11 @@ std::any AmE::Lua53::parsePropValFromLua(const PropType::Kind &kind, LuaCpp::Eng
             return color;
         }
         case PropType::PropTypeVector3: {
-            auto colorTable = ((LETable *) rawLuaVal);
+            auto vecTable = ((LETable *) rawLuaVal);
             auto vec = Vector3{
-                    ((LENum &) colorTable->getValue(LETKey("x"))).getValue(),
-                    ((LENum &) colorTable->getValue(LETKey("y"))).getValue(),
-                    ((LENum &) colorTable->getValue(LETKey("z"))).getValue(),
+                    ((LENum &) vecTable->getValue(LETKey("x"))).getValue(),
+                    ((LENum &) vecTable->getValue(LETKey("y"))).getValue(),
+                    ((LENum &) vecTable->getValue(LETKey("z"))).getValue(),
             };
             return vec;
         }

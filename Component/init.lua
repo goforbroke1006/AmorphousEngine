@@ -8,3 +8,5 @@ require "Component/Camera"
 require "Component/CharacterController"
 require "Component/Light"
 require "Component/MeshRender"
+
+require "Component/BoxCollider"

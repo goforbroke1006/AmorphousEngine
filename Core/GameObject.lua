@@ -54,7 +54,7 @@ function GameObject:GetComponent(typeArg)
 
     local typeName = getTableName(typeArg)
 
-    return __all_components['' .. self.__instanceID .. " :: " .. typeName]
+    return __all_components[self.__instanceID][typeName]
 end
 
 function GameObject.Find(name --[[string]])

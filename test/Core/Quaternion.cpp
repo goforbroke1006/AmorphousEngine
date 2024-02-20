@@ -12,7 +12,7 @@ TEST(TestQuaternion, file_compilation) {
 }
 
 TEST(TestQuaternion_isA, positive_1) {
-//    testing::internal::CaptureStdout();
+    testing::internal::CaptureStdout();
 
     LuaCpp::LuaContext ctx;
     ctx.CompileStringAndRun(
@@ -22,8 +22,8 @@ TEST(TestQuaternion_isA, positive_1) {
             "print(qtr:IsA('Quaternion')) \n"
     );
 
-//    std::string output = testing::internal::GetCapturedStdout();
-//    EXPECT_EQ("true\n", output);
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("true\n", output);
 }
 
 TEST(TestQuaternion_isA, negative_all) {
@@ -66,7 +66,7 @@ TEST(TestQuaternion___mul, look_forward_rotate_right) {
 }
 
 TEST(TestQuaternion___mul, look_forward_rotate_left) {
-//    testing::internal::CaptureStdout();
+    testing::internal::CaptureStdout();
 
     LuaCpp::LuaContext ctx;
     ctx.CompileStringAndRun(
@@ -74,13 +74,13 @@ TEST(TestQuaternion___mul, look_forward_rotate_left) {
             "require 'Core/Quaternion' \n"
             ""
             "local vec = Vector3:new(0.0, 0.0, 1.0)\n"
-            "local qtr = Quaternion.Euler(0.0, -270.0, 0.0)\n"
+            "local qtr = Quaternion.Euler(0.0, -90.0, 0.0)\n"
             ""
             "local res = qtr * vec \n"
             ""
             "print(res:ToString()) \n"
     );
 
-//    std::string output = testing::internal::GetCapturedStdout();
-//    EXPECT_EQ("(-1.0, 0.0, 0.0)\n", output);
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("(-1.0, 0.0, 0.0)\n", output);
 }

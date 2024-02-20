@@ -6,6 +6,7 @@
 
 require "Core/__lib"
 require "Core/__external"
+require "Core/__runtime"
 
 require "Core/Debug"
 require "Core/Time"
