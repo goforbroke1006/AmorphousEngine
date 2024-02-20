@@ -17,6 +17,23 @@
       ]
     },
     {
+      "name": "Level Generator",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/LevelGenerator",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "brickWallPrefab", "type": "PrefabPath", "value": "./Prefabs/Obstacle-BrickWall.json"}
+          ]
+        }
+      ]
+    },
+    {
       "name": "Physics System Custom",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -153,13 +170,13 @@
             {"name": "path", "type": "string", "value": "BaseBanner.mesh"}
           ]
         },
-    {
-      "pathname": "Component/BoxCollider",
-      "properties": [
-        {"name": "enabled", "type": "boolean", "value": "true"},
-        {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
-      ]
-    },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
         {
           "pathname": "Scripts/BaseBanner",
           "properties": [

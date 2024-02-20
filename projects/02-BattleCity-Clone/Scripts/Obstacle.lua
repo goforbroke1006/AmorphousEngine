@@ -9,7 +9,7 @@ require "Core/Collision"
 Obstacle = LuaBehaviour:new()
 
 function Obstacle:Awake()
-    self.solidity = 0
+    self.solidity = self.solidity or 0
 end
 
 function Obstacle:Start()
