@@ -6,11 +6,11 @@
 
 require "math"
 
-PhysicsSystem = {}
+PhysicsSystemCustom = {}
 
 MIN_DISTANCE = 10.0
 
-function PhysicsSystem:Update()
+function PhysicsSystemCustom:Update()
     local obstacles = Object.FindObjectsOfType(Obstacle)
     local tanks = Object.FindObjectsOfType(Tank)
 
@@ -19,7 +19,7 @@ function PhysicsSystem:Update()
         local obstacle
 
         for _, ob in pairs(obstacles) do
-            if PhysicsSystem.detectCollisionInXZ(tk.transform.position, ob.transform.position) then
+            if PhysicsSystemCustom.detectCollisionInXZ(tk.transform.position, ob.transform.position) then
                 local currDistance = tk.transform.position:Distance(ob.transform.position)
                 if currDistance < distance then
                     distance = currDistance
@@ -66,7 +66,7 @@ function PhysicsSystem:Update()
 
 end
 
-function PhysicsSystem.detectCollisionInXZ(pos1 --[[Vector3]], pos2 --[[Vector3]])
+function PhysicsSystemCustom.detectCollisionInXZ(pos1 --[[Vector3]], pos2 --[[Vector3]])
     local halfSize = MIN_DISTANCE
     if pos1.x + halfSize >= pos2.x           -- r1 right edge past r2 left
             and pos1.x <= pos2.x + halfSize   -- r1 left edge past r2 right

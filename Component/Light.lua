@@ -10,7 +10,7 @@ require 'Core/Color'
 Light = {}
 
 function Light:new()
-    instance = LuaBehaviour:new()
+    local instance = LuaBehaviour:new()
     instance.color = Color.yellow
 
     setmetatable(instance, self)

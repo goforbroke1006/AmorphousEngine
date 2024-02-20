@@ -17,7 +17,7 @@ function Color:new(red --[[number]], green --[[number]], blue --[[number]], alph
     blue = blue or 1.0
     alpha = alpha or 1.0
 
-    clr = {
+    local clr = {
         r = red,
         g = green,
         b = blue,

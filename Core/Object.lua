@@ -12,7 +12,7 @@ Object = {
 function Object:new(__instanceID --[[integer]])
     __instanceID = __instanceID or -1
 
-    obj = {
+    local obj = {
         __instanceID = __instanceID,
     }
 

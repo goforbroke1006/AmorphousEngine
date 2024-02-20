@@ -11,7 +11,7 @@ MeshRender = {
 }
 
 function MeshRender:new()
-    instance = LuaBehaviour:new()
+    local instance = LuaBehaviour:new()
     instance.path = ""
 
     setmetatable(instance, self)

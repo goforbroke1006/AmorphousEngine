@@ -7,7 +7,7 @@
 Collision = {}
 
 function Collision:new(gameObject --[[GameObject]])
-    c = {
+    local c = {
         gameObject = gameObject,
     }
 

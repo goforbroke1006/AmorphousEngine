@@ -10,7 +10,7 @@ require 'Core/Color'
 Camera = {}
 
 function Camera:new()
-    instance = LuaBehaviour:new()
+    local instance = LuaBehaviour:new()
     instance.backgroundColor = Color:new()
     instance.nearClipPlane = 0.1
     instance.farClipPlane = 1000.0

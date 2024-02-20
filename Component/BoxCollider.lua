@@ -9,7 +9,7 @@ require "Core/Vector3"
 BoxCollider = {}
 
 function BoxCollider:new()
-    instance = LuaBehaviour:new()
+    local instance = LuaBehaviour:new()
     instance.center = Vector3.zero
     instance.size = Vector3:new(1.0, 1.0, 1.0)
 

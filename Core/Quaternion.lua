@@ -26,7 +26,7 @@ function Quaternion:new(newX --[[number]], newY --[[number]], newZ --[[number]],
         error("Can not create Quaternion")
     end
 
-    qrt = {
+    local qrt = {
         x = newX,
         y = newY,
         z = newZ,

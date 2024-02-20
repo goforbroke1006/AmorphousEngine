@@ -18,7 +18,7 @@ function GameObject:new(__instanceID --[[integer]], name --[[string]])
     __instanceID = __instanceID or -1
     name = name or ""
 
-    gameObj = Object:new(__instanceID)
+    local gameObj = Object:new(__instanceID)
     gameObj.__instanceID = __instanceID
     gameObj.name = name
     gameObj.transform = Transform:new()

@@ -16,7 +16,7 @@ function Vector3:new(newX --[[number]], newY --[[number]], newZ --[[number]])
         error("Can not create Vector3")
     end
 
-    vec = {}
+    local vec = {}
     self.__index = self
     setmetatable(vec, self)
 

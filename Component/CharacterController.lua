@@ -9,7 +9,7 @@ require 'Core/LuaBehaviour'
 CharacterController = {}
 
 function CharacterController:new()
-    instance = LuaBehaviour:new()
+    local instance = LuaBehaviour:new()
     instance.isGrounded = false
     instance.center = Vector3.zero
     instance.height = 1.8

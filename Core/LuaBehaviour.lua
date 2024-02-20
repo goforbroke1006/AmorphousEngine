@@ -21,7 +21,7 @@ LuaBehaviour = {
 }
 
 function LuaBehaviour:new()
-    lb = {
+    local lb = {
         __type_name = "",
         __type_filepath = "",
         enabled = true,
