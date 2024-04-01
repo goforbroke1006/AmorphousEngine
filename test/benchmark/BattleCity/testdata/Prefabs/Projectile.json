@@ -1,0 +1,33 @@
+{
+  "name": "Projectile",
+  "transform": {
+    "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+  },
+  "components": [
+    {
+      "name": "MeshRender",
+      "pathname": "Component/MeshRender",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "path", "type": "string", "value": "Projectile.mesh"}
+      ]
+    },
+    {
+      "pathname": "Component/BoxCollider",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "size", "type": "Vector3", "value": "5.0 5.0 5.0"}
+      ]
+    },
+    {
+      "name": "Projectile",
+      "pathname": "Scripts/Projectile",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "motionSpeed", "type": "double", "value": "20.0"}
+      ]
+    }
+  ]
+}

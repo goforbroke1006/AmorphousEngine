@@ -20,7 +20,7 @@ namespace AmE {
         auto *pCalculationEngine = new AmE::Lua53(engineRoot, projectRoot);
         auto *pInputReader = new InputReaderFake();
 
-        auto *app = new Application(
+        auto *app = new AmE::Application(
                 engineRoot,
                 projectRoot,
                 pGraphicsEngine,
