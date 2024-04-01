@@ -12,13 +12,13 @@ function Obstacle:Awake()
     self.solidity = self.solidity or 0
 end
 
-function Obstacle:Start()
-    --
-end
-
-function Obstacle:Update()
-    --
-end
+--function Obstacle:Start()
+--    --
+--end
+--
+--function Obstacle:Update()
+--    --
+--end
 
 --function Obstacle:OnCollisionEnter(collision --[[Collision]])
 --    if collision.gameObject:GetComponent(Obstacle) ~= nil then

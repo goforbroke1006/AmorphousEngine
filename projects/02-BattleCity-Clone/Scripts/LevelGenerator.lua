@@ -47,35 +47,35 @@ LevelGenerator.levels = {
 
         --
 
-        { position = Vector3:new(-50.0, 0.0, -50.0), type = "brick" },
-        { position = Vector3:new(-50.0, 0.0, -40.0), type = "brick" },
-        { position = Vector3:new(-50.0, 0.0, -30.0), type = "brick" },
-        { position = Vector3:new(-50.0, 0.0, -20.0), type = "brick" },
-
-        { position = Vector3:new(-30.0, 0.0, -50.0), type = "brick" },
-        { position = Vector3:new(-30.0, 0.0, -40.0), type = "brick" },
-        { position = Vector3:new(-30.0, 0.0, -30.0), type = "brick" },
-        { position = Vector3:new(-30.0, 0.0, -20.0), type = "brick" },
-
-        { position = Vector3:new(-10.0, 0.0, -30.0), type = "brick" },
-        { position = Vector3:new(-10.0, 0.0, -20.0), type = "brick" },
-        { position = Vector3:new(-10.0, 0.0, -10.0), type = "brick" },
+        --{ position = Vector3:new(-50.0, 0.0, -50.0), type = "brick" },
+        --{ position = Vector3:new(-50.0, 0.0, -40.0), type = "brick" },
+        --{ position = Vector3:new(-50.0, 0.0, -30.0), type = "brick" },
+        --{ position = Vector3:new(-50.0, 0.0, -20.0), type = "brick" },
         --
-        { position = Vector3:new(0.0, 0.0, -20.0), type = "brick" },
+        --{ position = Vector3:new(-30.0, 0.0, -50.0), type = "brick" },
+        --{ position = Vector3:new(-30.0, 0.0, -40.0), type = "brick" },
+        --{ position = Vector3:new(-30.0, 0.0, -30.0), type = "brick" },
+        --{ position = Vector3:new(-30.0, 0.0, -20.0), type = "brick" },
         --
-        { position = Vector3:new(10.0, 0.0, -30.0), type = "brick" },
-        { position = Vector3:new(10.0, 0.0, -20.0), type = "brick" },
-        { position = Vector3:new(10.0, 0.0, -10.0), type = "brick" },
-
-        { position = Vector3:new(30.0, 0.0, -50.0), type = "brick" },
-        { position = Vector3:new(30.0, 0.0, -40.0), type = "brick" },
-        { position = Vector3:new(30.0, 0.0, -30.0), type = "brick" },
-        { position = Vector3:new(30.0, 0.0, -20.0), type = "brick" },
-
-        { position = Vector3:new(50.0, 0.0, -50.0), type = "brick" },
-        { position = Vector3:new(50.0, 0.0, -40.0), type = "brick" },
-        { position = Vector3:new(50.0, 0.0, -30.0), type = "brick" },
-        { position = Vector3:new(50.0, 0.0, -20.0), type = "brick" },
+        --{ position = Vector3:new(-10.0, 0.0, -30.0), type = "brick" },
+        --{ position = Vector3:new(-10.0, 0.0, -20.0), type = "brick" },
+        --{ position = Vector3:new(-10.0, 0.0, -10.0), type = "brick" },
+        ----
+        --{ position = Vector3:new(0.0, 0.0, -20.0), type = "brick" },
+        ----
+        --{ position = Vector3:new(10.0, 0.0, -30.0), type = "brick" },
+        --{ position = Vector3:new(10.0, 0.0, -20.0), type = "brick" },
+        --{ position = Vector3:new(10.0, 0.0, -10.0), type = "brick" },
+        --
+        --{ position = Vector3:new(30.0, 0.0, -50.0), type = "brick" },
+        --{ position = Vector3:new(30.0, 0.0, -40.0), type = "brick" },
+        --{ position = Vector3:new(30.0, 0.0, -30.0), type = "brick" },
+        --{ position = Vector3:new(30.0, 0.0, -20.0), type = "brick" },
+        --
+        --{ position = Vector3:new(50.0, 0.0, -50.0), type = "brick" },
+        --{ position = Vector3:new(50.0, 0.0, -40.0), type = "brick" },
+        --{ position = Vector3:new(50.0, 0.0, -30.0), type = "brick" },
+        --{ position = Vector3:new(50.0, 0.0, -20.0), type = "brick" },
     }
 }
 

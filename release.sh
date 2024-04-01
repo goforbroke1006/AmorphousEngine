@@ -28,10 +28,9 @@ cat <<EOT > ./release/launcher
 set -e
 
 SCRIPT_DIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-PROJECT_DIR="\$PWD"
+PROJECT_DIR="\${1:-\$PWD}"
 
-#SCRIPT_DIR=\$(realpath \$(pwd)/\${SCRIPT_DIR})
-#PROJECT_DIR=\$(realpath \$(pwd)/\${PROJECT_DIR})
+PROJECT_DIR=\$(realpath "\$(pwd)/\${PROJECT_DIR}")
 
 cd "\${SCRIPT_DIR}"
 

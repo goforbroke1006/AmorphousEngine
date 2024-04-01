@@ -55,7 +55,7 @@ AmE::Lua53Generator::buildInitLuaCode(
         }
 
         initCode += generateInitCode(
-                std::string() + LUA53_G_VAR_PREFABS + "['" + prefabPath + "']",
+                std::string() + "__global_prefab_game_objects['" + prefabPath + "']",
                 pGameObj,
                 false
         );
@@ -63,7 +63,7 @@ AmE::Lua53Generator::buildInitLuaCode(
 
     for (const auto &[_, pGameObj]: sceneState->getSceneGameObjects()) {
         initCode += generateInitCode(
-                std::string() + LUA53_G_VAR_GO_T + "[" + std::to_string(pGameObj->getID()) + "]",
+                std::string() + "__all_game_objects[" + std::to_string(pGameObj->getID()) + "]",
                 pGameObj,
                 true
         );
@@ -98,27 +98,24 @@ AmE::Lua53Generator::buildInitLuaCode(
         const auto &idStr = std::to_string(pGameObj->getID());
 
         initCode += std::string()
-                    + LUA53_G_VAR_CMP_T + "[" + idStr + "] = {}\n"
-                                                        "\n";
+                    + "__all_components[" + idStr + "] = {}\n"
+                    + "\n";
 
         for (const auto &[path, pCmp]: pGameObj->getComponents()) {
-            std::string cmpTableName = stringSplit(pCmp->mPathname, '/').back();
+            std::string cmpT = pCmp->getName();
 
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'] = " + pCmp->getName() +
-                        ":new()\n";
+                        + "__all_components[" + idStr + "]['" + cmpT + "'] = " + cmpT + ":new()\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].__type_name = '" +
-                        cmpTableName + "'\n";
+                        + "__all_components[" + idStr + "]['" + cmpT + "'].__type_name = '" + cmpT + "'\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].__type_filepath = '" + path +
-                        "'\n";
+                        + "__all_components[" + idStr + "]['" + cmpT + "'].__type_filepath = '" + path + "'\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].gameObject = "
-                        + LUA53_G_VAR_GO_T + "[" + idStr + "]\n";
+                        + "__all_components[" + idStr + "]['" + cmpT + "'].gameObject = "
+                        + "__all_game_objects[" + idStr + "]\n";
             initCode += std::string()
-                        + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "'].transform = "
-                        + LUA53_G_VAR_GO_T + "[" + idStr + "].transform\n";
+                        + "__all_components[" + idStr + "]['" + cmpT + "'].transform = "
+                        + "__all_game_objects[" + idStr + "].transform\n";
             initCode += "\n";
 
             for (const auto &[_, prop]: pCmp->mProperties) {
@@ -127,8 +124,7 @@ AmE::Lua53Generator::buildInitLuaCode(
                     continue;
 
                 initCode += std::string()
-                            + LUA53_G_VAR_CMP_T + "[" + idStr + "]['" + cmpTableName + "']." + prop.mName + " = " +
-                            val + "\n";
+                            + "__all_components[" + idStr + "]['" + cmpT + "']." + prop.mName + " = " + val + "\n";
             }
 
             initCode += "\n";
@@ -136,9 +132,9 @@ AmE::Lua53Generator::buildInitLuaCode(
     }
 
     initCode += std::string()
-                + "for _, cmpTable in pairs(" + LUA53_G_VAR_CMP_T + ") do\n"
+                + "for _, cmpTable in pairs(__all_components) do\n"
                 + "    for _, cmpInstance in pairs(cmpTable) do\n"
-                + "        if cmpInstance['Start'] ~= nil and type(cmpInstance['Start']) == 'function' then\n"
+                + "        if cmpInstance['enabled'] and cmpInstance['Start'] ~= nil and type(cmpInstance['Start']) == 'function' then\n"
                 + "            cmpInstance:Start()\n"
                 + "        end\n"
                 + "    end\n"
@@ -250,8 +246,7 @@ AmE::Lua53Generator::simplePropValToLuaCode(const Property &prop) {
         case PropType::PropTypeGameObject: {
             try {
                 auto goID = prop.asInt();
-                return std::string()
-                       + LUA53_G_VAR_GO_T + "[" + std::to_string(goID) + "]";
+                return std::string() + "__all_game_objects[" + std::to_string(goID) + "]";
             } catch (const std::bad_any_cast &e) {
                 //Logger::Error(e.what());
             }
@@ -259,16 +254,14 @@ AmE::Lua53Generator::simplePropValToLuaCode(const Property &prop) {
         case PropType::PropTypeGameObjectTransform: {
             try {
                 auto goID = prop.asInt();
-                return std::string()
-                       + LUA53_G_VAR_GO_T + "[" + std::to_string(goID) + "].transform";
+                return std::string() + "__all_game_objects[" + std::to_string(goID) + "].transform";
             } catch (const std::bad_any_cast &e) {
                 Logger::Error(e.what());
             }
 
         }
         case PropType::PropTypePrefabPath:
-            return std::string()
-                   + LUA53_G_VAR_PREFABS + "['" + prop.asString() + "']";
+            return std::string() + "__global_prefab_game_objects['" + prop.asString() + "']";
     }
 
     throw std::runtime_error("unexpected type " + PropType::asString(prop.mType));

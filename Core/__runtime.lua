@@ -71,9 +71,7 @@ function __on_update_frame()
 
     for _, cmpTable in pairs(__all_components) do
         for _, cmpInstance in pairs(cmpTable) do
-            if cmpInstance['Update'] ~= nil and type(cmpInstance['Update']) == "function"
-                    and cmpInstance.enabled
-            then
+            if cmpInstance['enabled'] and cmpInstance['Update'] ~= nil and type(cmpInstance['Update']) == "function" then
                 local fn = cmpInstance['Update']
                 local status, err = pcall(fn, cmpInstance)
                 if err ~= nil then

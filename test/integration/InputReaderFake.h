@@ -8,6 +8,11 @@
 #include "../../include/InputReader.h"
 #include "../../include/InputsState.h"
 
+/**
+ * There is two reasons to create fake input reader:
+ * 1. Emulate key events from code
+ * 2. Usage OIS in debug mode locks application and all OS
+ */
 class InputReaderFake : public AmE::InputReader {
 public:
     explicit InputReaderFake() {
