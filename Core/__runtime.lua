@@ -83,6 +83,8 @@ function __on_update_frame()
 end
 
 function __check_all_collisions()
+    -- TODO: benchmark and metrics show that this method takes most of time.
+
     --if __application_quit then
     --    return
     --end

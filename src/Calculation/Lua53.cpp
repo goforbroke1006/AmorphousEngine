@@ -14,6 +14,14 @@
 
 #include "../../include/Calculation/Lua53Generator.h"
 
+#ifdef AME_BENCHMARK
+
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+
+#endif
+
 using LETKey = LuaCpp::Engine::Table::Key;
 using LENum = LuaCpp::Engine::LuaTNumber;
 using LEString = LuaCpp::Engine::LuaTString;
@@ -95,6 +103,10 @@ void AmE::Lua53::update(
         SceneState *const sceneState,
         double timeDelta
 ) {
+#ifdef AME_BENCHMARK
+    auto insertionStart = std::chrono::high_resolution_clock::now();
+#endif
+
     mTimeDelta->setValue(timeDelta);
     mTimeDelta->PushGlobal(*L, LUA53_G_VAR_TIME_DELTA);
 
@@ -110,8 +122,22 @@ void AmE::Lua53::update(
     mBtnPressedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_P_T);
     mBtnReleasedTbl.PushGlobal(*L, LUA53_G_VAR_BTN_R_T);
 
+#ifdef AME_BENCHMARK
+    auto insertionEnd = std::chrono::high_resolution_clock::now();
+    auto insertionPeriod =
+            std::chrono::duration_cast<std::chrono::duration<double>>(
+                    insertionEnd - insertionStart);
+    std::cout << "AmE::Lua53::update [insertion] "
+              << std::fixed << std::setprecision(12) << insertionPeriod.count() << " seconds" << std::endl;
+#endif
+
+
+#ifdef AME_BENCHMARK
+    auto calculationStart = std::chrono::high_resolution_clock::now();
+#endif
+
     // calculate new frame in LUA
-    std::string updateFrameCode
+    static std::string updateFrameCode
             = "__before_update_frame();\n"
               "__on_update_frame();\n"
               "__check_all_collisions();\n"
@@ -121,6 +147,20 @@ void AmE::Lua53::update(
     if (res != LUA_OK) {
         throw std::runtime_error(lua_tostring(*L, 1));
     }
+
+#ifdef AME_BENCHMARK
+    auto calculationEnd = std::chrono::high_resolution_clock::now();
+    auto calculationPeriod =
+            std::chrono::duration_cast<std::chrono::duration<double>>(
+                    calculationEnd - calculationStart);
+    std::cout << "AmE::Lua53::update [calculation] "
+              << std::fixed << std::setprecision(12) << calculationPeriod.count() << " seconds" << std::endl;
+#endif
+
+
+#ifdef AME_BENCHMARK
+    auto retrievingStart = std::chrono::high_resolution_clock::now();
+#endif
 
     // extract scene state
     mGameObjectsTbl.PopGlobal(*L);
@@ -185,7 +225,7 @@ void AmE::Lua53::update(
     }
 
     for (const auto &[luaGoIdx, luaCmpList]: mComponentsTbl.getValues()) {
-        for (const auto &[luaIdx, luaCmp]: ((LETable *)luaCmpList.get())->getValues()) {
+        for (const auto &[luaIdx, luaCmp]: ((LETable *) luaCmpList.get())->getValues()) {
             try {
                 auto *cmpTbl = (LETable *) luaCmp.get();
                 if (nullptr == cmpTbl) {
@@ -253,6 +293,15 @@ void AmE::Lua53::update(
 
     mAppQuit->PopGlobal(*L);
     sceneState->setAppQuit(mAppQuit->getValue());
+
+#ifdef AME_BENCHMARK
+    auto retrievingEnd = std::chrono::high_resolution_clock::now();
+    auto retrievingPeriod =
+            std::chrono::duration_cast<std::chrono::duration<double>>(
+                    retrievingEnd - retrievingStart);
+    std::cout << "AmE::Lua53::update [retrieving] "
+              << std::fixed << std::setprecision(12) << retrievingPeriod.count() << " seconds" << std::endl;
+#endif
 }
 
 

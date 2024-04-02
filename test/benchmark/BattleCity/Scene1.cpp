@@ -37,6 +37,43 @@ static void BM_Application_BattleCity_Scene1_NullGraphics(
     pCalculationEngine->initialize(app->getSceneState());
     app->updateOneFrame();
 
+    for (auto _: state) {
+        std::cout << "#\n#\n#\n";
+        app->updateOneFrame();
+    }
+
+    pInputReader->fakePress(AmE::KeyCode_Escape);
+    pInputReader->fakeRelease(AmE::KeyCode_Escape);
+
+    delete app;
+}
+
+BENCHMARK(BM_Application_BattleCity_Scene1_NullGraphics)->Iterations(10);
+
+
+/*static void BM_Lua53_BattleCity_Scene1_NullGraphics(
+        benchmark::State &state) {
+    const std::string engineRoot = ".";
+    const std::string projectRoot = "./testdata";
+
+    auto *pGraphicsEngine = new AmE::Null();
+    auto *pCalculationEngine = new AmE::Lua53(engineRoot, projectRoot);
+    auto *pInputReader = new InputReaderFake();
+
+    auto *app = new AmE::Application(
+            engineRoot,
+            projectRoot,
+            pGraphicsEngine,
+            pCalculationEngine,
+            pInputReader);
+
+    app->loadScene("./Scenes/level-1.json");
+
+    // Do operation from AmE::Application::runMainLoop()
+    pGraphicsEngine->initialize(app->getSceneState());
+    pCalculationEngine->initialize(app->getSceneState());
+    app->updateOneFrame();
+
     for (auto _: state)
         app->updateOneFrame();
 
@@ -46,4 +83,4 @@ static void BM_Application_BattleCity_Scene1_NullGraphics(
     delete app;
 }
 
-BENCHMARK(BM_Application_BattleCity_Scene1_NullGraphics);
+BENCHMARK(BM_Lua53_BattleCity_Scene1_NullGraphics);*/

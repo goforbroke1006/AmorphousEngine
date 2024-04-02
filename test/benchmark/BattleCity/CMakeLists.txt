@@ -1,6 +1,7 @@
 project(${PROJECT_NAME}-benchmark-BattleCity)
 
 add_compile_definitions(DEBUG "")
+add_compile_definitions(AME_BENCHMARK "")
 
 file(GLOB test_source_files
         "./*.cxx" "./*.cpp"
