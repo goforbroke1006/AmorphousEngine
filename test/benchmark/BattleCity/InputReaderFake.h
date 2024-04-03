@@ -35,6 +35,11 @@ public:
         mInputState->released[code] = true;
     }
 
+    void fakeClear() {
+        mInputState->pressed.clear();
+        mInputState->released.clear();
+    }
+
 private:
     AmE::InputsState *mInputState;
 };

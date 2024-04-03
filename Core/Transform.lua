@@ -114,3 +114,7 @@ function Transform:LookAt(target --[[Transform]], worldUp --[[Vector3]])
 
     self.rotation = q;
 end
+
+function Transform:__hash_str()
+    return self.position:ToString() .. " " .. self.rotation:ToString() .. " " .. self.localScale:ToString()
+end

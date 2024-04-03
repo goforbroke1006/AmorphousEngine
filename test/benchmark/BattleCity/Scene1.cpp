@@ -39,11 +39,16 @@ static void BM_Application_BattleCity_Scene1_NullGraphics(
 
     for (auto _: state) {
         std::cout << "#\n#\n#\n";
+        pInputReader->fakePress(AmE::KeyCode_W);
         app->updateOneFrame();
     }
+    pInputReader->fakeClear();
+    pInputReader->fakeRelease(AmE::KeyCode_W);
+    app->updateOneFrame();
 
     pInputReader->fakePress(AmE::KeyCode_Escape);
     pInputReader->fakeRelease(AmE::KeyCode_Escape);
+    app->updateOneFrame();
 
     delete app;
 }

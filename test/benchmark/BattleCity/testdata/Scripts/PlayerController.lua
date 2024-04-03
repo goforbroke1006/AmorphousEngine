@@ -55,4 +55,6 @@ function PlayerController:Update()
             self.tank:DriveStraight(horSpeed)
         end
     end
+
+    Debug.Log("Player position: " .. self.transform.position:ToString())
 end
