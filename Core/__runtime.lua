@@ -57,7 +57,7 @@ function __before_update_frame()
             else
                 __global_buttons_hold[keyCode] = true
 
-                Debug.LogTrace("Button " .. keyCode .. " pressed")
+                -- Debug.LogTrace("Button " .. keyCode .. " pressed")
             end
         end
     end
@@ -66,7 +66,7 @@ function __before_update_frame()
         if keyState == true then
             __global_buttons_hold[keyCode] = false
 
-            Debug.LogTrace("Button " .. keyCode .. " released")
+            -- Debug.LogTrace("Button " .. keyCode .. " released")
         end
     end
 end
@@ -105,7 +105,7 @@ function __check_all_collisions()
         return
     end
 
-    Debug.LogTrace("Found " .. table_length(__game_object_id_tr_modified_after_frame) .. " changed objects")
+    -- Debug.LogTrace("Found " .. table_length(__game_object_id_tr_modified_after_frame) .. " changed objects")
 
     local colliders = {}
     for gameObjectID, _ in pairs(__game_object_id_tr_modified_after_frame) do
@@ -121,10 +121,10 @@ function __check_all_collisions()
         end
     end
 
-    Debug.LogTrace("Found " .. table_length(colliders) .. " colliders")
+    -- Debug.LogTrace("Found " .. table_length(colliders) .. " colliders")
 
     for objID1, col1 in pairs(colliders) do
-        for objID2, col2 in pairs(colliders) do
+        for objID2, col2 in pairs(colliders) do -- TODO: need to compare to another objects
             if objID1 ~= objID2 then
                 if PhysicsSystem.hasCollision(col1, col2) then
                     for _, cmp in pairs(__all_components[objID1]) do
