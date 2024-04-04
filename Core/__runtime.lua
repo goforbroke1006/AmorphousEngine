@@ -107,14 +107,28 @@ function __check_all_collisions()
 
     -- Debug.LogTrace("Found " .. table_length(__game_object_id_tr_modified_after_frame) .. " changed objects")
 
-    local colliders = {}
+    local allColliders = {}
+    for _, cmpTable in pairs(__all_components) do
+        for _, cmpInstance in pairs(cmpTable) do
+            if cmpInstance["IsA"] ~= nil
+                    and type(cmpInstance["IsA"]) == "function"
+                    and cmpInstance:IsA("Collider")
+            then
+                allColliders[cmpInstance.gameObject.__instanceID] = cmpInstance
+
+                --Debug.LogTrace("Found '" .. cmpInstance.gameObject.name .. "' colliders")
+            end
+        end
+    end
+
+    local transformedColliders = {}
     for gameObjectID, _ in pairs(__game_object_id_tr_modified_after_frame) do
         for _, cmpInstance in pairs(__all_components[gameObjectID]) do
             if cmpInstance["IsA"] ~= nil
                     and type(cmpInstance["IsA"]) == "function"
                     and cmpInstance:IsA("Collider")
             then
-                colliders[cmpInstance.gameObject.__instanceID] = cmpInstance
+                transformedColliders[cmpInstance.gameObject.__instanceID] = cmpInstance
 
                 --Debug.LogTrace("Found '" .. cmpInstance.gameObject.name .. "' colliders")
             end
@@ -123,8 +137,8 @@ function __check_all_collisions()
 
     -- Debug.LogTrace("Found " .. table_length(colliders) .. " colliders")
 
-    for objID1, col1 in pairs(colliders) do
-        for objID2, col2 in pairs(colliders) do -- TODO: need to compare to another objects
+    for objID1, col1 in pairs(allColliders) do
+        for objID2, col2 in pairs(transformedColliders) do
             if objID1 ~= objID2 then
                 if PhysicsSystem.hasCollision(col1, col2) then
                     for _, cmp in pairs(__all_components[objID1]) do
