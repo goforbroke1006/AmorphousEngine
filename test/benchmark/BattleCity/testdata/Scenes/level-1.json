@@ -1,0 +1,452 @@
+{
+  "gameObjects": [
+    {
+      "name": "Application System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/ApplicationSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Level Generator",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/LevelGenerator",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "brickWallPrefab", "type": "PrefabPath", "value": "./Prefabs/Obstacle-BrickWall.json"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Physics System Custom",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/PhysicsSystemCustom",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "false"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hitting System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/HittingSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Main Camera",
+      "transform": {
+        "position": {"x": 0.0, "y": 150.0, "z": -150.0},
+        "rotation": {"x": -45.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/Camera",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "backgroundColor", "type": "Color", "value": "0.0 0.25 1.0 1.0"},
+            {"name": "nearClipPlane", "type": "double", "value": "0.1"},
+            {"name": "farClipPlane", "type": "double", "value": "1000.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Light 1",
+      "transform": {
+        "position": {"x": 0.0, "y": 1000.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/Light",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "type", "type": "string", "value": "Spot"},
+            {"name": "color", "type": "Color", "value": "1.0 0.92 0.016 1.0"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Light 2",
+      "transform": {
+        "position": {"x": 0.0, "y": 10.0, "z": 0.0},
+        "rotation": {"x": -180.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/Light",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "color", "type": "Color", "value": "1.0 1.0 1.0 1.0"},
+            {"name": "type", "type": "string", "value": "Directional"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Light 3",
+      "transform": {
+        "position": {"x": 0.0, "y": 10.0, "z": 0.0},
+        "rotation": {"x": -180.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/Light",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "color", "type": "Color", "value": "1.0 1.0 1.0 1.0"},
+            {"name": "type", "type": "string", "value": "Spot"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Terrain",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Terrain.mesh"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Base Banner",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BaseBanner.mesh"}
+          ]
+        },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
+        {
+          "pathname": "Scripts/BaseBanner",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "isDestroyed", "type": "boolean", "value": "false"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall 1",
+      "transform": {
+        "position": {"x": -10.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall 2",
+      "transform": {
+        "position": {"x": -10.0, "y": 0.0, "z": -50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall 3",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": -50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall 4",
+      "transform": {
+        "position": {"x": 10.0, "y": 0.0, "z": -50.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Obstacle BrickWall 5",
+      "transform": {
+        "position": {"x": 10.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "BrickWall.mesh"}
+          ]
+        },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Obstacle",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "solidity", "type": "integer", "value": "2"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player 1",
+      "transform": {
+        "position": {"x": -20.0, "y": 0.0, "z": -60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 10.0, "y": 10.0, "z": 10.0}
+      },
+      "components": [
+        {
+          "pathname": "Component/MeshRender",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "path", "type": "string", "value": "Tank001.mesh"}
+          ]
+        },
+        {
+          "pathname": "Component/BoxCollider",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+          ]
+        },
+        {
+          "pathname": "Scripts/Tank",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "motionSpeed", "type": "double", "value": "10.0"},
+            {"name": "reloadingTimeout", "type": "double", "value": "2.0"},
+            {"name": "projectilePrefab", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"},
+            {"name": "solidity", "type": "integer", "value": "1"}
+          ]
+        },
+        {
+          "pathname": "Scripts/PlayerController",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Enemy Respawn System",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/EnemyRespawnSystem",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Respawn Point Left",
+      "transform": {
+        "position": {"x": -60.0, "y": 0.0, "z": 60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/EnemyRespawnPoint",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "tank1Prefab", "type": "PrefabPath", "value": "./Prefabs/Enemy-Tank1.json"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Respawn Point Center",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/EnemyRespawnPoint",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "tank1Prefab", "type": "PrefabPath", "value": "./Prefabs/Enemy-Tank1.json"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Respawn Point Right",
+      "transform": {
+        "position": {"x": 60.0, "y": 0.0, "z": 60.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      },
+      "components": [
+        {
+          "pathname": "Scripts/EnemyRespawnPoint",
+          "properties": [
+            {"name": "enabled", "type": "boolean", "value": "true"},
+            {"name": "tank1Prefab", "type": "PrefabPath", "value": "./Prefabs/Enemy-Tank1.json"}
+          ]
+        }
+      ]
+    }
+  ]
+}

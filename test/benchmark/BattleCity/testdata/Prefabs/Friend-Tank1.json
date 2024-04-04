@@ -1,0 +1,42 @@
+{
+  "name": "Friend    Tank 1",
+  "transform": {
+    "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "localScale": {"x": 1.0, "y": 1.0, "z": 1.0}
+  },
+  "components": [
+    {
+      "name": "MeshRender",
+      "pathname": "Component/MeshRender",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "path", "type": "string", "value": "Tank001.mesh"}
+      ]
+    },
+    {
+      "pathname": "Component/BoxCollider",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "size", "type": "Vector3", "value": "10.0 10.0 10.0"}
+      ]
+    },
+    {
+      "pathname": "Scripts/Tank",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"},
+        {"name": "motionSpeed", "type": "double", "value": "10.0"},
+        {"name": "reloadingTimeout", "type": "double", "value": "2.0"},
+        {"name": "projectilePrefab", "type": "PrefabPath", "value": "./Prefabs/Projectile.json"},
+        {"name": "solidity", "type": "integer", "value": "1"}
+      ]
+    },
+    {
+      "name": "FriendController",
+      "pathname": "Scripts/FriendController",
+      "properties": [
+        {"name": "enabled", "type": "boolean", "value": "true"}
+      ]
+    }
+  ]
+}

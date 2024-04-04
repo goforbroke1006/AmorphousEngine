@@ -8,6 +8,9 @@ require "Core/__external"
 require "Core/__physics"
 require "Core/Collision"
 
+-- use this var to collect object that transform was changed after frame
+__game_object_tr_modified_after_frame = {}
+
 function __before_scene_components_awake()
     for _, cmpTable in pairs(__all_components) do
         for _, cmpInstance in pairs(cmpTable) do
@@ -41,9 +44,9 @@ function __before_scene_components_start()
 end
 
 function __before_update_frame()
-    --if __application_quit then
-    --    return
-    --end
+    if __application_quit then
+        return
+    end
 
     Time.deltaTime = __time_delta
 
@@ -53,6 +56,8 @@ function __before_update_frame()
                 __global_buttons_pressed[keyCode] = false
             else
                 __global_buttons_hold[keyCode] = true
+
+                -- Debug.LogTrace("Button " .. keyCode .. " pressed")
             end
         end
     end
@@ -60,22 +65,35 @@ function __before_update_frame()
     for keyCode, keyState in pairs(__global_buttons_released) do
         if keyState == true then
             __global_buttons_hold[keyCode] = false
+
+            -- Debug.LogTrace("Button " .. keyCode .. " released")
         end
     end
 end
 
 function __on_update_frame()
-    --if __application_quit then
-    --    return
-    --end
+    if __application_quit then
+        return
+    end
+
+    __game_object_id_tr_modified_after_frame = {} -- reset before frame
 
     for _, cmpTable in pairs(__all_components) do
         for _, cmpInstance in pairs(cmpTable) do
             if cmpInstance['enabled'] and cmpInstance['Update'] ~= nil and type(cmpInstance['Update']) == "function" then
+                local hashStrBefore = cmpInstance.transform:__hash_str()
+
                 local fn = cmpInstance['Update']
                 local status, err = pcall(fn, cmpInstance)
                 if err ~= nil then
                     Debug.LogError(err)
+                end
+
+                local hashStrAfter = cmpInstance.transform:__hash_str()
+                if hashStrAfter ~= hashStrBefore then
+                    local instID = cmpInstance.gameObject:GetInstanceID()
+                    -- Debug.LogTrace("GO " .. instID .. " has been changed")
+                    __game_object_id_tr_modified_after_frame[instID] = true
                 end
             end
         end
@@ -83,28 +101,44 @@ function __on_update_frame()
 end
 
 function __check_all_collisions()
-    --if __application_quit then
-    --    return
-    --end
+    if __application_quit then
+        return
+    end
 
-    local colliders = {}
+    -- Debug.LogTrace("Found " .. table_length(__game_object_id_tr_modified_after_frame) .. " changed objects")
+
+    local allColliders = {}
     for _, cmpTable in pairs(__all_components) do
         for _, cmpInstance in pairs(cmpTable) do
             if cmpInstance["IsA"] ~= nil
                     and type(cmpInstance["IsA"]) == "function"
                     and cmpInstance:IsA("Collider")
             then
-                colliders[cmpInstance.gameObject.__instanceID] = cmpInstance
+                allColliders[cmpInstance.gameObject.__instanceID] = cmpInstance
 
                 --Debug.LogTrace("Found '" .. cmpInstance.gameObject.name .. "' colliders")
             end
         end
     end
 
-    --Debug.LogTrace("Found " .. table_length(colliders) .. " colliders")
+    local transformedColliders = {}
+    for gameObjectID, _ in pairs(__game_object_id_tr_modified_after_frame) do
+        for _, cmpInstance in pairs(__all_components[gameObjectID]) do
+            if cmpInstance["IsA"] ~= nil
+                    and type(cmpInstance["IsA"]) == "function"
+                    and cmpInstance:IsA("Collider")
+            then
+                transformedColliders[cmpInstance.gameObject.__instanceID] = cmpInstance
 
-    for objID1, col1 in pairs(colliders) do
-        for objID2, col2 in pairs(colliders) do
+                --Debug.LogTrace("Found '" .. cmpInstance.gameObject.name .. "' colliders")
+            end
+        end
+    end
+
+    -- Debug.LogTrace("Found " .. table_length(colliders) .. " colliders")
+
+    for objID1, col1 in pairs(allColliders) do
+        for objID2, col2 in pairs(transformedColliders) do
             if objID1 ~= objID2 then
                 if PhysicsSystem.hasCollision(col1, col2) then
                     for _, cmp in pairs(__all_components[objID1]) do

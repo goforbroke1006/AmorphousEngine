@@ -100,7 +100,7 @@ bool AmE::InputReaderOIS::keyPressed(const OIS::KeyEvent &arg) {
     if (InputReaderOIS::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
-    Logger::Trace("Press keyboard: " + kbOisToAME[arg.key].toString());
+    // Logger::Trace("Press keyboard: " + kbOisToAME[arg.key].toString());
     mInputState->pressed[kbOisToAME[arg.key]] = true;
 
     return true;
@@ -110,7 +110,7 @@ bool AmE::InputReaderOIS::keyReleased(const OIS::KeyEvent &arg) {
     if (InputReaderOIS::kbOisToAME.find(arg.key) == kbOisToAME.end())
         return true;
 
-    Logger::Trace("Release keyboard: " + kbOisToAME[arg.key].toString());
+    // Logger::Trace("Release keyboard: " + kbOisToAME[arg.key].toString());
     mInputState->released[kbOisToAME[arg.key]] = true;
 
     return true;
